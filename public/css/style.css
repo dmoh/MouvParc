@@ -39,8 +39,14 @@ ul
 }
 li{
     padding-top: 15px;
-}
 
+}
+#myNavbarCar li {
+    padding-bottom: 15px;
+}
+#myNavbarCar ul {
+    font-size: 14px;
+}
 .panel .panel-quicksearch .panel-heading {
     background-color: #f8f8f8;
 }
@@ -55,6 +61,10 @@ li{
     border-radius: 5px;
     background-color: rgba(225,225,225,.25);
 }
+.ml-header{
+
+}
+
 /* Separators
 ---------------------------------- */
 .fa{
@@ -101,7 +111,7 @@ ul.nav a
 }
 .ml-40
 {
-    margin-left: 13%;
+    margin-left: 25%;
 }
 .table-bordered thead th{
     font-weight: 500;
@@ -109,14 +119,36 @@ ul.nav a
 }
 
 .table td{
-    font-size: 13px;
+    font-size: 12px;
     text-align: center;
 }
-
+.table td, .table th {
+    border-right: 1px solid #e9ecef;
+}
+.upper{
+    text-transform: uppercase;
+}
 .table
 {
     text-align: center;
 }
+
+
+
+.bg-madison {
+    background: #0d2d62;
+    fill: #0d2d62;
+}
+
+.divider {
+    width: 50px;
+    height: 3px;
+    padding: 0;
+    margin: 21px auto 21px;
+    background: #b1b1b1;
+    border: none;
+}
+
 /***********************************SLIDE ***********************/
 /* SLIDE THREE */
 .slideThree {
@@ -144,6 +176,10 @@ ul.nav a
     z-index: 0;
     font-weight: bold;
     text-shadow: 1px 1px 0px rgba(255,255,255,.15);
+}
+
+h3{
+    font-family: 'Montserrat', sans-serif;
 }
 
 .slideThree:before {
@@ -213,4 +249,193 @@ input[type="checkbox" i] {
     vertical-align: bottom;
     border-bottom: 2px solid #e9ecef;
     font-size: 12px;
+}
+
+.g-pa-25{
+    padding: 1.7rem !important;
+}
+
+.u-shadow-v11 {
+    box-shadow: 0 0 2px #ccc;
+}
+
+.rounded {
+    border-radius: .25rem!important;
+}
+article h3{
+    font-size: 1.75rem;
+}
+article p {
+    text-align: justify;
+}
+
+.title-p{
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding-bottom: 0px;
+    padding-top: 10px;
+}
+p.mini{
+    font-style: italic;
+    font-size: 0.95rem;
+    color: #8c8c8c;
+}
+
+article .g-pa-25{
+    border-left: 2px solid red;
+
+}
+
+.upper-right{
+    text-align: left;
+}
+p.right{
+    text-align: right;
+}
+
+article.g-pa-25{
+    margin-bottom: 15px;
+}
+
+article .btn{
+    margin-top: 0;
+}
+form.form-horizontal{
+    margin-bottom: 55px;
+}
+
+.card{
+    border: none;
+}
+.marB-40{
+    margin-bottom: 40px;
+}
+
+.navbar > ul {
+    font-size: 13px;
+}
+
+.equipements
+{
+    font-size: 0.68rem;
+}
+.equipements .fa
+{
+    width: 10px;
+    font-size: 0.75rem;
+}
+a.green{
+    color: #3cff35;
+}
+a.collapsed{
+    color: #3cff35;
+    font-size: 15px;
+}
+i.fa.fa-male{
+    width: 8px !important;
+}
+.p_right{
+    padding-right: 10px;
+}
+article .text-right{
+    float: right;
+    padding-top: 7px;
+    color: #505050;
+    font-weight: 300;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+}
+.no_marg form.form-horizontal{
+    margin-bottom: 0px !important;
+}
+
+input[type="checkbox" i]{
+    width: 9%;
+    position: relative;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+div.card{
+    background-color: #4c473d00;
+}
+select#form_marque.form-control{
+    padding-right: 0.3rem;
+    padding-left: 0.3rem;
+}
+.form-control{
+    padding-right: 0.4rem;
+    padding-left: 0.4rem;
+}
+i.fa.fa-times-circle
+{
+    width: 0px;
+    /* top: 45%; */
+    bottom: 24px;
+    /* top: 0; */
+    right: 36px;
+    height: 14px;
+    z-index: 10000;
+    /* padding-top: 11px; */
+    color: red;
+    position: absolute;
+}
+.mini_td
+{
+    font-size: 11px;
+}
+
+.green
+{
+    color: #87d116;
+}
+
+#map {
+    height: 400px;
+    width: 100%;
+}
+.navbar-nav {
+    padding-left: 40px;
+}
+.head_login{
+    background: url("../images/headerBus.jpg") top left no-repeat;
+    background-size: cover;
+
+}
+img{
+    max-width: 100%;
+    max-height: 100%;
+}
+.form_bg{
+    color: #fff;
+    padding: 25px;
+    border-top: 3px solid #0d2d62;
+    background: #1f1f1f73;
+    -webkit-box-shadow: 3px 2px 2px 0px rgba(0,0,0,0.47);
+    -moz-box-shadow: 3px 2px 2px 0px rgba(0,0,0,0.47);
+    box-shadow: 3px 2px 2px 0px rgba(0,0,0,0.47);
+}
+.head_login h4{
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    box-shadow: #777777;
+}
+/**********
+*****************************MEDIA QUERIES*************************************************/
+
+@media screen and (max-width: 990px) {
+
+    .ml-40{
+        margin-left: 13%;
+    }
+
+}
+
+@media screen and (max-width: 767px) {
+
+    .ml-40{
+        margin-left: 5%;
+    }
+
 }

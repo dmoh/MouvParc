@@ -5,6 +5,8 @@
         "php": "^7.1.3",
         "ext-iconv": "*",
         "javiereguiluz/easyadmin-bundle": "^1.17",
+        "knplabs/knp-paginator-bundle": "^2.7",
+        "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "^4.0",
         "symfony/console": "^4.0",
         "symfony/flex": "^1.0",
@@ -63,7 +65,7 @@
     "extra": {
         "symfony": {
             "id": "01C2C461A9Z9E71TGBESBPPVG1",
-            "allow-contrib": false
+            "allow-contrib": "true"
         }
     }
 }

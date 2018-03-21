@@ -6,10 +6,14 @@
 {% endblock %}
 
 {% block body %}
+
+    <div class="count">
+
+    </div>
     <section class="jumbotron text-center">
         <div class="container">
-            <h1 class="jumbotron-heading"> Liste Cars</h1>
-            <p class="lead text-muted">Liste des Autocars enregistrer dans la base de donnée</p>
+            <h1 class="jumbotron-heading"> Liste Cars </h1>
+            <p style="color: #4edb13!important;" class="lead">Liste des Autocars ({{ pagination.getTotalItemCount }}) enregistrer dans la base de donnée </p>
         </div>
     </section>
     <section class="container-fluid">
@@ -17,30 +21,39 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="listing_car">
+                        <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
                                 <tr class="text-uppercase">
                                     <th scope="col-md-2">Immatriculation</th>
-                                    <th scope="col-md-1">Date mise à jour</th>
-                                    <th scope="col-md-1">Date d'enregistrement</th>
-                                    <th scope="col-md-2">N° de série</th>
+                                    <th scope="col-md-3">Date 1er Mise en Circu.</th>
                                     <th scope="col-md-2">Marque</th>
                                     <th scope="col-md-2">Site</th>
                                     <th scope="col-md-2">Etat Autocar</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for Car in Cars %}
-                                <tr>
-                                    <th scope="row"><a href="{{ path('car', { 'id': Car.id }) }}">{{ Car.immat|upper }}</a></th>
-                                    <td>{{ Car.dateMaj |date("d/m/Y") }}</td>
-                                    <td>{{ Car.date|date("d/m/Y") }}</td>
-                                    <td>{{ Car.numSerie }}</td>
+                                {% for Car in pagination %}
+                                    <tr {% if loop.index is odd %}class="color"{% endif %}>
+                                    <th scope="row">
+                                        {% if app.user %}
+                                            <a href="{{ path('car', { 'id': Car.id }) }}">{{ Car.immat|upper }}</a>
+                                            {% else %}
+                                            {{ Car.immat|upper }}
+                                        {% endif %}
+                                    </th>
+                                    <td>{{ Car.dateMar|date("d/m/Y") }}</td>
                                     <td>{{ Car.marque| upper }}</td>
                                     <td>{{ Car.site }}</td>
                                     <td>{% if  Car.etatCar == "roulant" %}<i class="fa fa-bus" style="color: #00a65a;" aria-hidden="true"></i>
-                                        {% elseif Car.etatCar == "roulant ano" %} <i class="fa fa-ambulance" style="color: orange; font-size: 15px" aria-hidden="true"></i>
+                                        {% elseif Car.etatCar == "roulant ano" or Car.etatCar == "roulant_ano" %} <i class="fa fa-ambulance" style="color: orange; font-size: 15px" aria-hidden="true"></i>
+                                            depuis le
+                                            {{ Car.datePanneDeb| date("d/m/Y") }}
                                         {% elseif Car.etatCar == "panne" %} <i class="fa fa-ambulance" style="color: red;  font-size: 15px" aria-hidden="true"></i>
+                                            depuis le
+                                            {{ Car.datePanneDeb| date("d/m/Y")  }}
+                                            {% elseif Car.etatCar == "atelier" %}
+                                            <i class="fa fa-wrench" style="color: red;  font-size: 16px; padding-top: 1px" aria-hidden="true"></i>
                                             depuis le
                                             {{ Car.datePanneDeb| date("d/m/Y")  }}
                                         {% else %}
@@ -51,6 +64,13 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-offset-4 col-lg-4">
+                    <div class="navigation">
+                        {{ knp_pagination_render(pagination) }}
                     </div>
                 </div>
             </div>
@@ -71,6 +91,10 @@
                 </div>
             </div>
         </footer>
+    {# total items count #}
+
+    {# display navigation #}
+
 {% endblock %}
 {% block javascripts %}
     {#<srcipt src="{{ asset('locales/bootstrap-datepicker.fr.min.js') }}"></srcipt>#}

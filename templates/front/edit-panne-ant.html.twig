@@ -1,23 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <section class="jumbotron text-center">
-        <div class="container">
-            <h1 class="jumbotron-heading"> Ajout de panne sur l'autocar {{ car.immat| upper }}</h1>
-            <p class="lead text-muted"></p>
-        </div>
-    </section>
-    {% if liste_panne is defined %}
-        <ul>
-            {% for panne in liste_panne  %}
-                <li>{{ panne.etat_car }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
     <section>
         <div class="container">
-            <h3 class="text-center"></h3>
-            <div class="well">
+            <h3 class="pt-30 text-center"> Edition panne antérieur </h3>
+            <div class="well pt-30">
                 {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
 
                 {{ form_errors(form) }}
@@ -57,22 +44,12 @@
                         </div>
                     </div>
                     <div class="form-row trac">
-                        <div class="form-group col-md-8">
+                        <div class="form-group col-md-12">
                             {# Génération du label. #}
                             {{ form_label(form.nature_panne, "Nature de la panne : ", {'label_attr': {'class': ' control-label'}}) }}
                             {# Génération de l'input.#}
                             {{ form_widget(form.nature_panne, {'attr': {'class': ' form-control'}}) }}
                             {{ form_errors(form.nature_panne, { 'attr': {'class': 'red' }}) }}
-                        </div>
-                        <div class="form-group col-md-4">
-                            {# Génération du label. #}
-                            {{ form_label(form.garantie, "En garantie : ", {'label_attr': {'class': ' control-label'}}) }}
-                            {# Génération de l'input.#}
-                            {{ form_widget(form.garantie, {'attr': {'class': ' form-control'}}) }}
-                            <p class="mini" style="font-size: 0.75rem">{% if cond_garantie is defined %}
-                                    {{ cond_garantie }}
-                                {% endif %}</p>
-                            {{ form_errors(form.garantie, { 'attr': {'class': 'red' }}) }}
                         </div>
                     </div>
                     <div class="form-row trac">
@@ -80,7 +57,7 @@
                             {# Génération du label. #}
                             {{ form_label(form.desc_panne, "Description de la panne : ", {'label_attr': {'class': ' control-label'}}) }}
                             {# Génération de l'input.#}
-                            {{ form_widget(form.desc_panne, {'attr': {'class': ' form-control', 'rows':'8'}}) }}
+                            {{ form_widget(form.desc_panne, {'attr': {'class': ' form-control', 'rows': '8'}}) }}
                             {{ form_errors(form.desc_panne, { 'attr': {'class': 'red' }}) }}
                         </div>
                     </div>
@@ -89,7 +66,7 @@
                             {# Génération du label. #}
                             {{ form_label(form.suites_donnes, "Suite donné : ", {'label_attr': {'class': ' control-label'}}) }}
                             {# Génération de l'input.#}
-                            {{ form_widget(form.suites_donnes, {'attr': {'class': ' form-control', 'rows':'8'}}) }}
+                            {{ form_widget(form.suites_donnes, {'attr': {'class': ' form-control', 'rows': '8'}}) }}
                             {{ form_errors(form.suites_donnes, { 'attr': {'class': 'red' }}) }}
                         </div>
                     </div>
@@ -108,11 +85,36 @@
         </div>
     </section>
 {% endblock %}
+
 {% block javascripts %}
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("option.etat_roulant").prop("disabled", true);
-            $('.anomalie').prop("disabled", false);
+        $(document).ready(function(){
+            if($('option.etat_roulant.avec.anomalie').is(':selected'))
+            {
+                $('select option.etat_panne').prop('disabled', true);
+            }
+            else if($('option.etat_panne').is(':selected'))
+            {
+                $('option.etat_roulant.avec.anomalie').prop('disabled', true);
+            }
+            else
+            {
+                $('option.etat_roulant').prop('disabled', true);
+                $('option.etat_roulant.avec.anomalie').prop('disabled', false);
+            }
+
+            $('#panne_enregistrer').on('click', function(){
+
+                    if($('#panne_date_effective').val().length < 8 && $('#panne_date_effective').val().length > 10)
+                    {
+                        $('#panne_date_effective').css('border', '2px solid red');
+                        alert('la date de fin de panne doit être enregistré !');
+                        return false;
+                    }
+
+            });
+            //   $('select#panne_etat_car').prop('disabled', true);
+
         });
     </script>
 {% endblock %}

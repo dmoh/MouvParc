@@ -3,68 +3,358 @@
 {% block body %}
     <section class="jumbotron text-center">
         <div class="container">
-            <h1 class="jumbotron-heading"> Historique du Car {{ car.immat| upper }}</h1>
-            <p><a href="{{ path('ajout_panne', { 'id': car.id }) }}">Ajouter une panne a cet autocar</a></p>
-            <p class="lead text-muted"></p>
+                <h1 class="jumbotron-heading"> Autocar <em class="green" id="car_immat">{{ car.immat| upper }}</em></h1>
+                <p><a href="{{ path('ajout_panne', { 'id': car.id }) }}">Ajouter une panne a cet autocar</a></p>
+                <p class="lead text-muted"></p>
         </div>
     </section>
     <section class="container">
         <div class="row pb-40">
             <div class="col-md-12">
-                <a class="btn btn-primary ml-40" href="{{ path('ajout_panne', { 'id': car.id }) }}">Ajouter une panne</a>
+                <a class="btn btn-primary ml-40 tee" href="{{ path('ajout_panne', { 'id': car.id }) }}">Ajouter une panne</a>
                 <a class="btn btn-primary " href="{{ path('edit_car', { 'id': car.id }) }}">Editer fiche du car</a>
                 <a class="btn btn-danger " href="{{ path('effacer_car', { 'id': car.id }) }}">Supprimer fiche du car</a>
             </div>
         </div>
+        {% if geoc_lat > 0 and geoc_long > 0 %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="elem_gps">
+                        <p id="geoc_lat">{{ geoc_lat }}</p><p id="geoc_long">{{ geoc_long }}</p>
+                    </div>
+                    <h6 class="text-center"><a href="" id="locate_bus"><i class="fa fa-bus"></i>Position actuel du car</a> <em class="green" id="car_immat">{{ car.immat| upper }}</em></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="map"></div>
+                </div>
+            </div>
+        {% endif %}
         <div class="row">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th scope="col-md-2">Immatriculation</th>
-                    <th scope="col-md-1">Date de la dernière Mise à jour</th>
-                    <th scope="col-md-1">Date d'enregistrement</th>
-                    <th scope="col-md-2">Auteur </th>
-                    <th scope="col-md-2">Etat du Car</th>
-                    <th scope="col-md-2">Num Série</th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">{{ car.immat| upper }}</th>
-                        <td>{{ car.dateMaj| date("d/m/Y") }}</td>
-                        <td>{{ car.date|date("d/m/Y") }}</td>
-                        <td>{{ car.auteur }}</td>
-                        <td>{{ car.EtatCar }}</td>
-                        <td>{{ car.numSerie | upper }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="col-md-12">
+                {% if kms is defined and kms > 0 %}
+                    <h5 class="text-center">Kilomètrage actuel <em class="green">{{ car.marque }} : {{ kms }} km</em></h5>
+                {% endif %}
+            </div>
         </div>
         <div class="row">
-            {% if pannes is defined %}
+            <div class="col-md-12"><h5>Equipements</h5></div>
+        </div>
+        <div class="row">
+            <div class="equipements">
+                <div class="col-md-12">
+                    <b> <i class="fa fa-users"></i> Nombres de places : </b>
+                    <span class="p_right">
+                        {% if car.nbPlaces is defined and car.nbPlaces != 0 %}
+                            {{ car.nbPlaces }}
+                            {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                    <span class="p_right">
+                    <b><i class="fa fa-user"></i> Siège guide : </b>
+                        {% if car.siegeGuide is defined and car.siegeGuide != 0 %}
+                            Oui
+                        {% elseif car.siegeGuide == 0 or car.siegeGuide == '0' %}
+                            Non
+                            {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                    <span class="p_right">
+                    <b><i class="fa fa-euro"></i> Norme EURO : </b>
+                        {% if car.euro is defined and car.euro != 0 %}
+                            {{ car.euro }}
+                        {% elseif car.euro == 0 or car.euro == '0' %}
+                            Non
+                            {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                    <span>
+                    <b><i class="fa fa-male "></i>|<i class="fa fa-female "></i> Toilettes : </b>
+                        {% if car.wc is defined and car.wc != 0 %}
+                            Oui
+                        {% elseif car.wc == 0 or car.wc =="0" %}
+                            Non
+                            {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="equipements">
+                <div class="col-md-12">
+                    <b> <i class="fa fa-wheelchair"></i> Rampe H : </b>
+                    <span class="p_right">
+                        {% if car.ufr is defined and car.ufr != 0 %}
+                            Oui
+                        {% elseif car.ufr == 0 or car.ufr == '0' %}
+                            Non
+                            {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                    <span class="p_right">
+                         <b><i class="fa fa-usb p_right"></i> Prises USB : </b>
+                        {% if car.usb is defined and car.usb != 0 %}
+                            Oui
+                        {% elseif car.usb == 0 or car.usb == '0' %}
+                            Non
+                            {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                    <span class="p_right">
+                    <b><i class="fa fa-plug"></i> Prises èlec. : </b>
+                        {% if car.prisesElec is defined and car.prisesElec != 0 %}
+                            Oui
+                        {% elseif car.prisesElec == 0 or car.prisesElec == '0' %}
+                            Non
+                            {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                    <span>
+                    <b><i class="fa fa-square"></i> Porte Ski : </b>
+                        {% if car.porteSki is defined and car.porteSki != 0 %}
+                            Oui
+                        {% elseif car.porteSki == 0 or car.porteSki == '0' %}
+                            Non
+                            {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-30 ">
+            <div class="col-md-12"><h5>Date de Fin</h5></div>
+        </div>
+        <div class="row pb-40">
+            <div class="equipements">
+                <div class="col-md-12">
+                    <span class="p_right">
+                    <b><i class="fa fa-history"></i> Controle tech : </b>
+                        {% if car.ct is defined %}
+                            {{ car.ct | date('d/m/Y') }}
+                        {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                    <b> <i class="fa fa-fire-extinguisher"></i> Extincteur : </b>
+                    <span class="p_right">
+                        {% if car.dateExtincteur is defined %}
+                            {{ car.dateExtincteur | date('d/m/Y') }}
+                        {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                    <span class="p_right">
+                    <b><i class="fa fa-clock-o"></i> Limiteur : </b>
+                        {% if car.dateLimiteur is defined  %}
+                            {{ car.dateLimiteur | date('d/m/Y') }}
+                        {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                    <span class="p_right">
+                    <b><i class="fa fa-credit-card"></i> Tachy : </b>
+                        {% if car.dateTachy is defined %}
+                            {{ car.dateTachy | date('d/m/Y') }}
+                        {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                    <span>
+                    <b><i class="fa fa-beer"></i> Ethylo: </b>
+                        {% if car.dateEthylo is defined %}
+                            {{ car.dateEthylo | date('d/m/Y') }}
+                        {% else %}
+                            Non renseigné
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-40">
+            <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                     <tr>
                         <th scope="col-md-2">Immatriculation</th>
-                        <th scope="col-md-1">Date de la dernière Mise à jour</th>
-                        <th scope="col-md-1">Auteur</th>
-                        <th scope="col-md-2">état du Car </th>
-                        <th scope="col-md-2">Desc. Panne</th>
+                        <th scope="col-md-1">Date d'enregistrement</th>
+                        <th scope="col-md-2">Déclarant</th>
+                        <th scope="col-md-2" >Etat du Car (ACTUEL)</th>
+                        <th scope="col-md-2" >
+                            {% if car.EtatCar == 'panne'  %}
+                                Nature panne
+                                {% elseif car.EtatCar == 'atelier' %}
+                                Entretien
+                                {% elseif car.EtatCar == 'roulant ano' or car.EtatCar == 'roulant_ano' %}
+                                Nature du problème
+                                {% elseif car.EtatCar == 'roulant' %}
+                                Situation Car
+                            {% endif %} </th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for panne in pannes %}
                         <tr>
-                            <td scope="row">{{ car.immat| upper }}</td>
-                            <td>{{ panne.date|date("d/m/Y") }}</td>
-                            <td>{{ panne.auteur }}</td>
-                            <td>{{ panne.EtatCar }}</td>
-                            <td>{{ panne.DescPanne }}</td>
+                            <th scope="row">
+                            {% if car.EtatCar == 'panne' or car.EtatCar == 'atelier'%}
+                                <a href="{{ path('edit_panne', {'id': car.id}) }}">{{ car.immat| upper }}</a>
+                            {% elseif car.EtatCar == 'roulant ano' or car.EtatCar == 'roulant_ano' %}
+                                <a href="{{ path('edit_panne', {'id': car.id }) }}">{{ car.immat| upper }}</a>
+                            {% else %}
+                                {{ car.immat|upper }}
+                            {% endif %}
+                            </th>
+                            <td>{{ car.date | date("d/m/Y") }}</td>
+                            <td>{{ car.auteur }}</td>
+                            <td >{% if car.EtatCar == 'roulant_ano' %}
+                                    <i class="fa fa-ambulance" style="color:orange; padding-top: 0 !important; font-size: 15px" id="etat_ra"></i>
+                                    {% elseif car.EtatCar == 'atelier' %}
+                                    <i class="fa fa-wrench" style="color:red; padding-top: 0 !important; font-size: 15px"></i>
+                                {% elseif car.EtatCar == 'panne' %}
+                                    <i class="fa fa-ambulance" style="font-size: 15px; padding-top: 0 !important; color: red;" id="etat_panne"></i>
+                                    {% else %}
+                                    <i class="fa fa-bus" style="color: #00e765; font-size: 15px; padding-top: 0 !important;" id="etat_ok"></i>
+                                {% endif %}</td>
+                            <td>
+                                {% if car.EtatCar == 'panne' or car.EtatCar == 'atelier' %}
+                                   {{ car.naturePanneCar| upper }}
+                                {% elseif car.EtatCar == 'roulant ano' or car.EtatCar == 'roulant_ano' %}
+                                    {{ car.naturePanneCar | upper }}
+                                {% else %}
+                                   Aucun Problème
+                                {% endif %}
+                            </td>
                         </tr>
-                    {% endfor %}
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="mini">Historique des pannes, nombre de panne(s) : {% if car %} {{ nombrep }}  {% else %} 00 panne {% endif %}</p>
+            </div>
+        </div>
+        <div class="row">
+            {% if pannes is defined %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col-md-2">Immatriculation</th>
+                            <th scope="col-md-1">Déclarant</th>
+                            <th scope="col-md-1">état du Car (Antérieur)</th>
+                            <th scope="col-md-1">Durée Panne</th>
+                            <th scope="col-md-2">
+                                Panne ou Entretien
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for panne in pannes %}
+                            <tr>
+                                <td scope="row">{{ car.immat| upper }} <br> <a href="{{ path('edit_panne_ant', { 'id': panne.id }) }}"><i style="color: #00a7d0; margin-right: 5px; font-size: 15px;" class="fa fa-pencil-square"> </i></a> <a href="{{ path('delete_panne', { 'id': panne.id }) }}"><i  style="font-size: 15px;" class="fa fa-trash"></i></a></td>
+                                <td>{{ panne.auteur }}</td>
+                                <td>{% if panne.EtatCar == 'roulant_ano' %}
+                                        <i class="fa fa-ambulance" style="color:orange; padding-top: 0 !important; font-size: 15px"></i>
+                                    {% elseif panne.EtatCar == 'panne' %}
+                                        <i class="fa fa-ambulance" style="font-size: 15px; padding-top: 0 !important; color: red;"></i>
+                                    {% elseif panne.EtatCar == 'atelier' %}
+                                        <i class="fa fa-wrench" style="font-size: 15px; padding-top: 0 !important; color: red;"></i>
+                                    {% else %}
+                                        {#<i class="fa fa-bus" style="font-size: 15px; padding-top: 0 !important; color: greenyellow;"></i>#}
+                                    {% endif %}</td>
+                                <td> {% if panne.dureePannePrev is not null or panne.dureePannePrev != '' %}
+                                        {{ panne.dureePannePrev }} jours
+                                    {% else %}
+                                        <p>Indéterminé</p>
+                                    {% endif %} </td>
+                                <td>{{ panne.naturePanne }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% endif %}
         </div>
     </section>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+
+
+            $('.elem_gps').css('display', 'none');
+            $('div#map').hide();
+            var geoc_lat = $('p#geoc_lat').html();
+            var f = parseFloat(geoc_lat);
+            var geoc_long = $('p#geoc_long').html();
+            var c = parseFloat(geoc_long);
+            function initMap() {
+                var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+                var uluru = {lat: f, lng: c};
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 18,
+                    center: uluru
+                });
+                var marker = new google.maps.Marker({
+                    position: uluru,
+                    map: map,
+                });
+            }
+
+
+            $('#locate_bus').on('click', function(e){
+                initMap();
+                $('div#map').show();
+
+                e.preventDefault();
+                /*$.ajax({
+                    url: 'https://ws.truckonline.pro/apis/rest/v2.2/fleet/vehicles?vehicle_vrn='+car_immat,
+                    headers: {
+                        "x-tonl-client-id":  "apa-aps-t39-c1",
+                        "x-tonl-timestamp":  "1519122919",
+                        "x-tonl-signature":  "IHUjgRXlVmZo7q9WTxLupxn40QU="
+                    },
+                    type: 'GET',
+                    dataType:'json',
+                    success :function(data){
+                        /* for(var key in data) {
+                             $('#resultat').append('<div>'+ data[key]['registration'] +'<br />'+ data[key]['totalKms'] +  data[key]['status'] +'</div>');
+                         }
+                        console.log(data[0]['registration']);
+                        console.log(data);
+                    }
+                });*/
+
+
+
+            });
+
+
+
+              $('.fa-trash').on('click', function(){
+                  location.reload(true);
+              });
+            $('.btn-danger').on('click', function(){
+                var r = confirm("Supprimé la fiche du car ?");
+               if(r == false)
+               {
+                   return false;
+               }
+            });
+
+        });
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_YTCQfh_Jthc4ajFAU4-o_2nfss6ouIw&callback=initMap">
+    </script>
 {% endblock %}

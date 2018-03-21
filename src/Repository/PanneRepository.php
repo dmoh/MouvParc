@@ -14,7 +14,46 @@ class PanneRepository extends ServiceEntityRepository
         parent::__construct($registry, Panne::class);
     }
 
-    
+    public function getCarWithLastPanne($id)
+    {
+        $qb = $this
+            ->createQueryBuilder('p')
+            ->leftJoin('p.cars','car' )
+            ->addSelect('car')
+            ->andWhere('car.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        $qb->setMaxResults(2);
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
+
+    public function findParDateAtelier($etat_car)
+    {
+        $r = new \DateTime();
+
+         $qb =  $this->createQueryBuilder('p')
+                    ->leftJoin('p.cars', 'car')
+                    ->addSelect('car')
+                    ->where('p.etat_car = :etat')
+                    ->andHaving('p.date_prev < :r AND p.date_effective IS NULL OR p.date_effective > :r')
+                    ->setParameter('etat', $etat_car)
+                    ->setParameter('r', $r)
+                    ->orderBy('p.date_prev', 'DESC');
+         return $qb
+             ->getQuery()
+             ->getResult()
+             ;
+
+
+    }
+
+
+
     /*public function findByImmat($immat)
     {
         return $this->createQueryBuilder('p')

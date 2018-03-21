@@ -1,0 +1,199 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+
+        <div class="col-lg-12 pt-30 ">
+            <h2 class="text-center pb-40">Edition de la panne en cours</h2>
+            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+            {{ form_errors(form) }}
+                <div class="form-row">
+                    {# Génération du label. #}
+                    <div class="form-group col-md-4">
+                        {{ form_label(form.auteur, "Déclarant  : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+
+                        {{ form_widget(form.auteur, {'attr': {'class': ' form-control'}}) }}
+                        {{ form_errors(form.auteur, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        {# Génération du label. #}
+                        {{ form_label(form.etat_car, "état du car : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+                        {{ form_widget(form.etat_car, {'attr': {'class': ' form-control'}}) }}
+                        {{ form_errors(form.etat_car, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        {# Génération du label. #}
+                        {{ form_label(form.garantie, "En garantie : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+                        {{ form_widget(form.garantie, {'attr': {'class': ' form-control'}}) }}
+                        <p class="mini" style="font-size: 0.75rem">{% if c_garantie is defined %}
+                                {{ c_garantie }}
+                            {% endif %}</p>
+                        {{ form_errors(form.garantie, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                </div>
+                <div class="form-row ccc">
+                    <div class="form-group col-md-4">
+                        {# Génération du label. #}
+                        {{ form_label(form.nature_panne, "Nature de la panne : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+                        {{ form_widget(form.nature_panne, {'attr': {'class': ' form-control'}}) }}
+                        {{ form_errors(form.nature_panne, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        {# Génération du label. #}
+                        {{ form_label(form.date_prev, "Date de début de panne : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+                        {{ form_widget(form.date_prev, {'attr': {'class': 'js-datepicker form-control'}}) }}
+                        {{ form_errors(form.date_prev, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        {# Génération du label. #}
+                        {{ form_label(form.date_effective, "Date de fin de panne : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+                        {{ form_widget(form.date_effective, {'attr': {'class': 'js-datepicker form-control'}})}}
+                        {{ form_errors(form.date_effective, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        {# Génération du label. #}
+                        {{ form_label(form.suites_donnes, "Suites donnés : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+                        {{ form_widget(form.suites_donnes, {'attr': {'class': 'form-control', 'rows': '6'}}) }}
+                        {{ form_errors(form.suites_donnes, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {# Génération du label. #}
+                        {{ form_label(form.desc_panne, "Description de la panne: ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+                        {{ form_widget(form.desc_panne, {'attr': {'class': 'form-control', 'rows': '6'}}) }}
+                        {{ form_errors(form.desc_panne, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12">
+                        {# Génération de l'input.#}
+                        {{ form_widget(form.enregistrer , {'attr': {'class': ' col-md-12 btn btn-primary'}})}}
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+    <div class="container">
+            {% if liste_panne_anterieur is defined and liste_panne_anterieur is not empty %}
+                <h3 class="text-center pb-40">Historique des pannes</h3>
+                <div class="row listing_panne">
+                {% for panne_ant in liste_panne_anterieur  %}
+                    <div class="col-md-6 ">
+                        <article class="g-pa-25 u-shadow-v11 rounded">
+                            <h3 class="">
+                                {% if panne_ant.etatCar  == "atelier"%}
+                                    <i class="fa fa-wrench"></i>
+                                    {% else %}
+                                        <i class="fa fa-ambulance"></i>
+                                {% endif %}
+                                 {{ panne_ant.cars.immat| upper }}
+                                </h3><p class="upper-right">Marque : <b>{{ panne_ant.cars.marque | upper }}</b></p>
+                            <p> Déclarant : <b>{{ panne_ant.auteur }}</b><b> Garantie : {{ panne_ant.cars.garantie }}</b></p>
+                            {% if panne_ant.etatCar  == "atelier"%}
+                                <p class="title-p">Description atelier : </p>{{ panne_ant.descPanne }}</p>
+                                {% else %}
+                                    <p class="title-p">Description panne : </p>{{ panne_ant.descPanne }}</p>
+                            {% endif %}
+                                <p class="title-p">Suites donnés : </p>{{ panne_ant.suitesDonnes }}</p>
+                                <p class="mini">Date début de la panne : {% if panne_ant.dateDebPanne is defined %}
+                                        {{ panne_ant.cars.dateMaj | date('d/m/Y') }}{% else %}
+                                        {# {{ panne_ant.dateDebPanne | date('d/m/Y') }}#}
+                                    {% endif %}</p>
+                               {# <p class="right"><button class="btn btn-primary">Modifier</button></p>#}
+                            </article>
+                        </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+           
+            if($('option.etat_roulant.avec.anomalie').is(':selected'))
+            {
+                /*$('select option.etat_panne').prop('disabled', true);
+                $('select option.etat_atelier').prop('disabled', true);
+            }
+            else if($('option.etat_panne').is(':selected'))
+            {
+                $('option.etat_roulant.avec.anomalie').prop('disabled', true);
+                $('option.etat_atelier').prop('disabled', true);
+            }
+            else if($('option.etat_atelier').is(':selected'))
+            {
+                $('option.etat_roulant.avec.anomalie').prop('disabled', true);
+                $('option.etat_panne').prop('disabled', true);*/
+            }
+
+
+
+
+            $('.listing_panne div.col-md-6:first-child article').css({"background-color": "#c1ffc1",
+                '-webkit-box-shadow': '3px 3px 5px 0px rgba(0,0,0,0.48)',
+                '-moz-box-shadow': '3px 3px 5px 0px rgba(0,0,0,0.48)',
+                'box-shadow': '3px 3px 5px 0px rgba(0,0,0,0.48)'
+            });
+
+            var s =  $('.listing_panne div.col-md-6:first-child article');
+            s.prepend("<h6 class='text-center'> Dernière panne ou entretien Enregistrée </h6>");
+
+            $("select").change(function () {
+               $("select option.etat_roulant:selected").each(function () {
+               });
+
+            });
+
+
+
+            $('#panne_enregistrer').on('click', function () {
+                //e.preventDefault();
+
+              var c = $('select#panne_etat_car').val();
+              var g = $('#panne_nature_panne').val();
+              var h = $('#panne_nature_panne');
+
+                $('#panne_nature_panne').keyup(function(){
+                     // alert("OK");
+                  $('#panne_nature_panne').css("border", "2px solid green");
+              });
+
+              if( !g || g == '' )
+              {
+                  alert("Renseignez la nature de la panne!");
+                 h.css("border", "2px solid red");
+                  return false;
+              }
+
+
+
+
+              var t = $('input#panne_date_effective').val();
+
+              if( c == 'roulant' )
+              {
+                  if( !t || t.length < 4)
+                  {
+                    alert('La date de fin de panne doit être remplie. ');
+                    return false;
+
+                  }
+              }
+            });
+
+
+        });
+    </script>
+{% endblock %}

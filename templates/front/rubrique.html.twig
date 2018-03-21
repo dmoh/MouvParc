@@ -1,0 +1,75 @@
+{% extends 'base.html.twig'%}
+
+{% block body %}
+    <section class="container" xmlns="http://www.w3.org/1999/html">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-center pt-30 "> Rubriques</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% if rub %}
+                    {% for rubrique in rub  %}
+                        <div class="list-group pb-40">
+                            <div  class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ rubrique.title }}</h5>
+                                    <small><a href="{{ path('edit_rubrique', {'id': rubrique.id} ) }}"><i style="font-size: 14px; color: #00a7d0; border-top: 2px solid lightgray; " class="fa fa-pencil-square pb-40"></i></a>
+                                        <a href="{{ path('delete_rubrique', {'id': rubrique.id }) }}"><i style="font-size: 14px; color: red;" class="fa fa-trash pb-40"></i></a></small>
+                                </div>
+                                <p class="mb-1">{{ rubrique.rubriqueText }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <a class="btn btn-primary  marB-40" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Ajouter une rubrique
+                </a>
+                <div class="collapse pt-30" id="collapseExample">
+                    <div class="card card-block">
+                        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+                        {{ form_errors(form) }}
+
+                        <div class="form-row">
+                            {# Génération du label. #}
+                            <div class="form-group col-md-12">
+                                {{ form_label(form.title, "Titre de la rubrique : ", {'label_attr': {'class': ' control-label'}}) }}
+                                {# Génération de l'input.#}
+                                {{ form_widget(form.title, {'attr': {'class': ' form-control'}}) }}
+                                {{ form_errors(form.title, { 'attr': {'class': 'red' }}) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {# Génération du label. #}
+                                {{ form_label(form.rubrique_text, "Rubrique : ", {'label_attr': {'class': ' control-label'}}) }}
+                                {# Génération de l'input.#}
+                                {{ form_widget(form.rubrique_text, {'attr': {'class': ' form-control', 'rows':'8'}}) }}
+                                {{ form_errors(form.rubrique_text, { 'attr': {'class': 'red' }}) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-12 marB-40">
+                                {# Génération de l'input.#}
+                                {{ form_widget(form.enregistrer , {'attr': {'class': 'col-md-12 btn btn-primary'}})}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+        });
+    </script>
+{% endblock %}

@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 
 class CarType extends AbstractType
@@ -48,6 +49,12 @@ class CarType extends AbstractType
                     'BOVA' => "bova",
                     'IRIZAR I4' => "irizar i4",
                 ),))
+            ->add('nb_places', NumberType::class, array(
+                'required' => false
+            ))
+            ->add('euro', NumberType::class, array(
+                'required' => false
+            ))
             ->add('locataire',  ChoiceType::class, array(
                 'choices' => array(
                     'Aps' => "APS",
@@ -60,15 +67,52 @@ class CarType extends AbstractType
             ->add('date_prev', DateType::class, array(
                 'widget' => 'single_text',
                 'html5' => false,
+                'required' => false,
+                'format'    => 'dd/MM/yyyy'
                 ))
-            ->add('condition_garantie', TextType::class)
+            ->add('condition_garantie', TextType::class, array(
+                'required' => false
+            ))
             ->add('date_mar', DateType::class, array(
                 'widget' => 'single_text',
                 'html5' => false,
+                'required'  => false,
+                'format'    => 'dd/MM/yyyy'
                 ))
+            ->add('ct', DateType::class, array(
+                'widget' => 'single_text',
+                'html5' => false,
+                'required'  => false,
+                'format'    => 'dd/MM/yyyy'
+            ))
+            ->add('date_extincteur', DateType::class, array(
+                'widget' => 'single_text',
+                'required'  => false,
+                'format'    => 'd/M/y'
+            ))
+            ->add('date_limiteur', DateType::class, array(
+                'widget' => 'single_text',
+                'html5' => false,
+                'required'  => false,
+                'format'    => 'dd/MM/yyyy'
+            ))
+            ->add('date_tachy', DateType::class, array(
+                'widget' => 'single_text',
+                'html5' => false,
+                'required'  => false,
+                'format'    => 'dd/MM/yyyy'
+            ))
+            ->add('date_ethylo', DateType::class, array(
+                'widget' => 'single_text',
+                'html5' => false,
+                'required'  => false,
+                'format'    => 'dd/MM/yyyy'
+            ))
             ->add('fin_garantie', DateType::class, array(
                 'widget' => 'single_text',
                 'html5' => false,
+                'required'  => false,
+                'format'    => 'dd/MM/yyyy'
             ))
             ->add('etat_car', ChoiceType::class, array(
                 'choices' => array(
@@ -95,6 +139,32 @@ class CarType extends AbstractType
                     // adds a class like attending_yes, attending_no, etc
                     return ['class' => 'attending_'.strtolower($key)];
                 },))
+            ->add('memo_car', TextareaType::class, array(
+                'required' => false,
+            ))
+
+            // Equipements
+            ->add('siege_guide', CheckboxType::class, array(
+                'label'     => 'Siège guide',
+                'required'  => false,
+            ))
+            ->add('wc', CheckboxType::class, array(
+                'required' => false
+            ))
+            ->add('ufr', CheckboxType::class, array(
+                'required' => false
+            ))
+            ->add('usb', CheckboxType::class, array(
+                'required'=> false
+            ))
+            ->add('prises_elec', CheckboxType::class, array(
+
+                'required' => false
+            ))
+            ->add('porte_ski', CheckboxType::class, array(
+                'required' => false
+            ))
+
             ->add('enregistrer',    SubmitType::class)
         ;
 

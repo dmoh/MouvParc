@@ -2,11 +2,13 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <title>{% block title %}Car arrêtés | Aps{% endblock %}</title>
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+        <title>{% block title %}MouvParc | Aps et Fle{% endblock %}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
             <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('fontAwe/css/font-awesome.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker3.standalone.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
@@ -14,16 +16,29 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar sticky-top navbar-dark bg-dark justify-content-between">
-            <a class="navbar-brand" href="{{ path('consultation') }}">Autocars APS | FLE</a>
-            <ul class="nav">
-              <a class="nav-link active" href="{{ path('index') }}">Ajouter un Autocar</a>
-              <a class="nav-link active" href="{{ path('consultation') }}">Consultation</a>
-              <a class="nav-link active" href="{{ path('liste_panne') }}">Car en panne</a>
-              <a class="nav-link" href="{{ path('recherche') }}">Recherche</a>
-              <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModalLong">Se connecter</a>
-            </ul>
+        <nav class="navbar sticky-top navbar-inverse navbar-dark bg-dark navbar-expand-md justify-content-between">
+
+                <a class="navbar-brand" href="{{ path('consultation') }}">Autocars APS | FLE</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbarCar" aria-controls="#myNavbarCar" aria-expanded="false" aria-label="Toggle navigation">
+                <span ><i style="font-size: 24px; color: #fff; line-height: 10px" class="fa fa-bars"></i></span>
+            </button>
+                <div class="collapse navbar-collapse" id="myNavbarCar">
+                    <ul class="navbar-nav ml-auto">
+                        {% if app.user %}
+                            <li><a class="nav-link active" href="{{ path('add_rubrique') }}">Rubrique</a></li>
+                            <li><a class="nav-link active" href="{{ path('index') }}">Ajouter un Autocar</a></li>
+                            <li><a class="nav-link active" href="{{ path('liste_panne') }}">Car en panne</a></li>
+                        <li><a class="nav-link active" href="{{ path('consultation') }}">Etat Parc</a></li>
+                        <li><a class="nav-link active" href="{{ path('recherche') }}">Recherche</a></li>
+                            <li><a class="nav-link active" href="{{ path('logout') }}">Se déconnecter</a></li>
+                        {% else %}
+                            <li><a class="nav-link active" href="#" data-toggle="modal" data-target="#exampleModalLong">Se connecter</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+
         </nav>
+        <!-- Toggle get grouped for better mobile display -->
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -36,24 +51,94 @@
                 </button>
               </div>
               <div class="modal-body">
-                ...
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                  {% if is_granted('ROLE_USER') %}
+                  {% else %}
+                  <div class="container">
+                      <div class="row">
+                          {% if error is defined %}
+                              {% if error %}
+                                  <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                              {% endif %}
+                          {% endif %}
+                          <form class="form-horizontal" action="{{ path('login') }}" method="post">
+
+                              <label class="control-label" for="username">Nom d'utilisateur:</label>
+                              <input type="text" class="form-control" id="username" name="_username" value="" autocomplete="off" />
+
+                              <label class="control-label" for="password">Mot de passe:</label>
+                              <input type="password" class="form-control" id="password" name="_password" />
+
+                               <input type="checkbox" id="remember_me" name="_remember_me"  />
+                               <label for="remember_me"> Se souvenir de moi</label>
+{#
+                             {#
+                                   If you want to control the URL the user
+                                   is redirected to on success (more details below)
+                                   <input type="hidden" name="_target_path" value="/account" />
+                               #}
+
+                              <button class="btn btn-primary" id="valid" type="submit">Se connecter</button>
+                          </form>
+                      </div>
+                  </div>
+                  {% endif %}
               </div>
             </div>
           </div>
         </div>
         {% block body %}{% endblock %}
         {% block footer %}{% endblock %}
-            <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-            {#<srcipt src="{{ asset('locales/bootstrap-datepicker.fr.min.js') }}"></srcipt>#}
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>{#<srcipt src="{{ asset('locales/bootstrap-datepicker.fr.min.js') }}"></srcipt>#}
             <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
             <script src="{{ asset('js/main.js') }}"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var s = $('#valid');
+
+                if($(window).width() > 767 && $('i.fa.fa-bars').is(':visible'))
+                {
+                    $('i.fa.fa-bars').css('display', 'none');
+                }
+                else if($(window).width() < 767)
+                {
+                    $('i.fa.fa-bars').css('visibility', 'visible');
+                }
+
+
+               $('#remember_me').css('visibility', 'visible');
+               $('#username').on('change', function(){
+                  if($(this).val().length < 4)
+                  {
+                      $(this).css('border', '2px solid #ff0000');
+                      s.prop('disabled', true);
+                  }
+                  else
+                  {
+                      $(this).css('border', '2px solid #5494ff');
+                      s.prop('disabled', false);
+                  }
+               });
+
+                $('#password').on('change', function(){
+                    if($(this).val().length < 4)
+                    {
+                        $(this).css('border', '2px solid #ff0000');
+                        s.prop('disabled', true);
+                    }
+                    else
+                    {
+                        $(this).css('border', '2px solid #5494ff');
+                        s.prop('disabled', false);
+                    }
+                });
+
+
+            });
+        </script>
         {% block javascripts %}
+
         {% endblock %}
     </body>
 </html>

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{%  block body %}
+    <section class="container">
+        <div class="row">
+            <div class="col-md-12 pt-30">
+                <h5 class="text-center"> Modification de la rubrique</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+                {{ form_errors(form) }}
+
+                <div class="form-row">
+                    {# Génération du label. #}
+                    <div class="form-group col-md-12">
+                        {{ form_label(form.title, "Titre de la rubrique : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+                        {{ form_widget(form.title, {'attr': {'class': ' form-control'}}) }}
+                        {{ form_errors(form.title, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        {# Génération du label. #}
+                        {{ form_label(form.rubrique_text, "Rubrique : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+                        {{ form_widget(form.rubrique_text, {'attr': {'class': ' form-control', 'rows':'8'}}) }}
+                        {{ form_errors(form.rubrique_text, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12 marB-40">
+                        {# Génération de l'input.#}
+                        {{ form_widget(form.enregistrer , {'attr': {'class': 'col-md-12 btn btn-primary'}})}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

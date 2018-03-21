@@ -46,6 +46,11 @@ class Cars
     protected $date;
 
     /**
+     * @ORM\Column(name="compteur_panne", type="integer", nullable=true)
+     */
+    protected $compteur_panne = 0;
+
+    /**
      * @ORM\Column(name="site", type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Regex("/^\w+/")
@@ -69,8 +74,8 @@ class Cars
     protected $marque;
 
     /**
-     * @ORM\Column(name="locataire", type="string", length=20)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="locataire", type="string", nullable=true)
+     *
      */
     protected $locataire;
 
@@ -96,14 +101,14 @@ class Cars
     protected $action_engages;
 
     /**
-     * @ORM\Column(name="etat_car", type="string", length=100)
+     * @ORM\Column(name="etat_car", type="string", nullable=true)
      */
     protected $etat_car;
 
     /**
-     * @ORM\Column(name="date_ev", type="date", nullable=true)
+     * @ORM\Column(name="date_fin_panne", type="date", nullable=true)
      */
-    protected $date_ev;
+    protected $date_fin_panne;
 
     /**
      * @ORM\Column(name="date_panne_deb", type="datetime", nullable=true)
@@ -145,15 +150,123 @@ class Cars
 
 
     /**
+     * @ORM\Column(name="desc_panne_car", type="text", nullable=true)
+     */
+    protected $desc_panne_car;
+
+    /**
      * @ORM\Column(name="garantie", type="text", nullable=true)
      */
     protected $garantie;
+
+    /**
+     * @ORM\Column(name="desc_panne_ano", type="text", nullable=true)
+     */
+    protected $desc_panne_ano;
+    /**
+     *
+     * @ORM\Column(name="nature_panne_car", type="text", nullable=true)
+     */
+    protected $nature_panne_car;
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Panne", mappedBy="cars", orphanRemoval=true, cascade={"persist", "remove", "merge"})
+     */
+    protected $pannes;
+
+    /**
+     * @ORM\Column(name="memo_car", type="text", nullable=true)
+     */
+    protected $memo_car;
+
+    /**
+     * @ORM\Column(name="nb_places", type="integer", nullable= true)
+     */
+    protected $nb_places;
+
+    /**
+     * @ORM\Column(name="siege_guide", type="boolean", nullable= true)
+     */
+    protected $siege_guide = false;
+
+    /**
+     * @ORM\Column(name="euro", type="string", nullable= true)
+     */
+    protected $euro;
+
+    /**
+     * @ORM\Column(name="ct", type="date", nullable= true)
+     */
+    protected $ct;
+
+    /**
+     * @ORM\Column(name="date_extincteur", type="date", nullable= true)
+     */
+    protected $date_extincteur;
+
+
+    /**
+     * @ORM\Column(name="date_limiteur", type="date", nullable= true)
+     */
+    protected $date_limiteur;
+
+    /**
+     * @ORM\Column(name="date_tachy", type="date", nullable= true)
+     */
+    protected $date_tachy;
+
+    /**
+     * @ORM\Column(name="date_ethylo", type="date", nullable= true)
+     */
+    protected $date_ethylo;
+
+    /**
+     * @ORM\Column(name="wc", type="boolean", nullable= true)
+     */
+    protected $wc = false;
+
+    /**
+     * @ORM\Column(name="ufr", type="boolean", nullable= true)
+     */
+    protected $ufr = false;
+
+    /**
+     * @ORM\Column(name="usb", type="boolean", nullable= true)
+     */
+    protected $usb = false;
+
+    /**
+     * @ORM\Column(name="prises_elec", type="boolean", nullable= true)
+     */
+    protected $prises_elec = false;
+
+    /**
+     * @ORM\Column(name="porte_ski", type="boolean", nullable= true)
+     */
+    protected $porte_ski = false;
+
 
 
     public function __construct()
     {
         $this->date = new \Datetime();
-        $this->p_encours = false;
+        $this->pannes = new ArrayCollection();
+    }
+
+
+    public function addPanne(Panne $panne)
+    {
+        $this->pannes[] = $panne;
+
+        $panne->setCars($this);
+
+        return $this;
+    }
+
+    public function removePanne(Panne $panne)
+    {
+        $this->pannes->removeElement($panne);
+
+        $panne->setCars(null);
     }
 
 
@@ -368,17 +481,17 @@ class Cars
     /**
      * @return mixed
      */
-    public function getDateEv()
+    public function getDateFinPanne()
     {
-        return $this->date_ev;
+        return $this->date_fin_panne;
     }
 
     /**
-     * @param mixed $date_ev
+     * @param mixed $date_fin_panne
      */
-    public function setDateEv($date_ev): void
+    public function setDateFinPanne($date_fin_panne): void
     {
-        $this->date_ev = $date_ev;
+        $this->date_fin_panne = $date_fin_panne;
     }
 
     /**
@@ -518,6 +631,24 @@ class Cars
         $this->duree_panne = $duree_panne;
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function getDescPanneCar()
+    {
+        return $this->desc_panne_car;
+    }
+
+    /**
+     * @param mixed $desc_panne_car
+     */
+    public function setDescPanneCar($desc_panne_car): void
+    {
+        $this->desc_panne_car = $desc_panne_car;
+    }
+
+
     /*
      *@return Collection|Panne[]
 
@@ -541,5 +672,297 @@ class Cars
 
        return $this;
     }*/
+
+    /**
+     * @param mixed $pannes
+     */
+    public function setPannes($pannes): void
+    {
+        $this->pannes = $pannes;
+    }
+
+    /*
+     *@return Collection|Panne[]
+     */
+    public function getPannes()
+    {
+        return $this->pannes;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getDescPanneAno()
+    {
+        return $this->desc_panne_ano;
+    }
+
+    /**
+     * @param mixed $desc_panne_ano
+     */
+    public function setDescPanneAno($desc_panne_ano): void
+    {
+        $this->desc_panne_ano = $desc_panne_ano;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompteurPanne()
+    {
+        return $this->compteur_panne;
+    }
+
+    /**
+     * @param mixed $compteur_panne
+     */
+    public function setCompteurPanne($compteur_panne): void
+    {
+        $this->compteur_panne = $compteur_panne;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNaturePanneCar()
+    {
+        return $this->nature_panne_car;
+    }
+
+    /**
+     * @param mixed $nature_panne_car
+     */
+    public function setNaturePanneCar($nature_panne_car): void
+    {
+        $this->nature_panne_car = $nature_panne_car;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMemoCar()
+    {
+        return $this->memo_car;
+    }
+
+    /**
+     * @param mixed $memo_car
+     */
+    public function setMemoCar($memo_car): void
+    {
+        $this->memo_car = $memo_car;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNbPlaces()
+    {
+        return $this->nb_places;
+    }
+
+    /**
+     * @param mixed $nb_places
+     */
+    public function setNbPlaces($nb_places): void
+    {
+        $this->nb_places = $nb_places;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSiegeGuide()
+    {
+        return $this->siege_guide;
+    }
+
+    /**
+     * @param mixed $siege_guide
+     */
+    public function setSiegeGuide($siege_guide): void
+    {
+        $this->siege_guide = $siege_guide;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEuro()
+    {
+        return $this->euro;
+    }
+
+    /**
+     * @param mixed $euro
+     */
+    public function setEuro($euro): void
+    {
+        $this->euro = $euro;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCt()
+    {
+        return $this->ct;
+    }
+
+    /**
+     * @param mixed $ct
+     */
+    public function setCt($ct): void
+    {
+        $this->ct = $ct;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateExtincteur()
+    {
+        return $this->date_extincteur;
+    }
+
+    /**
+     * @param mixed $date_extincteur
+     */
+    public function setDateExtincteur($date_extincteur): void
+    {
+        $this->date_extincteur = $date_extincteur;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateLimiteur()
+    {
+        return $this->date_limiteur;
+    }
+
+    /**
+     * @param mixed $date_limiteur
+     */
+    public function setDateLimiteur($date_limiteur): void
+    {
+        $this->date_limiteur = $date_limiteur;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateTachy()
+    {
+        return $this->date_tachy;
+    }
+
+    /**
+     * @param mixed $date_tachy
+     */
+    public function setDateTachy($date_tachy): void
+    {
+        $this->date_tachy = $date_tachy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateEthylo()
+    {
+        return $this->date_ethylo;
+    }
+
+    /**
+     * @param mixed $date_ethylo
+     */
+    public function setDateEthylo($date_ethylo): void
+    {
+        $this->date_ethylo = $date_ethylo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWc()
+    {
+        return $this->wc;
+    }
+
+    /**
+     * @param mixed $wc
+     */
+    public function setWc($wc): void
+    {
+        $this->wc = $wc;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUfr()
+    {
+        return $this->ufr;
+    }
+
+    /**
+     * @param mixed $ufr
+     */
+    public function setUfr($ufr): void
+    {
+        $this->ufr = $ufr;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsb()
+    {
+        return $this->usb;
+    }
+
+    /**
+     * @param mixed $usb
+     */
+    public function setUsb($usb): void
+    {
+        $this->usb = $usb;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrisesElec()
+    {
+        return $this->prises_elec;
+    }
+
+    /**
+     * @param mixed $prises_elec
+     */
+    public function setPrisesElec($prises_elec): void
+    {
+        $this->prises_elec = $prises_elec;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorteSki()
+    {
+        return $this->porte_ski;
+    }
+
+    /**
+     * @param mixed $porte_ski
+     */
+    public function setPorteSki($porte_ski): void
+    {
+        $this->porte_ski = $porte_ski;
+    }
+
+
 
 }
