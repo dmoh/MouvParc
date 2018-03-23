@@ -1,0 +1,56 @@
+{%  extends 'base.html.twig' %}
+
+{%  block body %}
+    <section>
+        <div class="container">
+            <h2> Mise à jour de la BDD </h2>
+        </div>
+        <div class="container">
+            <div class="form-row">
+                <div class="col-md-12">
+                    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+                    {{ form_errors(form) }}
+
+                    {{ form_label(form.docExcel, "Fichier au format (.csv): ", {'label_attr': {'class': ' control-label'}}) }}
+                    {# Génération de l'input.#}
+
+                    {{ form_widget(form.docExcel, {'attr': {'class': ' form-control'}}) }}
+                    {{ form_errors(form.docExcel, { 'attr': {'class': 'red' }}) }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-12">
+                    {{ form_widget(form.Valider , {'attr': {'class': 'col-md-6 btn btn-primary'}})}}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    {% if erreurImmat is defined and immat is defined %}
+                        <strong style="color: #cc006a">{{ erreurImmat }}, immatriculé : {{ immat }}</strong>
+                    {% endif %}
+                    {% if saveOk is defined %}
+                        <strong style="color: #5ccc4d">{{ saveOk }}</strong>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {% if carLouper is defined %}
+                        <p>Voici la liste des cars qui ne sont pas enregistrés dans la base de données : </p>
+                        <ul class="list-group">
+                            {% for car in carLouper  %}
+                            <li class="list-group-item">
+                                {{ car }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{%  endblock %}

@@ -83,3 +83,6 @@ register:
     defaults:
     controller: App\Controller\MainController::register
 
+miseajour:
+    path: /admin/mise-a-jour
+    controller: App\Controller\MainController::miseajour

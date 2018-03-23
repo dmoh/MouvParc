@@ -8,6 +8,7 @@
 namespace App\Controller;
 
 use App\Entity\Rubrique;
+use App\Form\MiseajourType;
 use App\Form\RubriqueType;
 use App\Form\UserType;
 use App\Repository\PanneRepository;
@@ -37,10 +38,13 @@ use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Entity\User;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Entity\Miseajour;
 
 Class MainController extends Controller
 {
@@ -93,7 +97,172 @@ Class MainController extends Controller
 
     }
 
+    public function miseajour(Request $request)
+    {
+        $docExcel = new Miseajour();
 
+        $form = $this->createForm(MiseajourType::class, $docExcel);
+        $form->handleRequest($request);
+
+        if($request->isMethod('POST'))
+        {
+            $file = $docExcel->getDocExcel();
+            $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+            $directory = $this->getParameter('kernel.root_dir').'/../public/uploads';
+            $litLeFicheir =  file($file);
+
+            $carLouper = array();
+
+            $tt = count($litLeFicheir);
+            //unset($litLeFicheir[0]);
+
+            /**/
+            for($i = 1; $i < $tt; $i++)
+            {
+                $car = explode(";",$litLeFicheir[$i]);
+
+
+                    $immat = $car[0];
+
+                    $em= $this->getDoctrine()->getManager();
+
+                    $repo = $em->getRepository(Cars::class)->findOneBy(['immat' => $immat]);
+                    if($repo != NULL)
+                    {
+                        $nb_places = $car[1];
+                        if($nb_places != '')
+                        {
+                           $nb_places = (int)$nb_places;
+                        }
+                        else{
+                            $nb_places = NULL;
+                        }
+
+                        $siege_guide = $car[2];
+
+                        if($siege_guide == 'O')
+                        {
+                            $siege_guide = (int)1;
+
+                        }
+                        else if($siege_guide == 'N')
+                        {
+                            $siege_guide = 0;
+                        }
+                        else {
+                            $siege_guide = NULL;
+                        }
+
+                        $euro = $car[3];
+
+                        if($euro == '')
+                        {
+                            $euro = NULL;
+                        }
+                        //Changer format date
+                        $date_ethylo = $car[4];
+
+                        if($date_ethylo != '')
+                        {
+                            $date_ethylo = date_create_from_format('d/m/Y', $date_ethylo);
+                            $date_ethylo = date_format($date_ethylo, 'Y-m-d');
+                        }
+                        else{
+                            $date_ethylo = NULL;
+                        }
+
+                        $date_extincteur = $car[5];
+
+                        if($date_extincteur != '') {
+                            $date_extincteur = date_create_from_format('d/m/Y', $date_extincteur);
+                            $date_extincteur = date_format($date_extincteur, 'Y-m-d');
+
+                        }
+                        else{
+                            $date_extincteur = NULL;
+                        }
+
+                        $date_limiteur = $car[6];
+
+                        if($date_limiteur != '' )
+                        {
+                            $date_limiteur = date_create_from_format('d/m/Y', $date_limiteur);
+                            $date_limiteur = date_format($date_limiteur, 'Y-m-d');
+                        }
+                        else{
+                            $date_limiteur = NULL;
+                        }
+                        $ct = $car[7];
+
+                        if($ct != '')
+                        {
+                            $ct = date_create_from_format('d/m/Y', $ct);
+                            $ct = date_format($ct, 'Y-m-d');
+                        }
+                        else{
+                            $ct = NULL;
+                        }
+
+
+                        $date_tachy = $car[8];
+                        $date_tachy = substr($date_tachy,0, 10);
+
+
+
+
+                        if($date_tachy != '' && $date_tachy != 0)
+                        {
+                            $date_tachy = date_create_from_format('d/m/Y', $date_tachy);
+                            //$date_tachy = date_format($date_tachy, 'Y-m-d');
+                        }
+                        else{
+                            $date_tachy = NULL;
+                        }
+
+                        $query = $em->createQuery('UPDATE App\Entity\Cars c SET c.nb_places = :nb_places, c.siege_guide = :siege_guide, c.euro = :euro, c.date_ethylo = :date_ethylo, c.date_extincteur = :date_extincteur, c.date_limiteur = :date_limiteur, c.ct = :ct, c.date_tachy = :date_tachy   WHERE c.immat = :immat');
+                        $query->setParameters(array(
+                            'nb_places'             => $nb_places,
+                            'siege_guide'           => $siege_guide,
+                            'euro'                  => $euro,
+                            'date_ethylo'           => $date_ethylo,
+                            'date_extincteur'       => $date_extincteur,
+                            'date_limiteur'         => $date_limiteur,
+                            'ct'                    => $ct,
+                            'date_tachy'            => $date_tachy,
+                            'immat'                 => $immat
+                        ));
+
+                        $query->execute();
+                        $em->flush();
+
+
+
+                    }
+                    else
+                    {
+                        array_push($carLouper, $immat);
+                    }
+
+            }
+
+            $file->move($directory, $fileName);
+
+            return $this->render('front/miseajour.html.twig', array(
+                'form'      => $form->createView(),
+                'carLouper' => $carLouper,
+                'saveOK'    => 'Les modifications sont bien enregistrés dans la BDD'
+            ));
+        }
+
+        return $this->render('front/miseajour.html.twig', array(
+           'form' => $form->createView()
+        ));
+    }
+
+    public function generateUniqueFileName()
+    {
+        return md5(uniqid());
+    }
 
     public function consultation(Request $request, AuthenticationUtils $authUtils)
     {
