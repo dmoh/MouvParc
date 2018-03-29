@@ -56,11 +56,7 @@ Class MainController extends Controller
 
         $form = $this->createForm(CarType::class, $car);
 
-        if($req->isMethod('GET'))
-        {
-            var_dump($req);
-            die();
-        }
+        
 
         if($req->isMethod('POST'))
         {
