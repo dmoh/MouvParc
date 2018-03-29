@@ -52,7 +52,7 @@ class CarType extends AbstractType
             ->add('nb_places', NumberType::class, array(
                 'required' => false
             ))
-            ->add('euro', NumberType::class, array(
+            ->add('euro', TextType::class, array(
                 'required' => false
             ))
             ->add('locataire',  ChoiceType::class, array(

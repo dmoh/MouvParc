@@ -54,8 +54,8 @@
                     </span>
                     <span class="p_right">
                     <b><i class="fa fa-user"></i> Siège guide : </b>
-                        {% if car.siegeGuide is defined and car.siegeGuide != 0 %}
-                            Oui
+                        {% if car.siegeGuide is defined and car.siegeGuide == 1  %}
+                            OUI
                         {% elseif car.siegeGuide == 0 or car.siegeGuide == '0' %}
                             Non
                             {% else %}
@@ -64,10 +64,8 @@
                     </span>
                     <span class="p_right">
                     <b><i class="fa fa-euro"></i> Norme EURO : </b>
-                        {% if car.euro is defined and car.euro != 0 %}
+                        {% if car.euro is defined and car.euro != "" %}
                             {{ car.euro }}
-                        {% elseif car.euro == 0 or car.euro == '0' %}
-                            Non
                             {% else %}
                             Non renseigné
                         {% endif %}

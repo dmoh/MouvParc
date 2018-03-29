@@ -38,13 +38,31 @@
                 </div>
             </div>
             <div class="row">
+                {% if listeCars is defined%}
+                    <ul>
+                    {% for car in listeCars  %}
+                        <li>{{ car.id }}, <em>{{ car.immat }}</em> </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="row">
+                {% if carMaj is defined%}
+                    <div class="col-md-12">
+                        <span class="text-center"><em>{{ carMaj }}</em> véhicules ont été mis à jour. </span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="row">
                 <div class="col-md-12">
-                    {% if carLouper is defined %}
-                        <p>Voici la liste des cars qui ne sont pas enregistrés dans la base de données : </p>
+                    {% if carLouper is defined and carLouper is not empty %}
+                        <p>Voici la liste des cars qui ne sont pas enregistrés dans la base de données :  </p>
                         <ul class="list-group">
                             {% for car in carLouper  %}
                             <li class="list-group-item">
-                                {{ car }}
+                                {% if car != " " and car != "" %}
+                                    {{ car }}
+                                {% endif %}
                             </li>
                             {% endfor %}
                         </ul>
