@@ -1,6 +1,8 @@
 index:
     path: /admin/ajouter-car
     controller: App\Controller\MainController::index
+
+
 consultation:
     path: /consultation
     controller: App\Controller\MainController::consultation

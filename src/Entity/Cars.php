@@ -41,7 +41,7 @@ class Cars
     protected $immat;
 
     /**
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="date")
      */
     protected $date;
 
@@ -248,7 +248,7 @@ class Cars
 
     public function __construct()
     {
-        $this->date = new \Datetime();
+        $this->date = new \DateTime();
         $this->pannes = new ArrayCollection();
     }
 

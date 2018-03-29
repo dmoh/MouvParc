@@ -49,19 +49,19 @@
             <div class="row">
                 {% if carMaj is defined%}
                     <div class="col-md-12">
-                        <span class="text-center"><em>{{ carMaj }}</em> véhicules ont été mis à jour. </span>
+                        <span  style="padding-top: 20px;" class="text-center"><em style="color: #00e765; font-size: large;">{{ carMaj }}</em> véhicules ont été mis à jour. </span>
                     </div>
                 {% endif %}
             </div>
             <div class="row">
                 <div class="col-md-12">
                     {% if carLouper is defined and carLouper is not empty %}
-                        <p>Voici la liste des cars qui ne sont pas enregistrés dans la base de données :  </p>
+                        <p>Les véhicules suivants ont été ajoutés à la base de donnée :  </p>
                         <ul class="list-group">
                             {% for car in carLouper  %}
                             <li class="list-group-item">
                                 {% if car != " " and car != "" %}
-                                    {{ car }}
+                                    <p>{{ car }}</p>
                                 {% endif %}
                             </li>
                             {% endfor %}
