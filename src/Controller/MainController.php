@@ -56,7 +56,7 @@ Class MainController extends Controller
 
         $form = $this->createForm(CarType::class, $car);
 
-        
+
 
         if($req->isMethod('POST'))
         {
