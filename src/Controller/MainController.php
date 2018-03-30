@@ -87,11 +87,7 @@ Class MainController extends Controller
 
         }
 
-        /*recuperation de l'entity manager
-        $em = $this->getDoctrine()->getManager();
 
-        $em->persist($car);
-        $em->flush();*/
 
         return $this->render('front/index.html.twig', array(
             'form' => $form->createView(),
@@ -257,7 +253,7 @@ Class MainController extends Controller
                         if ($ct != $listeCars[$j]['ct']) {
                             //$ct = null;
                            $ct = \DateTime::createFromFormat('d/m/Y', $ct);
-                            $ct = date_format($ct, 'Y-m-d');
+                           //$ct = date_format($ct, 'Y-m-d');
                         } else {
                             $ct = NULL;
                         }
@@ -360,8 +356,6 @@ Class MainController extends Controller
 
                                  $date_entree = \DateTime::createFromFormat('d/m/Y', $date_entree);
                                  //$date_entree = date_format($date_entree, 'Y-m-d');
-                             var_dump($date_entree);
-
 
 
                              $date_mar = $car[13];
@@ -2034,8 +2028,7 @@ Class MainController extends Controller
             ['id'   => 'DESC']
         );
 
-        var_dump($last_panne->getId());
-        die();
+
 
     }
 
