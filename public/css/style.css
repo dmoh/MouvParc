@@ -100,12 +100,23 @@ ul.nav a
 div.annonce_header{
     margin-bottom: 15px;
 }
-
+.no_marg_top .btn{
+    margin-top: 0;
+}
 div.annonce_header .fa{
 
     width: 14px;
     color: #C9C9C9;
+    padding-top: 0px;
 }
+div#form_snippet_image {
+    height: 300px;
+    border: 2px dashed #ccc;
+    background: #fbfbfb;
+    overflow: auto;
+}
+
+
 /************************CARACTERISTIQUES ET EQUIPEMENTS ANNONCE CAR*******************/
 
 div.caracteristiques table, div.equipements_table table{

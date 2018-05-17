@@ -42,16 +42,21 @@
                 {% endif %}
             </div>
         </div>
-        {% if car.images is not null %}
+        {% if car.images is not null and car.images is not empty %}
         {#style="width: 30%; height: auto; display: inline-block"#}
         <div class="row">
             <div class="col-md-offset-4 col-md-8">
-                    <h3 >Photos de l'autocar</h3>
-                    {% for car in car.images %}
-                        <a data-fancybox="gallery"   href="../{{ car.url }}">
-                            <img style="width: 10%; height: 40%; display: inline-block"  src="../{{ car.url }}" alt="{{ car.alt }}">
-                        </a>
-                    {% endfor %}
+                <h3 >Photos de l'autocar</h3>
+                {% for car in car.images %}
+                    <a data-fancybox="gallery"   href="../{{ car.url }}">
+                        <img style="width: 10%; height: 40%; display: inline-block"  src="../{{ car.url }}" alt="{{ car.alt }}">
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 no_marg_top">
+                <a href="{{ path('annonce_car', {'id': car.id}) }}" class="btn btn-primary">Voir l'Annonce</a>
             </div>
         </div>
         {% endif %}

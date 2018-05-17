@@ -4,14 +4,22 @@
     {%  if car %}
         <div class="container">
             <div class="row">
-                <div class="col-md-12 annonce_header">
-                    <h2>Autocar {{ car.marque }}</h2>
+                <div class="col-md-6 annonce_header">
+                    <h5>Autocar {{ car.marque }}</h5>
                     {% if car.km is defined  and car.km > 0 or car.km is not null %}
                     <i class="fa fa-bus"></i><span>
-                        <strong>{{ car.km }} Km | mise en circulation le {{ car.dateMar |date('d/m/Y') }}</strong>
+                        {{ car.km }} Km | mise en circulation le {{ car.dateMar |date('d/m/Y') }}
                         {% else %}
                            <strong>{{ car.dateMar | date('d/m/Y') }}</strong>
                     {% endif %}</span>
+                </div>
+                <div style="text-align: right" class="col-md-6">
+                    <i style="color: #00a65a" class="fa fa-money"></i><span> <em><strong>180.000 € HT</strong></em></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="separator"></div>
                 </div>
             </div>
             <div class="row">
@@ -179,6 +187,13 @@
                     <div class="separator"></div>
                 </div>
             </div>
+            {% if app.user %}
+                <div style="margin-bottom: 20px" class="row">
+                    <div class="col-md-4">
+                        <a href="{{ path('car', {'id': car.id }) }}" class="btn btn-primary">Retour Fiche du car</a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     {% endif %}
 {% endblock %}

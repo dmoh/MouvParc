@@ -47,7 +47,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Entity\Miseajour;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 Class MainController extends Controller
 {
@@ -2067,20 +2067,20 @@ Class MainController extends Controller
         // Hydrate le form
         $form = $this->get('form.factory')->create(CarType::class, $car);
 
-        $form->add('images', FileType::class, array(
+        /*$form->add('images', FileType::class, array(
             'multiple'      => true,
             'data_class'    => null,
             'attr'     => [
                 'multiple' => 'multiple'
             ]
-        ));
+        ));*/
 
 
         if ($request->isMethod("POST"))
         {
 
             //Nombre d'Images a télécharger
-            $nbfiles = count($request->files->get('car')["images"]);
+           /* $nbfiles = count($request->files->get('car')["images"]);
             if($nbfiles >= 0)
             {
                 $files = $request->files->get('car')["images"];
@@ -2121,11 +2121,15 @@ Class MainController extends Controller
                 {
                 $em->flush();
                 return $this->redirectToRoute('car', array('id'=> $car->getId()));
-            }
+            }*/
+
+            $em->flush();
+            return $this->redirectToRoute('car', array('id'=> $car->getId()));
         }
 
         return $this->render('front/mev.html.twig', array(
-            'form' => $form->createView()
+            'form'  => $form->createView(),
+            'id'    => $car->getId()
         ));
     }
 
@@ -2153,6 +2157,43 @@ Class MainController extends Controller
 
     }
 
+
+
+    public function ajaxSnippetImageSend(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $images = new Image();
+        $car = $em->getRepository(Cars::class)->find($id);
+
+        $media = $request->files->get('file');
+
+
+
+        $sizeImage = $media->getClientSize();
+        $extensionImage = $media->guessExtension();
+        $photoName = $this->generateUniqueFileName().'.'.$extensionImage;
+
+
+        //set Name photo
+        $images->setUrl($this->getUploadDir().'/'.$photoName);
+        $images->setAlt("Photo du Car : ". $car->getId());
+
+
+        //On lie l'image au car
+        $images->setCar($car);
+
+        $images->setFile($media);
+        $images->setPath($media->getPathName());
+        //$images->setName($media->getClientOriginalName());
+        $images->upload();
+        $em->persist($images);
+        $em->flush();
+
+        //infos sur le document envoyé
+        //var_dump($request->files->get('file'));die;
+        return new JsonResponse(array('success' => true));
+    }
 
 
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)

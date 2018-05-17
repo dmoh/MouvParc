@@ -44,6 +44,15 @@ annonce_car:
     requirements:
         id: '\d+'
 
+ajax_snippet_image_send:
+    path: /ajax/snippet/image/send/{id}
+    controller: App\Controller\MainController::ajaxSnippetImageSend
+    methods: [GET, POST]
+    requirements:
+        id: '\d+'
+
+
+
 effacer_car:
     path: /admin/effacer-car/{id}
     controller: App\Controller\MainController::deleteCar
