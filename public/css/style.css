@@ -97,9 +97,44 @@ ul.nav a
     border-bottom-width:0px !important;
 }
 
+div.annonce_header{
+    margin-bottom: 15px;
+}
+
+div.annonce_header .fa{
+
+    width: 14px;
+    color: #C9C9C9;
+}
+/************************CARACTERISTIQUES ET EQUIPEMENTS ANNONCE CAR*******************/
+
+div.caracteristiques table, div.equipements_table table{
+    font-size: 12px;
+    font-family: "Roboto", sans-serif;
+    line-height: 17px;
+    width: 100%;
+    border-collapse: separate;
+    display: table;
+}
+div.caracteristiques tbody, div.equipements_table tbody{
+    display: table-row-group;
+    vertical-align: middle;
+}
+div.caracteristiques td, div.equipements_table td
+{
+    vertical-align: top;
+}
+
+div.separator
+{
+    border: 0.02em solid #C9C9C9;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
 
 
 
+/*************************FIN CARACTERISTIQUES ANNONCE CAR *****************/
 .pt-30
 {
     padding-top: 30px;

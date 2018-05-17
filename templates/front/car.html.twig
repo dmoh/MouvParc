@@ -1,4 +1,7 @@
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <script type="text/css" src="{{ asset('css/zoombox.css') }}"></script>
+{% endblock %}
 
 {% block body %}
     <section class="jumbotron text-center">
@@ -13,6 +16,7 @@
             <div class="col-md-12">
                 <a class="btn btn-primary ml-40 tee" href="{{ path('ajout_panne', { 'id': car.id }) }}">Ajouter une panne</a>
                 <a class="btn btn-primary " href="{{ path('edit_car', { 'id': car.id }) }}">Editer fiche du car</a>
+                <a href="{{ path('mev_car',{ 'id': car.id} ) }}" class="btn btn-primary">Mise en vente</a>
                 <a class="btn btn-danger " href="{{ path('effacer_car', { 'id': car.id }) }}">Supprimer fiche du car</a>
             </div>
         </div>
@@ -38,6 +42,19 @@
                 {% endif %}
             </div>
         </div>
+        {% if car.images is not null %}
+        {#style="width: 30%; height: auto; display: inline-block"#}
+        <div class="row">
+            <div class="col-md-offset-4 col-md-8">
+                    <h3 >Photos de l'autocar</h3>
+                    {% for car in car.images %}
+                        <a data-fancybox="gallery"   href="../{{ car.url }}">
+                            <img style="width: 10%; height: 40%; display: inline-block"  src="../{{ car.url }}" alt="{{ car.alt }}">
+                        </a>
+                    {% endfor %}
+            </div>
+        </div>
+        {% endif %}
         <div class="row">
             <div class="col-md-12"><h5>Equipements</h5></div>
         </div>
@@ -285,11 +302,9 @@
     </section>
 {% endblock %}
 {% block javascripts %}
+
     <script type="text/javascript">
-
         $(document).ready(function(){
-
-
             $('.elem_gps').css('display', 'none');
             $('div#map').hide();
             var geoc_lat = $('p#geoc_lat').html();

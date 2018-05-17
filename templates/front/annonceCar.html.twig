@@ -1,0 +1,184 @@
+{%  extends 'base.html.twig' %}
+
+{% block body %}
+    {%  if car %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 annonce_header">
+                    <h2>Autocar {{ car.marque }}</h2>
+                    {% if car.km is defined  and car.km > 0 or car.km is not null %}
+                    <i class="fa fa-bus"></i><span>
+                        <strong>{{ car.km }} Km | mise en circulation le {{ car.dateMar |date('d/m/Y') }}</strong>
+                        {% else %}
+                           <strong>{{ car.dateMar | date('d/m/Y') }}</strong>
+                    {% endif %}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    {% if car.images is not null %}
+                        {% for car in car.images  %}
+                            {% if loop.first %}
+                                <a href="../../{{ car.url }}" data-fancybox="gallery">
+                                    <img src="../../{{ car.url }}" alt="{{ car.alt }}">
+                                </a>
+                                {% else %}
+                                    <a href="../../{{ car.url }}" data-fancybox="gallery">
+                                        <img style="width: 14%; height: 14%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
+                                    </a>
+                            {% endif %}
+                        {% endfor %}
+                        {% else %}
+                        <h4>Il n'y a pas de photo pour ce car</h4>
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <h6>Caractéristiques :</h6>
+                    <div class="caracteristiques">
+                        <table style="max-width: 300px" class="table-responsive">
+                            <tbody>
+                                <tr>
+                                    <td>Norme Euro : </td><td><em class="right">{{ car.euro }}</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Puissance moteur (cv din) : </td><td><em class="right">{{ car.euro }}</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Energie : </td><td><em class="right">{{ car.euro }}</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Transmission : </td><td><em class="right">{{ car.euro }}</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Bv : </td><td><em class="right">{{ car.euro }}</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Longueur : </td><td><em class="right">{{ car.euro }}</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Hauteur : </td><td><em class="right">{{ car.euro }}</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Sièges passagers : </td><td><em class="right">{{ car.nbPlaces }}</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Passagers debout : </td><td><em class="right">{{ car.euro }}</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Accessibilité : </td><td><em class="right">{{ car.euro }}</em></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="separator"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h6>Equipements</h6>
+                </div>
+            </div>
+            <div class="row equipements_table">
+                <div class="col-md-4">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td>Regulateur de vitesse : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Gps :</td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Micro guide :</td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Clim :</td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Liseuses individuelles : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Rideaux : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Filets : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Ralentisseur : </td><td><em>Oui</em></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td>Ceinture de sécurité</td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Vidéo :</td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Micro conducteur :</td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Chauffage indépendant : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Frigo : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Sièges : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Prédisposition ski : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Abs : </td><td><em>Oui</em></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td>Tachygraphe : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Radio : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Caméra : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Buses individuelles : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>WC : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Tablettes : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Repose pieds : </td><td><em>Oui</em></td>
+                        </tr>
+                        <tr>
+                            <td>Girouette : </td><td><em>Oui</em></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="separator"></div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

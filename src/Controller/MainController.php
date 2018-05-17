@@ -7,6 +7,7 @@
  */
 namespace App\Controller;
 
+use App\Entity\Image;
 use App\Entity\Rubrique;
 use App\Form\MiseajourType;
 use App\Form\RubriqueType;
@@ -16,6 +17,7 @@ use Doctrine\DBAL\Types\DateType;
 
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -45,6 +47,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Entity\Miseajour;
+
 
 Class MainController extends Controller
 {
@@ -560,8 +563,8 @@ Class MainController extends Controller
 
         $immat =  $car_info->getImmat();
         $ti = time();
-
-        if($immat !== "CS-223-JK" && $immat !== "BZ-668-TH" && $immat !== "BM-276-ZC" && $immat !== "BL-182-AH" && $immat !== "EV-910-DF" && $immat !== "EV-855-DF")
+        //&& $immat !== "EV-910-DF" && $immat !== "EV-855-DF"
+        if($immat !== "CS-223-JK" && $immat !== "BZ-668-TH" && $immat !== "BM-276-ZC" && $immat !== "BL-182-AH" )
         {
              $hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/fleet/vehicles?vehicle_vrn=".$immat."".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
             $opts = array(
@@ -580,6 +583,7 @@ Class MainController extends Controller
             if($result[0])
             {
                 $kms = $result[0]["totalKms"];
+
             }
 
             $hache2 = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?count=1&vehicle_vrn=".$immat."".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
@@ -635,7 +639,10 @@ Class MainController extends Controller
             }
         }
 
+        $car_info->setKm($kms);
         $car_info->setCompteurPanne($nombrep);
+        $em->persist($car_info);
+        $em->flush();
 
         return $this->render('front/car.html.twig',
             array(
@@ -1012,7 +1019,7 @@ Class MainController extends Controller
                     $date_de = $form_av['date'];
                     $date_a = $form_av['date_2'];
 
-                    if($form_av['recherche_av'] && $form_av['marque'] === null || $form_av['marque'] == null || $form_av['marque'] == '' )
+                    if($form_av['recherche_av'] && $form_av['marque'] === null )
                     {
                         $mot_cles = $form_av['recherche_av'];
                         $query = $em->createQuery('SELECT p FROM App\Entity\Panne p WHERE p.nature_panne LIKE :nature')
@@ -1082,20 +1089,36 @@ Class MainController extends Controller
                             ->setParameter('marque', $marque)
                             ->setParameter('mots',   '%'.$mot_cles.'%')
                             ->setParameter('date1', $date_de)
-                            ->setParameter('date2', $date_a);
+                            ->setParameter('date2', $date_a)
+                            //->setMaxResults(10)
+                        ;
 
                         $car_trouver = $query->getResult();
                         $r = count($car_trouver);
 
+
+
                         for($i = 0 ; $i < $r ; $i++)
                         {
-                            $marque_recu = $car_trouver[$i]->getCars()->getMarque();
-                            if($marque != $marque_recu)
+                            $marque_recu = strtolower($car_trouver[$i]->getCars()->getMarque());
+
+                            if($marque == "iveco crossway") {
+                                if ($marque == "iveco crossway" && $marque_recu == "iveco crossway" || $marque_recu == "iveco crossway ufr")
+                                {}
+                                else
+                                {
+                                    unset($car_trouver[$i]);
+                                }
+                            }else if($marque != $marque_recu)
                             {
                                 unset($car_trouver[$i]);
-                            }
+                            }/**/
+
 
                         }
+
+
+
 
 
                         // $r2 = count($car_trouver);
@@ -1136,7 +1159,7 @@ Class MainController extends Controller
                                     'IRIZAR I4'                  => "irizar i4",
                                 ),))
                             ->add('Valider', SubmitType::class)
-                            ->getForm();;
+                            ->getForm();
 
 
 
@@ -1148,19 +1171,17 @@ Class MainController extends Controller
                             'plusieurs' => 'OK',
                         ));
                     }
-                    elseif ( $form_av['recherche_av'] === '' || $form_av['recherche_av'] === null && $form_av['marque'] !== null || $form_av['marque'] != null || $form_av['marque'] != '')
+                    elseif ( $form_av['recherche_av'] === null && $form_av['marque'] !== null )
                     {
                         $marque = $form_av['marque'];
-
-
-
                         //*$query = $em->createQuery('SELECT p FROM App\Entity\Panne p WHERE p.nature_panne LIKE :nature')
                                    // ->setParameter( 'nature','%'.$marque.'%');
 
                         $query = $em->createQuery('SELECT p FROM App\Entity\Panne p JOIN App\Entity\Cars car WITH car.marque = :marque WHERE p.date_prev BETWEEN :date1 AND :date2 ')
                                     ->setParameter('marque', $marque)
                                     ->setParameter('date1', $date_de)
-                                    ->setParameter('date2', $date_a);
+                                    ->setParameter('date2', $date_a)
+                        ;
 
                         $car_trouver = $query->getResult();
 
@@ -1170,7 +1191,7 @@ Class MainController extends Controller
 
                         for($i = 0 ; $i < $r ; $i++)
                         {
-                             $marque_recu = $car_trouver[$i]->getCars()->getMarque();
+                             $marque_recu = strtolower($car_trouver[$i]->getCars()->getMarque());
                             if($marque != $marque_recu)
                             {
                                 unset($car_trouver[$i]);
@@ -1363,7 +1384,6 @@ Class MainController extends Controller
 
                 $car_trouver = $qb->select('c')->from('App\Entity\Cars', 'c')
                   ->where( $qb->expr()->like('c.immat', $qb->expr()->literal('%' . $imm . '%')) )
-                  ->setMaxResults(10)
                   ->getQuery()
                   ->getResult();
 
@@ -1631,7 +1651,12 @@ Class MainController extends Controller
         foreach ($car->getPannes()as $panne){
             $car->removePanne($panne);
         }
-       $em->remove($car);
+
+        foreach ($car->getImages() as $image){
+            $car->removeImage($image);
+        }
+
+        $em->remove($car);
         $em->flush();
         return $this->redirectToRoute('consultation');
     }
@@ -2031,6 +2056,104 @@ Class MainController extends Controller
 
 
     }
+
+
+    public function mevCar(Request $request, $id)
+    {
+        $em= $this->getDoctrine()->getManager();
+        $car = $em->getRepository(Cars::class)->find($id);
+
+
+        // Hydrate le form
+        $form = $this->get('form.factory')->create(CarType::class, $car);
+
+        $form->add('images', FileType::class, array(
+            'multiple'      => true,
+            'data_class'    => null,
+            'attr'     => [
+                'multiple' => 'multiple'
+            ]
+        ));
+
+
+        if ($request->isMethod("POST"))
+        {
+
+            //Nombre d'Images a télécharger
+            $nbfiles = count($request->files->get('car')["images"]);
+            if($nbfiles >= 0)
+            {
+                $files = $request->files->get('car')["images"];
+                for($i = 0; $i < $nbfiles; $i++)
+                {
+                    $images = new Image();
+
+                    $sizeImage = $files[$i]->getClientSize();
+                    $extensionImage = $files[$i]->guessExtension();
+                    $photoName = $this->generateUniqueFileName().'.'.$extensionImage;
+
+
+                    //set Name photo
+                    $images->setUrl($this->getUploadDir().'/'.$photoName);
+                    $images->setAlt("Photo du Car : ". $car->getId());
+
+
+                    //On lie l'image au car
+                    $images->setCar($car);
+
+
+                    //Déplace l'image dans le dossier
+                    $files[$i]->move($this->getUploadRootDir()
+                        , $photoName
+                    );
+
+                    $em->persist($images);
+                    $em->flush();
+
+                    return $this->redirectToRoute('annonce_car', array('id'=> $car->getId()));
+
+                    //__DIR__."../../public/images/photosCar"
+                }
+
+
+            }
+            else
+                {
+                $em->flush();
+                return $this->redirectToRoute('car', array('id'=> $car->getId()));
+            }
+        }
+
+        return $this->render('front/mev.html.twig', array(
+            'form' => $form->createView()
+        ));
+    }
+
+    public function getUploadDir()
+    {
+        return 'photosCar';
+    }
+
+    protected function getUploadRootDir()
+    {
+        return __DIR__.'/../../public/'.$this->getUploadDir();
+    }
+
+
+    public function annonceCar(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $car = $em->getRepository(Cars::class)->find($id);
+
+        return $this->render('front/annonceCar.html.twig',
+               array(
+                   "car" =>$car
+               )
+            );
+
+    }
+
+
 
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {

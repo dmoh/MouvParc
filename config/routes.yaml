@@ -31,6 +31,19 @@ edit_car:
     controller: App\Controller\MainController::editCar
     requirements:
         id: '\d+'
+
+mev_car:
+    path: /admin/mevcar/{id}
+    controller: App\Controller\MainController::mevCar
+    requirements:
+        id: '\d+'
+
+annonce_car:
+    path: /admin/annoncecar/{id}
+    controller: App\Controller\MainController::annonceCar
+    requirements:
+        id: '\d+'
+
 effacer_car:
     path: /admin/effacer-car/{id}
     controller: App\Controller\MainController::deleteCar

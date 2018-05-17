@@ -168,10 +168,19 @@ class Cars
      * @ORM\Column(name="nature_panne_car", type="text", nullable=true)
      */
     protected $nature_panne_car;
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Panne", mappedBy="cars", orphanRemoval=true, cascade={"persist", "remove", "merge"})
      */
     protected $pannes;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="car", orphanRemoval=true, cascade={"persist", "remove", "merge"})
+     */
+    protected $images;
+
+
 
     /**
      * @ORM\Column(name="memo_car", type="text", nullable=true)
@@ -245,11 +254,34 @@ class Cars
     protected $porte_ski = false;
 
 
+    /**
+     * @ORM\Column(name="km", type="integer", nullable=true)
+     */
+    protected $km;
+
+
 
     public function __construct()
     {
         $this->date = new \DateTime();
         $this->pannes = new ArrayCollection();
+        $this->images = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getKm()
+    {
+        return $this->km;
+    }
+
+    /**
+     * @param mixed $km
+     */
+    public function setKm($km): void
+    {
+        $this->km = $km;
     }
 
 
@@ -268,6 +300,25 @@ class Cars
 
         $panne->setCars(null);
     }
+
+
+
+    public function addImage(Image $image)
+    {
+        $this->images[] = $image;
+
+        $image->setCar($this);
+
+        return $this;
+    }
+
+    public function removeImage(Image $image)
+    {
+        $this->images->removeElement($image);
+
+        $image->setCar(null);
+    }
+
 
 
 
@@ -673,7 +724,7 @@ class Cars
        return $this;
     }*/
 
-    /**
+       /**
      * @param mixed $pannes
      */
     public function setPannes($pannes): void
@@ -688,6 +739,24 @@ class Cars
     {
         return $this->pannes;
     }
+
+
+    /**
+     * @param mixed $images
+     */
+    public function setImages($images): void
+    {
+        $this->images = $images;
+    }
+
+    /*
+     *@return Collection|Images[]
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
 
 
 
