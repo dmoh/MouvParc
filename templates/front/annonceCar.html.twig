@@ -3,7 +3,7 @@
 {% block body %}
     {%  if car %}
         <div class="container">
-            <div class="row">
+            <div style="margin-top: 15px" class="row">
                 <div class="col-md-6 annonce_header">
                     <h5>Autocar {{ car.marque }}</h5>
                     {% if car.km is defined  and car.km > 0 or car.km is not null %}
@@ -94,29 +94,85 @@
                 <div class="col-md-4">
                     <table>
                         <tbody>
-                        <tr>
-                            <td>Regulateur de vitesse : </td><td><em>Oui</em></td>
+                        <tr class="bg-grey">
+                            <td>Regulateur de vitesse : </td>
+                            <td>
+                                {% if car.RegulateurVitesse == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td>Gps :</td><td><em>Oui</em></td>
+                            <td>Gps :</td>
+                            <td>
+                                {% if car.Gps == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="bg-grey">
+                            <td>Micro guide :</td>
+                            <td>
+                                {% if car.MicroGuide == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td>Micro guide :</td><td><em>Oui</em></td>
+                            <td>Clim :</td>
+                            <td>
+                                {% if car.Clim == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr  class="bg-grey">
+                            <td>Buses individuelles : </td>
+                            <td>
+                                {% if car.BusesIndividuelles == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td>Clim :</td><td><em>Oui</em></td>
+                            <td>Rideaux : </td>
+                            <td>
+                                {% if car.Rideaux == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="bg-grey">
+                            <td>Filets : </td>
+                            <td>
+                                {% if car.Filets == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td>Liseuses individuelles : </td><td><em>Oui</em></td>
-                        </tr>
-                        <tr>
-                            <td>Rideaux : </td><td><em>Oui</em></td>
-                        </tr>
-                        <tr>
-                            <td>Filets : </td><td><em>Oui</em></td>
-                        </tr>
-                        <tr>
-                            <td>Ralentisseur : </td><td><em>Oui</em></td>
+                            <td>Frigo : </td>
+                            <td>
+                                {% if car.Frigo == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -124,29 +180,85 @@
                 <div class="col-md-4">
                     <table>
                         <tbody>
-                        <tr>
-                            <td>Ceinture de sécurité</td><td><em>Oui</em></td>
+                        <tr class="bg-grey">
+                            <td>Ceinture de sécurité</td>
+                            <td>
+                                {% if  car.CeintureSecurite == "2 points" or car.CeintureSecurite == "3 points" %}
+                                    <em><strong>{{ car.CeintureSecurite | upper }}</strong></em>
+                                {% else %}
+                                    <em><strong>-</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td>Vidéo :</td><td><em>Oui</em></td>
+                            <td>Vidéo :</td>
+                            <td>
+                                {% if  car.Video == "DVD" or car.Video == "VHS" %}
+                                    <em><strong>{{ car.Video | upper }}</strong></em>
+                                {% else %}
+                                    <em><strong>-</strong></em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="bg-grey">
+                            <td>Micro conducteur :</td>
+                            <td>
+                                {% if car.MicroConducteur == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td>Micro conducteur :</td><td><em>Oui</em></td>
+                            <td>Chauffage indépendant : </td>
+                            <td>
+                                {% if car.ChauffageIndependant == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr  class="bg-grey">
+                            <td>Ralentisseur : </td>
+                            <td>
+                                {% if  car.Ralentisseur == "intarder" or car.Ralentisseur == "voith" or car.Ralentisseur == "telma" %}
+                                    <em><strong>{{ car.Ralentisseur | upper }}</strong></em>
+                                {% else %}
+                                    <em><strong>-</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td>Chauffage indépendant : </td><td><em>Oui</em></td>
+                            <td>Sièges décalables : </td>
+                            <td>
+                                {% if car.SiegesDecalables == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="bg-grey">
+                            <td>Prédisposition ski : </td>
+                            <td>
+                                {% if car.PorteSki == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td>Frigo : </td><td><em>Oui</em></td>
-                        </tr>
-                        <tr>
-                            <td>Sièges : </td><td><em>Oui</em></td>
-                        </tr>
-                        <tr>
-                            <td>Prédisposition ski : </td><td><em>Oui</em></td>
-                        </tr>
-                        <tr>
-                            <td>Abs : </td><td><em>Oui</em></td>
+                            <td>Abs : </td>
+                            <td>
+                                {% if car.Abs == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -154,29 +266,75 @@
                 <div class="col-md-4">
                     <table>
                         <tbody>
-                        <tr>
-                            <td>Tachygraphe : </td><td><em>Oui</em></td>
+                        <tr class="bg-grey">
+                            <td>Tachygraphe : </td>
+                            <td>
+                                {% if  car.tachygraphe == "numérique" or car.tachygraphe == "analogique" %}
+                                    <em><strong>{{ car.tachygraphe | upper }}</strong></em>
+                                    {% else %}
+                                        <em><strong>-</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td>Radio : </td><td><em>Oui</em></td>
+                            <td>Radio : </td>
+                            <td>
+                                {% if  car.Radio == "CD" or car.Radio == "cassettes" %}
+                                    <em><strong>{{ car.Radio | upper }}</strong></em>
+                                {% else %}
+                                    <em><strong>-</strong></em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="bg-grey">
+                            <td>Caméra : </td>
+                            <td>
+                                {% if  car.Camera == "Route" or car.Camera == "Guide" or car.Camera == "Porte N2" or car.Camera == "Recul" %}
+                                    <em><strong>{{ car.Camera | upper }}</strong></em>
+                                {% else %}
+                                    <em><strong>-</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td>Caméra : </td><td><em>Oui</em></td>
+                            <td>WC : </td>
+                            <td>
+                                {% if car.Wc == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="bg-grey">
+                            <td>Tablettes : </td>
+                            <td>
+                                {% if car.Tablettes == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td>Buses individuelles : </td><td><em>Oui</em></td>
+                            <td>Repose pieds : </td>
+                            <td>
+                                {% if car.ReposeMollet == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
-                        <tr>
-                            <td>WC : </td><td><em>Oui</em></td>
-                        </tr>
-                        <tr>
-                            <td>Tablettes : </td><td><em>Oui</em></td>
-                        </tr>
-                        <tr>
-                            <td>Repose pieds : </td><td><em>Oui</em></td>
-                        </tr>
-                        <tr>
-                            <td>Girouette : </td><td><em>Oui</em></td>
+                        <tr class="bg-grey">
+                            <td>Girouette : </td>
+                            <td>
+                                {% if car.Girouette == 1 %}
+                                    <em><strong>OUI</strong></em>
+                                {% else %}
+                                    <em><strong>NON</strong></em>
+                                {% endif %}
+                            </td>
                         </tr>
                         </tbody>
                     </table>

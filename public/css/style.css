@@ -116,6 +116,11 @@ div#form_snippet_image {
     overflow: auto;
 }
 
+.bg-grey
+{
+    background: #f5f4f4;
+}
+
 
 /************************CARACTERISTIQUES ET EQUIPEMENTS ANNONCE CAR*******************/
 

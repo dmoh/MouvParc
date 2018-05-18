@@ -2067,17 +2067,102 @@ Class MainController extends Controller
         // Hydrate le form
         $form = $this->get('form.factory')->create(CarType::class, $car);
 
-        /*$form->add('images', FileType::class, array(
-            'multiple'      => true,
-            'data_class'    => null,
-            'attr'     => [
-                'multiple' => 'multiple'
-            ]
-        ));*/
+        $form
+            ->add('regulateur_vitesse', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('ralentisseur', ChoiceType::class, array(
+                'required'  => false,
+                "choices" => array(
+                "Voith"         => "voith",
+                "Intarder"      => "intarder",
+                "Telma"         => "telma"
+            )))
+            ->add('gps', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('abs', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('esp', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('asr', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('ceinture_securite', ChoiceType::class, array(
+                'required'  => false,
+                "choices" => array(
+                "2 points" => "2 points",
+                "3 points" => "3 points"
+            )))
+            ->add('repose_mollet', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('tachygraphe', ChoiceType::class, array(
+                'required'  => false,
+                "choices" => array(
+                "Numérique"     => "numérique",
+                "Analogique"    =>  "analogique"
+            )))
+            ->add('video', ChoiceType::class, array(
+                'required'  => false,
+                "choices" => array(
+                "DVD"     => "DVD",
+                "VHS"    =>  "VHS"
+            )))
+            ->add('radio', ChoiceType::class, array(
+                'required'  => false,
+                "choices" => array(
+                    "Cassettes"     => "cassettes",
+                    "CD"    =>  "CD"
+                )))
+            ->add('camera', ChoiceType::class, array(
+                'required'  => false,
+                "choices" => array(
+                "Recul"     => "Recul",
+                "Route"    =>  "Route",
+                "Guide"    =>  "Guide",
+                "Porte N2"    =>  "Porte N2",
+            )))
+            ->add('micro_conducteur', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('micro_guide', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('chauffage_independant', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('buses_individuelles', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('tablettes', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('sieges_decalables', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('frigo', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('girouette', CheckboxType::class, array(
+                'required'  => false,
+            ))
+            ->add('rideaux', CheckboxType::class, array(
+                'required'  => false,
+            ))
+
+        ;
+
+        $form->handleRequest($request);
 
 
         if ($request->isMethod("POST"))
         {
+           /*$ralentisseur = $request->request->get("car")["ralentisseur"];
+            $regulateur = ($dataF->getRegulateurVitesse()) ? "1" : "0" ;
+            $car->setRegulateurVitesse($regulateur);*/
 
             //Nombre d'Images a télécharger
            /* $nbfiles = count($request->files->get('car')["images"]);
@@ -2123,8 +2208,9 @@ Class MainController extends Controller
                 return $this->redirectToRoute('car', array('id'=> $car->getId()));
             }*/
 
+            $em->persist($car);
             $em->flush();
-            return $this->redirectToRoute('car', array('id'=> $car->getId()));
+            return $this->redirectToRoute('annonce_car', array('id'=> $car->getId()));
         }
 
         return $this->render('front/mev.html.twig', array(

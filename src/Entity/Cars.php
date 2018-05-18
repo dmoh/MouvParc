@@ -261,6 +261,137 @@ class Cars
 
 
 
+
+
+
+    /**
+     * @ORM\Column(name="regulateur_vitesse", type="boolean", nullable=true)
+     */
+    protected $regulateur_vitesse;
+
+    /**
+     * @ORM\Column(name="gps", type="boolean", nullable=true)
+     */
+    protected $gps;
+
+
+    /**
+     * @ORM\Column(name="ralentisseur", type="string", length=255, nullable=true)
+     */
+    protected $ralentisseur;
+
+    /**
+     * @ORM\Column(name="abs", type="boolean", nullable=true)
+     */
+    protected $abs;
+
+
+    /**
+     * @ORM\Column(name="esp", type="boolean", nullable=true)
+     */
+    protected $esp;
+
+
+    /**
+     * @ORM\Column(name="asr", type="boolean", nullable=true)
+     */
+    protected $asr;
+
+    /**
+     * @ORM\Column(name="ceinture_securite", type="string", nullable=true)
+     */
+    protected $ceinture_securite;
+
+    /**
+     * @ORM\Column(name="repose_mollet", type="boolean", nullable=true)
+     */
+    protected $repose_mollet;
+
+    /**
+     * @ORM\Column(name="tachygraphe", type="string", nullable=true)
+     */
+    protected $tachygraphe;
+
+
+    /**
+     * @ORM\Column(name="video", type="string", nullable=true)
+     */
+    protected $video;
+
+
+    /**
+     * @ORM\Column(name="micro_conducteur", type="boolean", nullable=true)
+     */
+    protected $micro_conducteur;
+
+    /**
+     * @ORM\Column(name="camera", type="string", nullable=true)
+     */
+    protected $camera;
+
+    /**
+     * @ORM\Column(name="radio", type="string", nullable=true)
+     */
+    protected $radio;
+
+    /**
+     * @ORM\Column(name="micro_guide", type="boolean", nullable=true)
+     */
+    protected $micro_guide;
+
+
+    /**
+     * @ORM\Column(name="chauffage_independant", type="boolean", nullable=true)
+     */
+    protected $chauffage_independant;
+
+    /**
+     * @ORM\Column(name="buses_individuelles", type="boolean", nullable=true)
+     */
+    protected $buses_individuelles;
+
+    /**
+     * @ORM\Column(name="tablettes", type="boolean", nullable=true)
+     */
+    protected $tablettes;
+
+    /**
+     * @ORM\Column(name="sieges_decalables", type="boolean", nullable=true)
+     */
+    protected $sieges_decalables;
+
+
+    /**
+     * @ORM\Column(name="frigo", type="boolean", nullable=true)
+     */
+    protected $frigo;
+
+    /**
+     * @ORM\Column(name="girouette", type="boolean", nullable=true)
+     */
+    protected $girouette;
+
+    /**
+     * @ORM\Column(name="rideaux", type="boolean", nullable=true)
+     */
+    protected $rideaux;
+
+
+    /**
+     * @ORM\Column(name="clim", type="boolean", nullable=true)
+     */
+    protected $clim;
+
+    /**
+     * @ORM\Column(name="filets", type="boolean", nullable=true)
+     */
+    protected $filets;
+
+
+
+
+
+
     public function __construct()
     {
         $this->date = new \DateTime();
@@ -1031,6 +1162,379 @@ class Cars
     {
         $this->porte_ski = $porte_ski;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRegulateurVitesse()
+    {
+        return $this->regulateur_vitesse;
+    }
+
+    /**
+     * @param mixed $regulateur_vitesse
+     */
+    public function setRegulateurVitesse($regulateur_vitesse): void
+    {
+        $this->regulateur_vitesse = $regulateur_vitesse;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGps()
+    {
+        return $this->gps;
+    }
+
+    /**
+     * @param mixed $gps
+     */
+    public function setGps($gps): void
+    {
+        $this->gps = $gps;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRalentisseur()
+    {
+        return $this->ralentisseur;
+    }
+
+    /**
+     * @param mixed $ralentisseur
+     */
+    public function setRalentisseur($ralentisseur): void
+    {
+        $this->ralentisseur = $ralentisseur;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAbs()
+    {
+        return $this->abs;
+    }
+
+    /**
+     * @param mixed $abs
+     */
+    public function setAbs($abs): void
+    {
+        $this->abs = $abs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEsp()
+    {
+        return $this->esp;
+    }
+
+    /**
+     * @param mixed $esp
+     */
+    public function setEsp($esp): void
+    {
+        $this->esp = $esp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsr()
+    {
+        return $this->asr;
+    }
+
+    /**
+     * @param mixed $asr
+     */
+    public function setAsr($asr): void
+    {
+        $this->asr = $asr;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCeintureSecurite()
+    {
+        return $this->ceinture_securite;
+    }
+
+    /**
+     * @param mixed $ceinture_securite
+     */
+    public function setCeintureSecurite($ceinture_securite): void
+    {
+        $this->ceinture_securite = $ceinture_securite;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReposeMollet()
+    {
+        return $this->repose_mollet;
+    }
+
+    /**
+     * @param mixed $repose_mollet
+     */
+    public function setReposeMollet($repose_mollet): void
+    {
+        $this->repose_mollet = $repose_mollet;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTachygraphe()
+    {
+        return $this->tachygraphe;
+    }
+
+    /**
+     * @param mixed $tachygraphe
+     */
+    public function setTachygraphe($tachygraphe): void
+    {
+        $this->tachygraphe = $tachygraphe;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVideo()
+    {
+        return $this->video;
+    }
+
+    /**
+     * @param mixed $video
+     */
+    public function setVideo($video): void
+    {
+        $this->video = $video;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMicroConducteur()
+    {
+        return $this->micro_conducteur;
+    }
+
+    /**
+     * @param mixed $micro_conducteur
+     */
+    public function setMicroConducteur($micro_conducteur): void
+    {
+        $this->micro_conducteur = $micro_conducteur;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCamera()
+    {
+        return $this->camera;
+    }
+
+    /**
+     * @param mixed $camera
+     */
+    public function setCamera($camera): void
+    {
+        $this->camera = $camera;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRadio()
+    {
+        return $this->radio;
+    }
+
+    /**
+     * @param mixed $radio
+     */
+    public function setRadio($radio): void
+    {
+        $this->radio = $radio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMicroGuide()
+    {
+        return $this->micro_guide;
+    }
+
+    /**
+     * @param mixed $micro_guide
+     */
+    public function setMicroGuide($micro_guide): void
+    {
+        $this->micro_guide = $micro_guide;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getChauffageIndependant()
+    {
+        return $this->chauffage_independant;
+    }
+
+    /**
+     * @param mixed $chauffage_independant
+     */
+    public function setChauffageIndependant($chauffage_independant): void
+    {
+        $this->chauffage_independant = $chauffage_independant;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBusesIndividuelles()
+    {
+        return $this->buses_individuelles;
+    }
+
+    /**
+     * @param mixed $buses_individuelles
+     */
+    public function setBusesIndividuelles($buses_individuelles): void
+    {
+        $this->buses_individuelles = $buses_individuelles;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTablettes()
+    {
+        return $this->tablettes;
+    }
+
+    /**
+     * @param mixed $tablettes
+     */
+    public function setTablettes($tablettes): void
+    {
+        $this->tablettes = $tablettes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSiegesDecalables()
+    {
+        return $this->sieges_decalables;
+    }
+
+    /**
+     * @param mixed $sieges_decalables
+     */
+    public function setSiegesDecalables($sieges_decalables): void
+    {
+        $this->sieges_decalables = $sieges_decalables;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFrigo()
+    {
+        return $this->frigo;
+    }
+
+    /**
+     * @param mixed $frigo
+     */
+    public function setFrigo($frigo): void
+    {
+        $this->frigo = $frigo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGirouette()
+    {
+        return $this->girouette;
+    }
+
+    /**
+     * @param mixed $girouette
+     */
+    public function setGirouette($girouette): void
+    {
+        $this->girouette = $girouette;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRideaux()
+    {
+        return $this->rideaux;
+    }
+
+    /**
+     * @param mixed $rideaux
+     */
+    public function setRideaux($rideaux): void
+    {
+        $this->rideaux = $rideaux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClim()
+    {
+        return $this->clim;
+    }
+
+    /**
+     * @param mixed $clim
+     */
+    public function setClim($clim): void
+    {
+        $this->clim = $clim;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFilets()
+    {
+        return $this->filets;
+    }
+
+    /**
+     * @param mixed $filets
+     */
+    public function setFilets($filets): void
+    {
+        $this->filets = $filets;
+    }
+
+
+
+
+
 
 
 

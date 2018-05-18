@@ -155,7 +155,7 @@
                         {{ form_widget(form.etat_car , {'attr': {'class': 'form-control'}})}}
                         {{ form_errors(form.etat_car, { 'attr': {'class': 'red' }}) }}
                     </div>
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-12 etat_hide">
                         {# Génération du label. #}
                         {{ form_label(form.condition_garantie, "Condition de garantie : ", {'label_attr': {'class': ' control-label'}}) }}
                         {# Génération de l'input.#}
@@ -177,6 +177,12 @@
                         {# Génération de l'input.#}
                         {{ form_widget(form.date_prev , {'attr': {'class': ' js-datepicker form-control'}})}}
                         {{ form_errors(form.date_prev, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                    <div class=" form-group col-md-6">
+                        {{ form_label(form.ralentisseur, "Ralentisseur : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.ralentisseur, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.ralentisseur, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
                 <div class="form-row">
@@ -225,9 +231,151 @@
 
                         {{ form_errors(form.porte_ski, {'attr': {'class': 'form-control'}}) }}
                     </div>
+
+                    <div class=" form-group col-md-3">
+                        {{ form_widget(form.regulateur_vitesse, {'attr': {'class': 'form-control'}}) }}<b>Regulateur Vit. </b>
+
+                        {{ form_errors(form.regulateur_vitesse, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class=" form-group col-md-3">
+                        {{ form_widget(form.gps, {'attr': {'class': 'form-control'}}) }}<b>GPS </b>
+
+                        {{ form_errors(form.gps, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
                 </div>
                 <div class="form-row">
-                    <div class="col-md-6">
+                    <div class=" form-group col-md-3">
+
+                        {{ form_widget(form.abs, {'attr': {'class': 'form-control'}}) }}<b>ABS</b>
+
+                        {{ form_errors(form.abs, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class=" form-group col-md-3">
+
+                        {{ form_widget(form.esp, {'attr': {'class': 'form-control'}}) }}<b>ESP </b>
+
+                        {{ form_errors(form.esp, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class=" form-group col-md-3">
+                        {{ form_widget(form.asr, {'attr': {'class': 'form-control'}}) }}<b>ASR</b>
+
+                        {{ form_errors(form.asr, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class=" form-group col-md-3">
+                        {{ form_widget(form.frigo, {'attr': {'class': 'form-control'}}) }}<b>Frigo</b>
+
+                        {{ form_errors(form.frigo, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class=" form-group col-md-3">
+
+                        {{ form_widget(form.micro_conducteur, {'attr': {'class': 'form-control'}}) }}<b>Micro Cond.</b>
+
+                        {{ form_errors(form.micro_conducteur, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class=" form-group col-md-3">
+
+                        {{ form_widget(form.micro_guide, {'attr': {'class': 'form-control'}}) }}<b>Micro Guide</b>
+
+                        {{ form_errors(form.micro_guide, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class=" form-group col-md-3">
+                        {{ form_widget(form.girouette, {'attr': {'class': 'form-control'}}) }}<b>Girouette</b>
+
+                        {{ form_errors(form.girouette, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class=" form-group col-md-3">
+                        {{ form_widget(form.tablettes, {'attr': {'class': 'form-control'}}) }}<b>Tablettes</b>
+
+                        {{ form_errors(form.tablettes, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class=" form-group col-md-3">
+
+                        {{ form_widget(form.chauffage_independant, {'attr': {'class': 'form-control'}}) }}<b>Chauffage Indépandant</b>
+
+                        {{ form_errors(form.chauffage_independant, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class=" form-group col-md-3">
+
+                        {{ form_widget(form.buses_individuelles, {'attr': {'class': 'form-control'}}) }}<b>Buses individuelles</b>
+
+                        {{ form_errors(form.buses_individuelles, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class=" form-group col-md-3">
+                        {{ form_widget(form.sieges_decalables, {'attr': {'class': 'form-control'}}) }}<b>Sièges décalables</b>
+
+                        {{ form_errors(form.sieges_decalables, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class=" form-group col-md-3">
+                        {{ form_widget(form.repose_mollet, {'attr': {'class': 'form-control'}}) }}<b>Repose mollet </b>
+
+                        {{ form_errors(form.repose_mollet, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class=" form-group col-md-3">
+                        {{ form_widget(form.rideaux, {'attr': {'class': 'form-control'}}) }}<b>Rideaux</b>
+
+                        {{ form_errors(form.rideaux, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+                    <div class=" form-group col-md-4">
+
+                        {{ form_label(form.ceinture_securite, "Ceintures Sécu.: ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.ceinture_securite, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.ceinture_securite, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class=" form-group col-md-4">
+
+                        {{ form_label(form.video, "Vidéo: ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.video, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.video, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class=" form-group col-md-4">
+                        {{ form_label(form.camera, "Caméra: ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.camera, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.camera, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        {{ form_label(form.tachygraphe, "Tachygraphe: ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.tachygraphe, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.tachygraphe, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        {{ form_label(form.radio, "Radio: ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.radio, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.radio, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12">
                         <div class="dropzone my-dropzone" id="form_snippet_image" action="{{path('ajax_snippet_image_send', {'id' : id })}}">
                         </div>
                     </div>
@@ -247,6 +395,7 @@
     <script src="{{ asset('js/dropzone.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function(){
+            $(".etat_hide").hide();
             $('input:checkbox').css('visibility', 'visible');
 
             //je récupère l'action où sera traité l'upload en PHP
