@@ -374,10 +374,119 @@
                         {{ form_errors(form.radio, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
+                {% if car.images is not null and car.images is not empty %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="separator"></div>
+                        </div>
+                    </div>
+                <div class="from-row">
+                    <div class="col-md-12">
+                        <h4>Photos enregistrés</h4>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12 fa_edit">
+                        {% if car.images | length == 1 or car.images | length == 2 %}
+                            {% for car in car.images  %}
+                                <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" href="../../{{ car.url }}" data-fancybox="gallery">
+                                    <img style="width: 49%; height: 100%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
+                                </a>
+                            {% endfor %}
+                        {% elseif car.images | length == 3 %}
+                            {% for car in car.images  %}
+                                <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" href="../../{{ car.url }}" data-fancybox="gallery">
+                                    <img style="width: 33%; height: 100%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
+                                </a>
+                            {% endfor %}
+                        {% elseif car.images | length == 4  %}
+                            {% for car in car.images  %}
+                                <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" href="../../{{ car.url }}" data-fancybox="gallery">
+                                    <img style="width: 24%; height: 100%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
+                                </a>
+                            {% endfor %}
+                        {% elseif car.images | length > 4  %}
+                            {% for car in car.images  %}
+                                <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" href="../../{{ car.url }}" data-fancybox="gallery">
+                                    <img style="width: 14%; height: 100%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="separator"></div>
+                        </div>
+                    </div>
+                {% endif %}
                 <div class="form-row">
                     <div class="col-md-12">
                         <div class="dropzone my-dropzone" id="form_snippet_image" action="{{path('ajax_snippet_image_send', {'id' : id })}}">
                         </div>
+                    </div>
+                </div>
+                <h5>Caractéristiques</h5>
+                <div class="form-row">
+                    <div class=" form-group col-md-4">
+
+                        {{ form_label(form.puissance, "Puissance moteur (cv din) : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.puissance, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.puissance, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class=" form-group col-md-4">
+
+                        {{ form_label(form.energie, "Energie : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.energie, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.energie, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class=" form-group col-md-4">
+                        {{ form_label(form.transmission, "Transmission : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.transmission, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.transmission, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class=" form-group col-md-3">
+
+                        {{ form_label(form.bv, "BV : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.bv, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.bv, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class=" form-group col-md-3">
+
+                        {{ form_label(form.longueur, "Longueur : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.longueur, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.longueur, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class=" form-group col-md-3">
+                        {{ form_label(form.hauteur, "Hauteur : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.hauteur, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.hauteur, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class=" form-group col-md-3">
+
+                        {{ form_label(form.accessibilite, "Accessibilité : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.accessibilite, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.accessibilite, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        {{ form_label(form.prix, "Prix HT : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.prix, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
                 <div class="form-row">
@@ -397,6 +506,31 @@
         $(document).ready(function(){
             $(".etat_hide").hide();
             $('input:checkbox').css('visibility', 'visible');
+
+            var carprix = $('#car_prix').val();
+
+            $('.del_photo').on('click', function(e){
+                e.preventDefault();
+                var mmd = $(this).next('a').attr('href');
+
+                if(confirm("Supprimer cette photo ?"))
+                {
+                    $(this).hide().next().hide();
+                    var url= window.location.href;
+
+
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {'del' : mmd},
+                        dataType: 'json',
+                        success: function(data){
+                            console.log(data);
+                        }
+                    });
+                }
+
+            });
 
             //je récupère l'action où sera traité l'upload en PHP
             var _actionToDropZone = $("#form_snippet_image").attr('action');

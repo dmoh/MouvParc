@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -614,6 +615,20 @@ Class MainController extends Controller
                      array('id' => 'DESC',
                  ));
         $nombrep = count($pannes);
+
+        if($req->isXmlHttpRequest())
+        {
+
+
+            $delUrl =  $req->get('del');
+            $delUrl =substr($delUrl, 3);
+            $image2 = $em->getRepository(Image::class)->findOneBy(array('url'=> $delUrl));
+
+            $em->remove($image2);
+            $em->flush();
+            return new JsonResponse(array('success' => true));
+
+        }
 
         if($nombrep == 0)
         {
@@ -2153,9 +2168,57 @@ Class MainController extends Controller
                 'required'  => false,
             ))
 
+            ->add('puissance', NumberType::class)
+            ->add('energie', ChoiceType::class, array(
+                'required'  => false,
+                "choices" => array(
+                    "Diesel"        => "Diesel",
+                    "Electric"      =>  "électric",
+                    "Essence"       =>  "Essence",
+                    "GNV"           =>  "gnv",
+                    "GPL"           =>  "gpl",
+                    "Hybride"       =>  "hybride"
+                )))
+            ->add('transmission', ChoiceType::class, array(
+                'required'  => false,
+                "choices" => array(
+                    "Boite mécanique"        => "boite mécanique",
+                    "Boite automatique"      =>  "boite automatique",
+                    "Boite robotisée"       =>  "boite robotisée",
+                )))
+            ->add('bv', NumberType::class)
+            ->add('longueur', NumberType::class, array(
+                'grouping'  => true,
+            ))
+            ->add('hauteur', NumberType::class, array(
+                'grouping'  => true,
+            ))
+            ->add('accessibilite', ChoiceType::class, array(
+                'required'  => false,
+                "choices" => array(
+                    "Prédisposé UFR"        => "prédisposé ufr",
+                    "Rampe manuelle"        =>  "rampe manuelle",
+                    "Ascenseur"             =>  "ascenseur",
+                    "Rampe électrique"    =>  "rampe électrique",
+                )))
+            ->add('prix', NumberType::class)
+
         ;
 
         $form->handleRequest($request);
+
+        if($request->isXmlHttpRequest())
+        {
+            $delUrl =  $request->get('del');
+            $delUrl =substr($delUrl, 6);
+            $filename = substr($delUrl, 10);
+            $image2 = $em->getRepository(Image::class)->findOneBy(array('url'=> $delUrl));
+            $image2->deleteFiles($filename);
+            $em->remove($image2);
+            $em->flush();
+            return new JsonResponse(array('success' => true));
+        }
+
 
 
         if ($request->isMethod("POST"))
@@ -2215,7 +2278,8 @@ Class MainController extends Controller
 
         return $this->render('front/mev.html.twig', array(
             'form'  => $form->createView(),
-            'id'    => $car->getId()
+            'id'    => $car->getId(),
+            'car'   => $car
         ));
     }
 

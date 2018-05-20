@@ -388,6 +388,55 @@ class Cars
     protected $filets;
 
 
+    /**
+     * @ORM\Column(name="prix", type="integer", nullable=true)
+     */
+    protected $prix;
+
+
+    /**
+     * @ORM\Column(name="puissance", type="integer", nullable=true)
+     */
+    protected $puissance;
+
+
+    /**
+     * @ORM\Column(name="energie", type="string", length=100, nullable=true)
+     */
+    protected $energie;
+
+
+    /**
+     * @ORM\Column(name="transmission", type="string", length=100, nullable=true)
+     */
+    protected $transmission;
+
+    /**
+     * @ORM\Column(name="bv", type="integer", nullable=true)
+     */
+    protected $bv;
+
+
+    /**
+     * @ORM\Column(name="longueur", type="float", nullable=true)
+     */
+    protected $longueur;
+
+    /**
+     * @ORM\Column(name="hauteur", type="float", nullable=true)
+     */
+    protected $hauteur;
+
+
+    /**
+     * @ORM\Column(name="accessibilite", type="string", length=100, nullable=true)
+     */
+    protected $accessibilite;
+
+
+
+
+
 
 
 
@@ -1530,6 +1579,136 @@ class Cars
     {
         $this->filets = $filets;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPrix()
+    {
+        return $this->prix;
+    }
+
+    /**
+     * @param mixed $prix
+     */
+    public function setPrix($prix): void
+    {
+        $this->prix = $prix;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPuissance()
+    {
+        return $this->puissance;
+    }
+
+    /**
+     * @param mixed $puissance
+     */
+    public function setPuissance($puissance): void
+    {
+        $this->puissance = $puissance;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnergie()
+    {
+        return $this->energie;
+    }
+
+    /**
+     * @param mixed $energie
+     */
+    public function setEnergie($energie): void
+    {
+        $this->energie = $energie;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransmission()
+    {
+        return $this->transmission;
+    }
+
+    /**
+     * @param mixed $transmission
+     */
+    public function setTransmission($transmission): void
+    {
+        $this->transmission = $transmission;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBv()
+    {
+        return $this->bv;
+    }
+
+    /**
+     * @param mixed $bv
+     */
+    public function setBv($bv): void
+    {
+        $this->bv = $bv;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLongueur()
+    {
+        return $this->longueur;
+    }
+
+    /**
+     * @param mixed $longueur
+     */
+    public function setLongueur($longueur): void
+    {
+        $this->longueur = $longueur;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHauteur()
+    {
+        return $this->hauteur;
+    }
+
+    /**
+     * @param mixed $hauteur
+     */
+    public function setHauteur($hauteur): void
+    {
+        $this->hauteur = $hauteur;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessibilite()
+    {
+        return $this->accessibilite;
+    }
+
+    /**
+     * @param mixed $accessibilite
+     */
+    public function setAccessibilite($accessibilite): void
+    {
+        $this->accessibilite = $accessibilite;
+    }
+
+
 
 
 

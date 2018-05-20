@@ -121,6 +121,37 @@ div#form_snippet_image {
     background: #f5f4f4;
 }
 
+.bg-green .btn-block
+{
+    background: #1ef950;
+    color: #fff;
+
+}
+
+.bg-green .btn-block:hover{
+    background: #007bff;
+    color: #ffffff;
+}
+.fa_modif .fa, .fa_edit .fa{
+    width: 30px;
+    height: 30px;
+    z-index: 10000;
+    /* padding-top: 11px; */
+    color: red;
+    /* float: right; */
+    /* position: absolute; */
+    /* top: 53px; */
+    position: absolute;
+    font-size: 20px;
+    top: 13px;
+    /* border: 1px solid red; */
+    border-radius: 100px;
+    cursor: pointer;
+}
+
+.fa_edit .fa{
+    top: -9px
+}
 
 /************************CARACTERISTIQUES ET EQUIPEMENTS ANNONCE CAR*******************/
 

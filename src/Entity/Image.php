@@ -126,6 +126,19 @@ class Image
         }
     }
 
+    public function deleteFiles($filename)
+    {
+        $file_path = $this->getUploadRootDir().'/'.$filename;
+
+        //Suppresion du fichier
+        if(file_exists($file_path))unlink($file_path);
+
+
+        $fileTmp = $this->path;
+        //suppression du fichier temporaire
+        if(file_exists($fileTmp)) unlink($fileTmp);
+    }
+
 
     /**
      * @ORM\PostPersist()

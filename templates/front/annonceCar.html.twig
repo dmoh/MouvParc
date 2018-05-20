@@ -5,7 +5,7 @@
         <div class="container">
             <div style="margin-top: 15px" class="row">
                 <div class="col-md-6 annonce_header">
-                    <h5>Autocar {{ car.marque }}</h5>
+                    <h5>Autocar <strong style="color: #00e765"><em>{{ car.marque | upper }}</em></strong></h5>
                     {% if car.km is defined  and car.km > 0 or car.km is not null %}
                     <i class="fa fa-bus"></i><span>
                         {{ car.km }} Km | mise en circulation le {{ car.dateMar |date('d/m/Y') }}
@@ -14,7 +14,7 @@
                     {% endif %}</span>
                 </div>
                 <div style="text-align: right" class="col-md-6">
-                    <i style="color: #00a65a" class="fa fa-money"></i><span> <em><strong>180.000 € HT</strong></em></span>
+                    <i style="color: #0be765" class="fa fa-money"></i><span> <em><strong style="font-size: 25px">{{ car.prix }} € HT</strong></em></span>
                 </div>
             </div>
             <div class="row">
@@ -24,7 +24,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    {% if car.images is not null %}
+                    {% if car.images is not null and car.images is not empty %}
                         {% for car in car.images  %}
                             {% if loop.first %}
                                 <a href="../../{{ car.url }}" data-fancybox="gallery">
@@ -36,48 +36,53 @@
                                     </a>
                             {% endif %}
                         {% endfor %}
-                        {% else %}
-                        <h4>Il n'y a pas de photo pour ce car</h4>
+                    {% else %}
+                        <img style="display: block; width: 211px; height: 211px; margin: 0 auto" src="{{ asset('images/no-camera.png') }}" alt="no camera">
                     {% endif %}
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <h6>Caractéristiques :</h6>
                     <div class="caracteristiques">
                         <table style="max-width: 300px" class="table-responsive">
                             <tbody>
-                                <tr>
-                                    <td>Norme Euro : </td><td><em class="right">{{ car.euro }}</em></td>
+                                <tr class="bg-grey">
+                                    <td>Norme Euro : </td><td><em class="right"><b>{{ car.euro }}</b></em></td>
                                 </tr>
                                 <tr>
-                                    <td>Puissance moteur (cv din) : </td><td><em class="right">{{ car.euro }}</em></td>
+                                    <td>Puissance moteur (cv din) : </td><td><em class="right"><b>{{ car.puissance }}</b></em></td>
+                                </tr>
+                                <tr class="bg-grey">
+                                    <td>Energie : </td><td><em class="right"><b>{{ car.energie | upper }}</b></em></td>
                                 </tr>
                                 <tr>
-                                    <td>Energie : </td><td><em class="right">{{ car.euro }}</em></td>
+                                    <td>Transmission : </td><td><em class="right"><b>{{ car.transmission | upper }}</b></em></td>
+                                </tr>
+                                <tr class="bg-grey">
+                                    <td>Bv : </td><td><em class="right"><b>{{ car.bv }}</b></em></td>
                                 </tr>
                                 <tr>
-                                    <td>Transmission : </td><td><em class="right">{{ car.euro }}</em></td>
+                                    <td>Longueur : </td><td><em class="right"><b>{{ car.longueur }} m</b></em></td>
+                                </tr>
+                                <tr class="bg-grey">
+                                    <td>Hauteur : </td><td><em class="right"><b>{{ car.hauteur }} m</b></em></td>
                                 </tr>
                                 <tr>
-                                    <td>Bv : </td><td><em class="right">{{ car.euro }}</em></td>
+                                    <td>Sièges passagers : </td><td><em class="right"><b>{{ car.nbPlaces }}</b></em></td>
                                 </tr>
-                                <tr>
-                                    <td>Longueur : </td><td><em class="right">{{ car.euro }}</em></td>
-                                </tr>
-                                <tr>
-                                    <td>Hauteur : </td><td><em class="right">{{ car.euro }}</em></td>
-                                </tr>
-                                <tr>
-                                    <td>Sièges passagers : </td><td><em class="right">{{ car.nbPlaces }}</em></td>
-                                </tr>
-                                <tr>
-                                    <td>Passagers debout : </td><td><em class="right">{{ car.euro }}</em></td>
-                                </tr>
-                                <tr>
-                                    <td>Accessibilité : </td><td><em class="right">{{ car.euro }}</em></td>
+                                <tr class="bg-grey">
+                                    <td>Accessibilité : </td><td><em class="right"><b>{{ car.accessibilite | upper }}</b></em></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="col-md-4">
+                    <h6><em>AUTOCARS PAYS DE SAVOIE</em></h6>
+                    <br>
+                    <span>55 impasse du Môle - Z.A des Dragiez <br>74800 La Roche sur Foron</span><br>
+                    <span style="color: #0be765"><i style="color: #0be765" class="fa fa-phone"></i>04 50 97 57 12 <br></span>
+                    <a href="mailto:commercial@autocarspaysdesaoive.fr">mail : commercial@autocarspaysdesavoie.fr</a>
+                    <a href="#" class="btn btn-primary">Je suis intéressé !</a>
                 </div>
             </div>
             <div class="row">
@@ -346,9 +351,12 @@
                 </div>
             </div>
             {% if app.user %}
-                <div style="margin-bottom: 20px" class="row">
-                    <div class="col-md-4">
-                        <a href="{{ path('car', {'id': car.id }) }}" class="btn btn-primary">Retour Fiche du car</a>
+                <div style="margin-bottom: 20px" class="row bg-green">
+                    <div class="col-md-6">
+                        <a href="{{ path('car', {'id': car.id }) }}" class="btn btn-block">Fiche du car</a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ path('mev_car', {'id': car.id }) }}" class="btn btn-block">Modifier l'annonce</a>
                     </div>
                 </div>
             {% endif %}
