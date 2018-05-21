@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4aea78bf-d786-447e-a7ee-8d982dc11f4e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/dropzone.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/dropzone.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/dropzone.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/dropzone.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Image.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Image.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/front/mev.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/front/mev.html.twig" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,8 +19,8 @@
       <file leaf-file-name="mev.html.twig" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/front/mev.html.twig">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="422" column="90" selection-start-line="422" selection-start-column="90" selection-end-line="422" selection-end-column="90" />
+            <state relative-caret-position="484">
+              <caret line="547" column="34" selection-start-line="547" selection-start-column="34" selection-end-line="547" selection-end-column="34" />
               <folding>
                 <element signature="e#23703#23726#0#HTML" expanded="true" />
               </folding>
@@ -78,7 +73,7 @@
         <entry file="file://$PROJECT_DIR$/public/js/dropzone.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="217">
-              <caret line="421" column="85" selection-start-line="421" selection-start-column="85" selection-end-line="421" selection-end-column="85" />
+              <caret line="664" column="60" selection-start-line="664" selection-start-column="52" selection-end-line="664" selection-end-column="60" />
             </state>
           </provider>
         </entry>
@@ -141,8 +136,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getPannes</find>
-      <find>setC</find>
       <find>addI</find>
       <find>images</find>
       <find>setPAnn</find>
@@ -170,7 +163,9 @@
       <find>dz-errormessage</find>
       <find>error</find>
       <find>déposez</find>
+      <find>resizeWidth</find>
       <find>form_sni</find>
+      <find>resizeWi</find>
     </findStrings>
     <dirStrings>
       <dir>C:\wamp64\www\MouvParc\public\photosCar</dir>
@@ -473,16 +468,15 @@
       <workItem from="1526645617044" duration="5678000" />
       <workItem from="1526665126760" duration="24087000" />
       <workItem from="1526819700475" duration="2167000" />
-      <workItem from="1526885419150" duration="9640000" />
+      <workItem from="1526885419150" duration="11658000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="455800000" />
+    <option name="totallyTimeSpent" value="457818000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-6" y="-6" width="1549" height="837" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13858165" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -796,13 +790,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/dropzone.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="421" column="85" selection-start-line="421" selection-start-column="85" selection-end-line="421" selection-end-column="85" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/css/dropzone.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="464">
@@ -810,10 +797,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/dropzone.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="664" column="60" selection-start-line="664" selection-start-column="52" selection-end-line="664" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/front/mev.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="422" column="90" selection-start-line="422" selection-start-column="90" selection-end-line="422" selection-end-column="90" />
+        <state relative-caret-position="484">
+          <caret line="547" column="34" selection-start-line="547" selection-start-column="34" selection-end-line="547" selection-end-column="34" />
           <folding>
             <element signature="e#23703#23726#0#HTML" expanded="true" />
           </folding>

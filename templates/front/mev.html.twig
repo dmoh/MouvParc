@@ -542,7 +542,13 @@
             Dropzone.autoDiscover = false;
             $("div#form_snippet_image").dropzone({
                 url: _actionToDropZone,
+                paramName: "file",
                 maxFilesize: 2,
+                resizeWidth: 450,
+                resizeHeight: 250,
+                transformFile: function (file, done) {
+                    done(file);
+                }
             });
 
         });
