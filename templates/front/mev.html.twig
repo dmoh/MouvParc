@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <script src="{{ asset('css/dropzone.css') }}"></script>
+
 {% endblock %}
 {% block body %}
     <div class="container">
@@ -536,7 +536,7 @@
             var _actionToDropZone = $("#form_snippet_image").attr('action');
             //je définis ma zone de drop grâce à l'ID de ma div citée plus haut.
             Dropzone.autoDiscover = false;
-            var myDropzone = new Dropzone("#form_snippet_image", { url: _actionToDropZone, addRemoveLinks: true });
+            $("div#form_snippet_image").dropzone({ url: _actionToDropZone, maxFilesize: 2, maxFiles: 6});
         });
     </script>
 {% endblock %}

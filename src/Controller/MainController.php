@@ -622,7 +622,10 @@ Class MainController extends Controller
 
             $delUrl =  $req->get('del');
             $delUrl =substr($delUrl, 3);
+            $filename = substr($delUrl, 9);
+
             $image2 = $em->getRepository(Image::class)->findOneBy(array('url'=> $delUrl));
+            $image2->deleteFiles($filename);
 
             $em->remove($image2);
             $em->flush();
