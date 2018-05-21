@@ -28,12 +28,12 @@
                     <ul class="navbar-nav ml-auto">
                         {% if app.user %}
                             <li><a class="nav-link active" href="{{ path('add_rubrique') }}">Rubrique</a></li>
+                            <li><a class="nav-link active" href="{{ path('miseajour') }}">Màj BDD</a></li>
                             <li><a class="nav-link active" href="{{ path('index') }}">Ajouter un Autocar</a></li>
                             <li><a class="nav-link active" href="{{ path('liste_panne') }}">Car en panne</a></li>
-                        <li><a class="nav-link active" href="{{ path('consultation') }}">Etat Parc</a></li>
-                        <li><a class="nav-link active" href="{{ path('recherche') }}">Recherche</a></li>
+                            <li><a class="nav-link active" href="{{ path('consultation') }}">Etat Parc</a></li>
+                            <li><a class="nav-link active" href="{{ path('recherche') }}">Recherche</a></li>
                             <li><a class="nav-link active" href="{{ path('logout') }}">Se déconnecter</a></li>
-
                         {% else %}
                             <li><a class="nav-link active" href="#" data-toggle="modal" data-target="#exampleModalLong">Se connecter</a></li>
                         {% endif %}
@@ -64,15 +64,12 @@
                               {% endif %}
                           {% endif %}
                           <form class="form-horizontal" action="{{ path('login') }}" method="post">
-
                               <label class="control-label" for="username">Nom d'utilisateur:</label>
                               <input type="text" class="form-control" id="username" name="_username" value="" autocomplete="off" />
-
                               <label class="control-label" for="password">Mot de passe:</label>
                               <input type="password" class="form-control" id="password" name="_password" />
-
-                               <input type="checkbox" id="remember_me" name="_remember_me"  />
-                               <label for="remember_me"> Se souvenir de moi</label>
+                              <input type="checkbox" id="remember_me" name="_remember_me"  />
+                              <label for="remember_me"> Se souvenir de moi</label>
                               <button class="btn btn-primary" id="valid" type="submit">Se connecter</button>
                           </form>
                       </div>

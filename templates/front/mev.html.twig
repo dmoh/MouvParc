@@ -1,7 +1,4 @@
 {% extends 'base.html.twig' %}
-{% block stylesheets %}
-
-{% endblock %}
 {% block body %}
     <div class="container">
         <div class="row">
@@ -422,6 +419,13 @@
                 {% endif %}
                 <div class="form-row">
                     <div class="col-md-12">
+                        <h5>Importez photos du car </h5>
+                        <span style="color: #ff5500;">Attention, si une croix <b><em>ROUGE</em></b> apparait sur la photo, cela signifie que la photo ne sera pas enregistrée ! (Taille max : 2MB) </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12">
                         <div class="dropzone my-dropzone" id="form_snippet_image" action="{{path('ajax_snippet_image_send', {'id' : id })}}">
                         </div>
                     </div>
@@ -536,7 +540,11 @@
             var _actionToDropZone = $("#form_snippet_image").attr('action');
             //je définis ma zone de drop grâce à l'ID de ma div citée plus haut.
             Dropzone.autoDiscover = false;
-            $("div#form_snippet_image").dropzone({ url: _actionToDropZone, maxFilesize: 2, maxFiles: 6});
+            $("div#form_snippet_image").dropzone({
+                url: _actionToDropZone,
+                maxFilesize: 2,
+            });
+
         });
     </script>
 {% endblock %}

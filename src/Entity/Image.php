@@ -76,8 +76,6 @@ class Image
     }
 
 
-
-
     public function __construct()
     {
         $this->car = new ArrayCollection();

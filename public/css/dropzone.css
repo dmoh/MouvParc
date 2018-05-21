@@ -298,6 +298,16 @@
     left: 50%;
     margin-left: -27px;
     margin-top: -27px; }
+.dropzone .dz-preview .dz-error-mark{
+    background: #ff0000;
+    border: 1px solid #ff0000;
+    border-radius: 100px;
+}
+.dropzone .dz-preview .dz-success-mark{
+    background: #26ff51;
+    border: 1px solid #61ff3d;
+    border-radius: 100px;
+}
 .dropzone .dz-preview .dz-success-mark svg, .dropzone .dz-preview .dz-error-mark svg {
     display: block;
     width: 54px;

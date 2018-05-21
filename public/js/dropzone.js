@@ -419,7 +419,7 @@ var Dropzone = function (_Emitter) {
                 /**
                  * The text used before any files are dropped.
                  */
-                dictDefaultMessage: "Déposez vos fichiers ici (6 max)",
+                dictDefaultMessage: "Déposez les photos ici (6 max), Taille Max : 2MB",
 
                 /**
                  * The text that replaces the default message text it the browser is not supported.
