@@ -2,13 +2,23 @@
 
 {% block body %}
     {%  if car %}
-        <div class="container">
+        {% if mail is defined %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p style="color: #00e765">{{ mail }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div style="margin-top: 20px;" class="container">
             <div style="margin-top: 15px" class="row">
                 <div class="col-md-6 annonce_header">
                     <h5>Autocar <strong style="color: #00e765"><em>{{ car.marque | upper }}</em></strong></h5>
-                    {% if car.km is defined  and car.km > 0 or car.km is not null %}
+                    {% if car.km is defined  and car.km > 0 and car.km is not null %}
                     <i class="fa fa-bus"></i><span>
-                        {{ car.km }} Km | mise en circulation le {{ car.dateMar |date('d/m/Y') }}
+                        {{ car.km }}
+                        Km | mise en circulation le {{ car.dateMar |date('d/m/Y') }}
                         {% else %}
                            <strong>{{ car.dateMar | date('d/m/Y') }}</strong>
                     {% endif %}</span>
@@ -80,9 +90,38 @@
                     <h6><em>AUTOCARS PAYS DE SAVOIE</em></h6>
                     <br>
                     <span>55 impasse du Môle - Z.A des Dragiez <br>74800 La Roche sur Foron</span><br>
-                    <span style="color: #0be765"><i style="color: #0be765" class="fa fa-phone"></i>04 50 97 57 12 <br></span>
-                    <a href="mailto:commercial@autocarspaysdesaoive.fr">mail : commercial@autocarspaysdesavoie.fr</a>
-                    <a href="#" class="btn btn-primary">Je suis intéressé !</a>
+                    <span style="color: #0be765"><i style="color: #0be765" class="fa fa-phone"></i>06 XX XX XX XX<br></span>
+                    <a href="mailto:commercial@autocarspaysdesaoive.fr">mail : thierry.janeriat@autocarspaysdesavoie.fr</a>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mailModal" >Envoyer par mail</button>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="mailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Le mail du client</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {{ form_start(form) }}
+                                {# Génération du label. #}
+                                {{ form_label(form.mailclient, "Déclarant : ", {'label_attr': {'class': ' control-label'}}) }}
+                                {# Génération de l'input.#}
+                                {{ form_widget(form.mailclient, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.mailclient, { 'attr': {'class': 'red' }}) }}
+
+                                {# Génération de l'input.#}
+                                {{ form_widget(form.envoyer, {'attr': {'class': 'form-control'}}) }}
+
+                            {{ form_end(form) }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="reloadMail" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -362,4 +401,13 @@
             {% endif %}
         </div>
     {% endif %}
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            /*$('#mailModal').click(function () {
+               location.reload();
+            });*/
+        });
+    </script>
 {% endblock %}

@@ -98,7 +98,7 @@ ul.nav a
 }
 
 div.annonce_header{
-    margin-bottom: 15px;
+    /*margin-bottom: 15px;*/
 }
 .no_marg_top .btn{
     margin-top: 0;
@@ -156,9 +156,9 @@ div#form_snippet_image {
 /************************CARACTERISTIQUES ET EQUIPEMENTS ANNONCE CAR*******************/
 
 div.caracteristiques table, div.equipements_table table{
-    font-size: 12px;
+    font-size: 13px;
     font-family: "Roboto", sans-serif;
-    line-height: 17px;
+    line-height: 27px;
     width: 100%;
     border-collapse: separate;
     display: table;

@@ -260,10 +260,6 @@ class Cars
     protected $km;
 
 
-
-
-
-
     /**
      * @ORM\Column(name="regulateur_vitesse", type="boolean", nullable=true)
      */
@@ -1707,6 +1703,7 @@ class Cars
     {
         $this->accessibilite = $accessibilite;
     }
+
 
 
 

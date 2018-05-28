@@ -621,9 +621,10 @@ Class MainController extends Controller
 
 
             $delUrl =  $req->get('del');
+
             $delUrl =substr($delUrl, 3);
             $filename = substr($delUrl, 9);
-
+           
             $image2 = $em->getRepository(Image::class)->findOneBy(array('url'=> $delUrl));
             $image2->deleteFiles($filename);
 
@@ -729,7 +730,8 @@ Class MainController extends Controller
                             'kevin.perrillat@autocarspaysdesavoie.fr'       =>  'Kevin Perrillat',
                             'thierry.janeriat@autocarspaysdesavoie.fr'      =>  'Thierry Janeriat',
                             'guillaume-aps@outlook.fr'                      =>  'Guillaume Waquet',
-                            'mounir.smirani@autocarspaysdesavoie.fr'        =>  'Mounir Smirani'
+                            'mounir.smirani@autocarspaysdesavoie.fr'        =>  'Mounir Smirani',
+                            'cedric.coppin@autocarspaysdesavoie.fr'         =>  'Cedric Coppin'
                         ])
                         ->setBody(
                             $this->renderView(
@@ -788,7 +790,8 @@ Class MainController extends Controller
                                     'kevin.perrillat@autocarspaysdesavoie.fr'       =>  'Kevin Perrillat',
                                     'thierry.janeriat@autocarspaysdesavoie.fr'      =>  'Thierry Janeriat',
                                     'guillaume-aps@outlook.fr'                      =>  'Guillaume Wacquet',
-                                    'mounir.smirani@autocarspaysdesavoie.fr'        =>  'Mounir Smirani'
+                                    'mounir.smirani@autocarspaysdesavoie.fr'        =>  'Mounir Smirani',
+                                    'cedric.coppin@autocarspaysdesavoie.fr'         =>  'Cedric Coppin'
                                 ])
                                 ->setBody(
                                     $this->renderView(
@@ -888,7 +891,8 @@ Class MainController extends Controller
                             'kevin.perrillat@autocarspaysdesavoie.fr'       =>  'Kevin Perrillat',
                             'thierry.janeriat@autocarspaysdesavoie.fr'      =>  'Thierry Janeriat',
                             'guillaume-aps@outlook.fr'                      =>  'Guillaume Wacquet',
-                            'mounir.smirani@autocarspaysdesavoie.fr'        =>  'Mounir Smirani'
+                            'mounir.smirani@autocarspaysdesavoie.fr'        =>  'Mounir Smirani',
+                            'cedric.coppin@autocarspaysdesavoie.fr'         =>  'Cedric Coppin'
                         ])
                         ->setBody(
                             $this->renderView(
@@ -2096,6 +2100,7 @@ Class MainController extends Controller
                 "Intarder"      => "intarder",
                 "Telma"         => "telma"
             )))
+            ->add('km', NumberType::class)
             ->add('gps', CheckboxType::class, array(
                 'required'  => false,
             ))
@@ -2213,9 +2218,13 @@ Class MainController extends Controller
         if($request->isXmlHttpRequest())
         {
             $delUrl =  $request->get('del');
+            
             $delUrl =substr($delUrl, 6);
             $filename = substr($delUrl, 10);
+
+            
             $image2 = $em->getRepository(Image::class)->findOneBy(array('url'=> $delUrl));
+            
             $image2->deleteFiles($filename);
             $em->remove($image2);
             $em->flush();
@@ -2297,14 +2306,78 @@ Class MainController extends Controller
     }
 
 
-    public function annonceCar(Request $request, $id)
+    public function annonceCar(Request $request, $id, \Swift_Mailer $mailer)
     {
         $em = $this->getDoctrine()->getManager();
         $car = $em->getRepository(Cars::class)->find($id);
+        $data= array();
+        $form =$this->createFormBuilder($data)
+                ->add('mailclient', TextType::class)
+                ->add('envoyer', SubmitType::class)
+                ->getForm()
+        ;
+
+        if($request->isMethod("POST"))
+        {
+            $form->handleRequest($request);
+
+            // $data is a simply array with your form fields
+            // like "query" and "category" as defined above.
+            $data = $form->getData();
+            $mail = $data['mailclient'];
+
+            if (filter_var($mail, FILTER_VALIDATE_EMAIL))
+            {
+                $mess = (new \Swift_Message('Mouvparc : Mise en Vente'))
+                    ->setFrom('info@caraps.fr', 'Mouv Parc')
+                    ->setTo([
+                        'mkanoute74@gmail.com'  =>  'Mohamed Kanoute',
+                    ])
+                    ->setBody(
+                        $this->renderView(
+                            'emails/mev.html.twig',
+                            array(
+                                'marque'        => $car->getMarque(),
+                                'euro'          => $car->getEuro(),
+                                'puissance'     => $car->getPuissance(),
+                                'energie'       => $car->getEnergie(),
+                                'transmission'  => $car->getTransmission(),
+                                'bv'            => $car->getBv(),
+                                'longueur'      => $car->getLongueur(),
+                                'hauteur'       => $car->getHauteur(),
+                                'nbPlaces'      => $car->getNbPlaces(),
+                                'accessibilite' => $car->getAccessibilite()
+                            )),
+                        'text/html'
+                    );
+                $mailer->send($mess);
+
+                $data= array();
+                $form =$this->createFormBuilder($data)
+                    ->add('mailclient', TextType::class)
+                    ->add('envoyer', SubmitType::class)
+                    ->getForm()
+                ;
+
+                return $this->render('front/annonceCar.html.twig',
+                    array(
+                        "car"    => $car,
+                        "form"   => $form->createView(),
+                        "mail"   => "Le mail a bien été envoyé",
+                    )
+                    );
+            }
+            else
+            {
+                echo "C'est MORT !";
+                die();
+            }
+        }
 
         return $this->render('front/annonceCar.html.twig',
                array(
-                   "car" =>$car
+                   "car"    => $car,
+                   "form"   => $form->createView()
                )
             );
 
@@ -2320,9 +2393,6 @@ Class MainController extends Controller
         $car = $em->getRepository(Cars::class)->find($id);
 
         $media = $request->files->get('file');
-
-
-
         $sizeImage = $media->getClientSize();
         $extensionImage = $media->guessExtension();
         $photoName = $this->generateUniqueFileName().'.'.$extensionImage;

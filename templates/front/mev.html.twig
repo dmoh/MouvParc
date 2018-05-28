@@ -416,6 +416,7 @@
                             <div class="separator"></div>
                         </div>
                     </div>
+                {% else %}
                 {% endif %}
                 <div class="form-row">
                     <div class="col-md-12">
@@ -487,10 +488,16 @@
 
                 <div class="form-row">
                     <div class="col-md-6">
-                        {{ form_label(form.prix, "Prix HT : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_label(form.prix, "Prix HT en € : ", {'label_attr': {'class': ' control-label'}}) }}
                         {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
 
                         {{ form_errors(form.prix, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_label(form.km, "Compteur km : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.km, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.km, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
                 <div class="form-row">
@@ -511,7 +518,41 @@
             $(".etat_hide").hide();
             $('input:checkbox').css('visibility', 'visible');
 
-            var carprix = $('#car_prix').val();
+            $('#car_enregistrer').on('click', function(){
+
+                var car_prix = $('#car_prix').val();
+                var km = $('#car_km').val();
+
+                if(car_prix == '' || car_prix == 0 || car_prix.length < 5 || isNaN(car_prix) )
+                {
+                    alert("le prix est non renseigné ou le format est incorrect");
+                    return false;
+                }
+                else if(car_prix < 50000)
+                {
+                    if(confirm("Êtes vous sûre du prix ? " + car_prix + " €"))
+                    {}
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if(km == '' || km == 0 || km.length < 5 || isNaN(km) )
+                {
+                    alert("le kilométrage est non renseigné ou le format est incorrect");
+                    return false;
+                }
+                else if(km < 50000)
+                {
+                    if(confirm("Êtes vous sûre du Kilométrage ? " + km + " €"))
+                    {}
+                    else
+                    {
+                        return false;
+                    }
+                }
+            });
 
             $('.del_photo').on('click', function(e){
                 e.preventDefault();
