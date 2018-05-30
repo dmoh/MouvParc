@@ -1029,7 +1029,7 @@ Class MainController extends Controller
         if ($req->isXmlHttpRequest()) { 
         }
 
-         if( $req->isMethod('POST') )
+         if($req->isMethod('POST') )
         {
             $form->handleRequest($req);
 
@@ -1141,14 +1141,7 @@ Class MainController extends Controller
 
 
                         }
-
-
-
-
-
                         // $r2 = count($car_trouver);
-
-
                         $form = $this->createFormBuilder()
                             ->add('recherche', TextType::class)
                             ->add('Rechercher', SubmitType::class)
@@ -1223,10 +1216,6 @@ Class MainController extends Controller
                             }
 
                         }
-
-
-
-
                         $form = $this->createFormBuilder()
                             ->add('recherche', TextType::class)
                             ->add('Rechercher', SubmitType::class)
@@ -1263,8 +1252,6 @@ Class MainController extends Controller
                                 ),))
                             ->add('Valider', SubmitType::class)
                             ->getForm();;
-
-
 
                         return $this->render('front/recherche.html.twig', array(
                             'form' => $form->createView(),
@@ -1454,7 +1441,6 @@ Class MainController extends Controller
                 {
                     $car_trouver = $qb->select('a')->from('App\Entity\Cars', 'a')
                         ->where($qb->expr()->like('a.marque', $qb->expr()->literal('%'.$imm.'%')))
-                        ->setMaxResults(20)
                         ->getQuery()
                         ->getResult();
                 }
@@ -1482,7 +1468,6 @@ Class MainController extends Controller
                 'plusieurs' => 'rien',
             )); 
         }//end if post
-
 
 
         //$repo = $em->getRepository(Cars::class)->find($id);
@@ -2087,6 +2072,8 @@ Class MainController extends Controller
     {
         $em= $this->getDoctrine()->getManager();
         $car = $em->getRepository(Cars::class)->find($id);
+        //Obliger de set par défaut marque
+        $marque = $car->getMarque();
 
 
         // Hydrate le form
@@ -2239,52 +2226,12 @@ Class MainController extends Controller
         if ($request->isMethod("POST"))
         {
            /*$ralentisseur = $request->request->get("car")["ralentisseur"];
-            $regulateur = ($dataF->getRegulateurVitesse()) ? "1" : "0" ;
-            $car->setRegulateurVitesse($regulateur);*/
 
-            //Nombre d'Images a télécharger
-           /* $nbfiles = count($request->files->get('car')["images"]);
-            if($nbfiles >= 0)
-            {
-                $files = $request->files->get('car')["images"];
-                for($i = 0; $i < $nbfiles; $i++)
-                {
-                    $images = new Image();
-
-                    $sizeImage = $files[$i]->getClientSize();
-                    $extensionImage = $files[$i]->guessExtension();
-                    $photoName = $this->generateUniqueFileName().'.'.$extensionImage;
-
-
-                    //set Name photo
-                    $images->setUrl($this->getUploadDir().'/'.$photoName);
-                    $images->setAlt("Photo du Car : ". $car->getId());
-
-
-                    //On lie l'image au car
-                    $images->setCar($car);
-
-
-                    //Déplace l'image dans le dossier
-                    $files[$i]->move($this->getUploadRootDir()
-                        , $photoName
-                    );
-
-                    $em->persist($images);
-                    $em->flush();
-
-                    return $this->redirectToRoute('annonce_car', array('id'=> $car->getId()));
-
-                    //__DIR__."../../public/images/photosCar"
-                }
-
-
-            }
-            else
-                {
-                $em->flush();
-                return $this->redirectToRoute('car', array('id'=> $car->getId()));
             }*/
+
+
+           $car->setMarque($marque);
+
 
             $em->persist($car);
             $em->flush();
@@ -2388,7 +2335,8 @@ Class MainController extends Controller
                                 'hauteur'       => $car->getHauteur(),
                                 'nbPlaces'      => $car->getNbPlaces(),
                                 'accessibilite' => $car->getAccessibilite(),
-                                'urlAnnonce'    => $carID
+                                'urlAnnonce'    => $carID,
+                                'mail'          => $mail
                             )),
                         'text/html'
                     )
