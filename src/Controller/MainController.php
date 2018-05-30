@@ -13,6 +13,8 @@ use App\Form\MiseajourType;
 use App\Form\RubriqueType;
 use App\Form\UserType;
 use App\Repository\PanneRepository;
+use App\Service\HTML2PDF;
+use App\Service\php;
 use Doctrine\DBAL\Types\DateType;
 
 use Doctrine\ORM\Mapping\Entity;
@@ -44,10 +46,11 @@ use App\Entity\User;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 use App\Entity\Miseajour;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 Class MainController extends Controller
@@ -2306,16 +2309,48 @@ Class MainController extends Controller
     }
 
 
-    public function annonceCar(Request $request, $id, \Swift_Mailer $mailer)
+    public function annonceCar(Request $request, $id, \Swift_Mailer $mailer, AuthorizationCheckerInterface $authorizationChecker)
     {
+
+
         $em = $this->getDoctrine()->getManager();
         $car = $em->getRepository(Cars::class)->find($id);
+        if (null === $car) {
+            throw new NotFoundHttpException("L'annonce de cet autocar n'existe pas.");
+        }
+
+
+        $carPrix = $car->getPrix();
+
+        if(false === $authorizationChecker->isGranted('ROLE_USER') && $carPrix === null)
+        {
+            throw new AccessDeniedException('VOUS n\'êtes pas autorisé a accéder a cette page ! ');
+        }
+
+
+
+
         $data= array();
         $form =$this->createFormBuilder($data)
                 ->add('mailclient', TextType::class)
                 ->add('envoyer', SubmitType::class)
                 ->getForm()
         ;
+        if ($authorizationChecker->isGranted('IS_AUTHENTICATED_ANONYMOUSLY'))
+        {
+            if ($this->container->has('profiler'))
+            {
+                $this->container->get('profiler')->disable();
+            }
+        }
+        else
+        {
+            if ($this->container->has('profiler'))
+            {
+                $this->container->get('profiler')->enable();
+            }
+        }
+
 
         if($request->isMethod("POST"))
         {
@@ -2326,8 +2361,14 @@ Class MainController extends Controller
             $data = $form->getData();
             $mail = $data['mailclient'];
 
+
+
             if (filter_var($mail, FILTER_VALIDATE_EMAIL))
             {
+                //  $this->returnPDFResponseFROMHtml($car->getId());
+                $carID = 'http://localhost:8000/admin/annoncecar/'.$car->getId();
+                //$carID = 'http://caraps.fr/admin/annoncecar/'.$car->getId();
+
                 $mess = (new \Swift_Message('Mouvparc : Mise en Vente'))
                     ->setFrom('info@caraps.fr', 'Mouv Parc')
                     ->setTo([
@@ -2346,10 +2387,13 @@ Class MainController extends Controller
                                 'longueur'      => $car->getLongueur(),
                                 'hauteur'       => $car->getHauteur(),
                                 'nbPlaces'      => $car->getNbPlaces(),
-                                'accessibilite' => $car->getAccessibilite()
+                                'accessibilite' => $car->getAccessibilite(),
+                                'urlAnnonce'    => $carID
                             )),
                         'text/html'
-                    );
+                    )
+                    //->attach(\Swift_Attachment::fromPath('/uploads/annonce'.$id.'.pdf'));
+                ;
                 $mailer->send($mess);
 
                 $data= array();
@@ -2359,11 +2403,12 @@ Class MainController extends Controller
                     ->getForm()
                 ;
 
+                $this->addFlash("success", "This is a success message");
+
                 return $this->render('front/annonceCar.html.twig',
                     array(
                         "car"    => $car,
                         "form"   => $form->createView(),
-                        "mail"   => "Le mail a bien été envoyé",
                     )
                     );
             }
@@ -2383,6 +2428,33 @@ Class MainController extends Controller
 
     }
 
+    /*Generate pdf
+    public function returnPDFResponseFROMHtml($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $car = $em->getRepository(Cars::class)->find($id);
+       // $form = $this->createForm(CarsType::class, $trajet);
+
+
+
+        $pdf = $this->container->get(HTML2PDF::class);
+        $template = $this->renderView('emails/annoncecarMail.html.twig',
+            array(
+                'car'=> $car
+            )
+        );
+        // $car_images = count($car->getImages());
+
+
+        $pdf->create('P', 'A4', 'fr', true, 'UTF-8', array(10, 15, 1, 15), $template, 'annonce'.$id);
+
+
+        return $this->redirectToRoute('annonce_car',
+            array(
+                'id'      => $id,
+            )
+        );
+    }*/
 
 
     public function ajaxSnippetImageSend(Request $request, $id)
@@ -2443,6 +2515,11 @@ Class MainController extends Controller
 
     public function login(Request $request, AuthenticationUtils $authUtils)
     {
+        if ($this->container->has('profiler'))
+        {
+            $this->container->get('profiler')->disable();
+        }
+
         // get the login error if there is one
         $error = $authUtils->getLastAuthenticationError();
 

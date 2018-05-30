@@ -1,6 +1,7 @@
 {%  extends 'base.html.twig' %}
 
 {% block body %}
+    <div class="container-fluid contour">
     {%  if car %}
         {% if mail is defined %}
             <div class="container">
@@ -11,8 +12,8 @@
                 </div>
             </div>
         {% endif %}
-        <div style="margin-top: 20px;" class="container">
-            <div style="margin-top: 15px" class="row">
+        <div style="margin-top: 25px;" class="container">
+            <div style="margin-top: 0px" class="row">
                 <div class="col-md-6 annonce_header">
                     <h5>Autocar <strong style="color: #00e765"><em>{{ car.marque | upper }}</em></strong></h5>
                     {% if car.km is defined  and car.km > 0 and car.km is not null %}
@@ -27,6 +28,13 @@
                     <i style="color: #0be765" class="fa fa-money"></i><span> <em><strong style="font-size: 25px">{{ car.prix }} € HT</strong></em></span>
                 </div>
             </div>
+            {% if app.flashes %}
+                {% for message in app.flashes('success') %}
+                    <div class="flash-notice">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
             <div class="row">
                 <div class="col-md-12">
                     <div class="separator"></div>
@@ -91,8 +99,10 @@
                     <br>
                     <span>55 impasse du Môle - Z.A des Dragiez <br>74800 La Roche sur Foron</span><br>
                     <span style="color: #0be765"><i style="color: #0be765" class="fa fa-phone"></i>06 XX XX XX XX<br></span>
-                    <a href="mailto:commercial@autocarspaysdesaoive.fr">mail : thierry.janeriat@autocarspaysdesavoie.fr</a>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mailModal" >Envoyer par mail</button>
+                    <a href="mailto:thierry.janeriat@autocarspaysdesavoie.fr"> thierry.janeriat@autocarspaysdesavoie.fr</a>
+                    {% if app.user %}
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mailModal" >Envoyer par mail</button>
+                    {% endif %}
                 </div>
             </div>
             <!-- Modal -->
@@ -108,13 +118,13 @@
                         <div class="modal-body">
                             {{ form_start(form) }}
                                 {# Génération du label. #}
-                                {{ form_label(form.mailclient, "Déclarant : ", {'label_attr': {'class': ' control-label'}}) }}
+                                {{ form_label(form.mailclient, "Mail client : ", {'label_attr': {'class': ' control-label'}}) }}
                                 {# Génération de l'input.#}
                                 {{ form_widget(form.mailclient, {'attr': {'class': 'form-control'}}) }}
                                 {{ form_errors(form.mailclient, { 'attr': {'class': 'red' }}) }}
 
                                 {# Génération de l'input.#}
-                                {{ form_widget(form.envoyer, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_widget(form.envoyer, {'attr': {'class': 'btn btn-primary'}}) }}
 
                             {{ form_end(form) }}
                         </div>
@@ -401,6 +411,7 @@
             {% endif %}
         </div>
     {% endif %}
+    </div>
 {% endblock %}
 {% block javascripts %}
     <script type="text/javascript">

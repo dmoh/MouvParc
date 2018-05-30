@@ -14,7 +14,7 @@
     <!--[if mso]>
     <style>
         * {
-            font-family: sans-serif !important;
+            font-family:  'helvetica';
         }
     </style>
     <![endif]-->
@@ -135,15 +135,11 @@
         .button-td,
         .button-a {
             transition: all 100ms ease-in;
-            padding: 20px;
-            background: #229cff;
-            border-radius: 5px ;
         }
         .button-td:hover,
         .button-a:hover {
-            background: #229cff !important;
-            border-color: #a7ff7e !important;
-            padding: 10px;
+            background: #555555 !important;
+            border-color: #555555 !important;
         }
 
         /* Media Queries */
@@ -208,97 +204,153 @@
 
 </head>
 <body width="100%" style="margin: 0; mso-line-height-rule: exactly;">
-<div style="width: 100%; background: #35c13a; text-align: left;">
+<div style="width: 100%; text-align: left;">
     <!--[if mso | IE]>
-    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#222222">
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td>
     <![endif]-->
 
     <!-- Visually Hidden Preheader Text : BEGIN -->
-    <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
-        Annonce d'un autocar
+    <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: 'helvetica';">
+
     </div>
     <!-- Visually Hidden Preheader Text : END -->
 
     <!-- Create white space after the desired preview text so email clients don’t pull other distracting text into the inbox preview. Extend as necessary. -->
     <!-- Preview Text Spacing Hack : BEGIN -->
-    <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
+    <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: 'helvetica';">
         &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
     </div>
     <!-- Preview Text Spacing Hack : END -->
 
     <!-- Email Header : BEGIN -->
-    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="800" style="margin: auto;" class="email-container">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" class="email-container">
         <tr>
             <td style="padding: 20px 0; text-align: center">
-                <h1 style="color: #fff;">MouvParc Mise en Vente</h1>
+                <h1 style="color: #fff;">MouvParc</h1>
             </td>
         </tr>
     </table>
     <!-- Email Header : END -->
 
-    <!-- Email Body : BEGIN -->
-    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="800" style="margin: auto;" class="email-container">
+    <!-- Email Caract : BEGIN -->
+    <table style="max-width: 300px; text-align: left" >
+        <tbody>
+        <tr class="bg-grey">
+            <td>Norme Euro : </td><td><em class="right"><b>{{ car.euro }}</b></em></td>
+        </tr>
+        <tr>
+            <td>Puissance moteur (cv din) : </td><td><em class="right"><b>{{ car.puissance }}</b></em></td>
+        </tr>
+        <tr class="bg-grey">
+            <td>Energie : </td><td><em class="right"><b>{{ car.energie | upper }}</b></em></td>
+        </tr>
+        <tr>
+            <td>Transmission : </td><td><em class="right"><b>{{ car.transmission | upper }}</b></em></td>
+        </tr>
+        <tr class="bg-grey">
+            <td>Bv : </td><td><em class="right"><b>{{ car.bv }}</b></em></td>
+        </tr>
+        <tr>
+            <td>Longueur : </td><td><em class="right"><b>{{ car.longueur }} m</b></em></td>
+        </tr>
+        <tr class="bg-grey">
+            <td>Hauteur : </td><td><em class="right"><b>{{ car.hauteur }} m</b></em></td>
+        </tr>
+        <tr>
+            <td>Sièges passagers : </td><td><em class="right"><b>{{ car.nbPlaces }}</b></em></td>
+        </tr>
+        <tr class="bg-grey">
+            <td>Accessibilité : </td><td><em class="right"><b>{{ car.accessibilite | upper }}</b></em></td>
+        </tr>
+        </tbody>
+    </table>
 
-        <!-- 1 Column Text + Button : BEGIN -->
-        <tr>
-            <td bgcolor="#ffffff" style="padding: 40px 40px 20px; text-align: center;">
-                <h1 style="margin: 0; font-family: sans-serif; font-size: 24px; line-height: 125%; color: #333333; font-weight: normal;">Bonjour,</h1>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #555555; text-align: center;">
-                <p style="margin: 0;">Nous vous envoyons une annonce concernant l'autocar <em>{{ marque | upper }}</em></p>
-                <br>
-                <a href="{{ urlAnnonce }}" class="button-a">Voir l'annonce </a>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #555555;">
-                <!-- Button : BEGIN -->
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto">
-                    <tbody>
-                        <tr>
-                            <td style="border-radius: 3px; text-align: left;" class="">
-                                <p>Caractéristiques du véhicule : </p>
-                            </td>
-                        </tr>
-                        <tr class="bg-grey">
-                            <td>Norme Euro : </td><td><em class="right"><b>{{ euro }}</b></em></td>
-                        </tr>
-                        <tr>
-                            <td>Puissance moteur (cv din) : </td><td><em class="right"><b>{{ puissance }}</b></em></td>
-                        </tr>
-                        <tr class="bg-grey">
-                            <td>Energie : </td><td><em class="right"><b>{{ energie | upper }}</b></em></td>
-                        </tr>
-                        <tr>
-                            <td>Transmission : </td><td><em class="right"><b>{{ transmission | upper }}</b></em></td>
-                        </tr>
-                        <tr class="bg-grey">
-                            <td>Bv : </td><td><em class="right"><b>{{ bv }}</b></em></td>
-                        </tr>
-                        <tr>
-                            <td>Longueur : </td><td><em class="right"><b>{{ longueur }} m</b></em></td>
-                        </tr>
-                        <tr class="bg-grey">
-                            <td>Hauteur : </td><td><em class="right"><b>{{ hauteur }} m</b></em></td>
-                        </tr>
-                        <tr>
-                            <td>Sièges passagers : </td><td><em class="right"><b>{{ nbPlaces }}</b></em></td>
-                        </tr>
-                        <tr class="bg-grey">
-                            <td>Accessibilité : </td><td><em class="right"><b>{{ accessibilite | upper }}</b></em></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- Button : END -->
-            </td>
-        </tr>
+
         <!-- 1 Column Text + Button : END -->
-
-
+        <table style=" float: left;" cellspacing="0" cellpadding="0" border="0" align="left" width="600" class="email-container">
+            <tbody>
+            <tr class="bg-grey">
+                <td>Regulateur de vitesse : </td>
+                <td>
+                    {% if car.RegulateurVitesse == 1 %}
+                        <em><strong>OUI</strong></em>
+                    {% else %}
+                        <em><strong>NON</strong></em>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Gps : </td>
+                <td>
+                    {% if car.Gps == 1 %}
+                        <em><strong>OUI</strong></em>
+                    {% else %}
+                        <em><strong>NON</strong></em>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr class="bg-grey">
+                <td>Micro guide :</td>
+                <td>
+                    {% if car.MicroGuide == 1 %}
+                        <em><strong>OUI</strong></em>
+                    {% else %}
+                        <em><strong>NON</strong></em>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Clim :</td>
+                <td>
+                    {% if car.Clim == 1 %}
+                        <em><strong>OUI</strong></em>
+                    {% else %}
+                        <em><strong>NON</strong></em>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr  class="bg-grey">
+                <td>Buses individuelles : </td>
+                <td>
+                    {% if car.BusesIndividuelles == 1 %}
+                        <em><strong>OUI</strong></em>
+                    {% else %}
+                        <em><strong>NON</strong></em>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Rideaux : </td>
+                <td>
+                    {% if car.Rideaux == 1 %}
+                        <em><strong>OUI</strong></em>
+                    {% else %}
+                        <em><strong>NON</strong></em>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr class="bg-grey">
+                <td>Filets : </td>
+                <td>
+                    {% if car.Filets == 1 %}
+                        <em><strong>OUI</strong></em>
+                    {% else %}
+                        <em><strong>NON</strong></em>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Frigo : </td>
+                <td>
+                    {% if car.Frigo == 1 %}
+                        <em><strong>OUI</strong></em>
+                    {% else %}
+                        <em><strong>NON</strong></em>
+                    {% endif %}
+                </td>
+            </tr>
         <!-- Clear Spacer : BEGIN -->
         <tr>
             <td aria-hidden="true" height="40" style="font-size: 0; line-height: 0;">
@@ -306,43 +358,99 @@
             </td>
         </tr>
         <!-- Clear Spacer : END -->
-
-
+        </tbody>
     </table>
     <!-- Email Body : END -->
     <!-- Full Bleed Background Section : BEGIN -->
-    <table role="presentation" bgcolor="#367ef5" cellspacing="0" cellpadding="0" border="0" align="center" width="100%">
-        <tr>
-            <td valign="top" align="center">
-                <div style="max-width: 600px; margin: auto;" class="email-container">
-                    <!--[if mso]>
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
-                        <tr>
-                            <td>
-                    <![endif]-->
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                        <tr>
-                            <td style="padding: 40px; text-align: center; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #ffffff;">
-                                <p style="margin: 0;">MouvParc.fr</p>
-                            </td>
-                        </tr>
-                    </table>
-                    <!--[if mso]>
-                    </td>
-                    </tr>
-                    </table>
-                    <![endif]-->
-                </div>
-            </td>
-        </tr>
-    </table>
+
     <!-- Full Bleed Background Section : END -->
 
-    <!--[if mso | IE]>
-    </td>
-    </tr>
+    <table>
+        <tbody>
+        <tr class="bg-grey">
+            <td>Ceinture de sécurité</td>
+            <td>
+                {% if  car.CeintureSecurite == "2 points" or car.CeintureSecurite == "3 points" %}
+                    <em><strong>{{ car.CeintureSecurite | upper }}</strong></em>
+                {% else %}
+                    <em><strong>-</strong></em>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Vidéo :</td>
+            <td>
+                {% if  car.Video == "DVD" or car.Video == "VHS" %}
+                    <em><strong>{{ car.Video | upper }}</strong></em>
+                {% else %}
+                    <em><strong>-</strong></em>
+                {% endif %}
+            </td>
+        </tr>
+        <tr class="bg-grey">
+            <td>Micro conducteur :</td>
+            <td>
+                {% if car.MicroConducteur == 1 %}
+                    <em><strong>OUI</strong></em>
+                {% else %}
+                    <em><strong>NON</strong></em>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Chauffage indépendant : </td>
+            <td>
+                {% if car.ChauffageIndependant == 1 %}
+                    <em><strong>OUI</strong></em>
+                {% else %}
+                    <em><strong>NON</strong></em>
+                {% endif %}
+            </td>
+        </tr>
+        <tr  class="bg-grey">
+            <td>Ralentisseur : </td>
+            <td>
+                {% if  car.Ralentisseur == "intarder" or car.Ralentisseur == "voith" or car.Ralentisseur == "telma" %}
+                    <em><strong>{{ car.Ralentisseur | upper }}</strong></em>
+                {% else %}
+                    <em><strong>-</strong></em>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Sièges décalables : </td>
+            <td>
+                {% if car.SiegesDecalables == 1 %}
+                    <em><strong>OUI</strong></em>
+                {% else %}
+                    <em><strong>NON</strong></em>
+                {% endif %}
+            </td>
+        </tr>
+        <tr class="bg-grey">
+            <td>Prédisposition ski : </td>
+            <td>
+                {% if car.PorteSki == 1 %}
+                    <em><strong>OUI</strong></em>
+                {% else %}
+                    <em><strong>NON</strong></em>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Abs : </td>
+            <td>
+                {% if car.Abs == 1 %}
+                    <em><strong>OUI</strong></em>
+                {% else %}
+                    <em><strong>NON</strong></em>
+                {% endif %}
+            </td>
+        </tr>
+        </tbody>
     </table>
     <![endif]-->
 </div>
 </body>
 </html>
+
