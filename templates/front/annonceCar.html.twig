@@ -98,7 +98,7 @@
                     <h6><em>AUTOCARS PAYS DE SAVOIE</em></h6>
                     <br>
                     <span>55 impasse du Môle - Z.A des Dragiez <br>74800 La Roche sur Foron</span><br>
-                    <span style="color: #0be765"><i style="color: #0be765" class="fa fa-phone"></i>06 XX XX XX XX<br></span>
+                    <span style="color: #0be765"><i style="color: #0be765" class="fa fa-phone"></i>06 76 72 75 96<br></span>
                     <a href="mailto:thierry.janeriat@autocarspaysdesavoie.fr"> thierry.janeriat@autocarspaysdesavoie.fr</a>
                     {% if app.user %}
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mailModal" >Envoyer par mail</button>
@@ -117,15 +117,14 @@
                         </div>
                         <div class="modal-body">
                             {{ form_start(form) }}
-                                {# Génération du label. #}
-                                {{ form_label(form.mailclient, "Mail client : ", {'label_attr': {'class': ' control-label'}}) }}
-                                {# Génération de l'input.#}
-                                {{ form_widget(form.mailclient, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(form.mailclient, { 'attr': {'class': 'red' }}) }}
+                                <ul class="mails" data-prototype="{{ form_widget(form.mailclients.vars.prototype, {'class': 'form-control' })|e('html_attr') }}">
+                                    {# Génération du label.
+                                    {{ form_label(form.mailclient, "Mail client : ", {'label_attr': {'class': ' control-label'}}) }}
+                                     #}
 
-                                {# Génération de l'input.#}
+                                    {# Génération de l'input.#}
+                                </ul>
                                 {{ form_widget(form.envoyer, {'attr': {'class': 'btn btn-primary'}}) }}
-
                             {{ form_end(form) }}
                         </div>
                         <div class="modal-footer">
@@ -415,7 +414,64 @@
 {% endblock %}
 {% block javascripts %}
     <script type="text/javascript">
+        var $collectionHolder;
+
+        //ajout mail client dynamique
+        var $addMailLink = $('<a href="#" id="add_mail_link" class="btn btn-primary">Ajout de mail client</a>');
+        var $newLinkLi = $('<li></li>').append($addMailLink);
+
+
+
         $(document).ready(function(){
+            $collectionHolder = $('ul.mails');
+
+            $collectionHolder.append($newLinkLi);
+            var $CpIndex = $collectionHolder.find(':input').length;
+
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addMailLink.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new tag form (see next code block)
+                addTagForm($collectionHolder, $newLinkLi);
+            });
+
+            if ($CpIndex === 0) {
+                addTagForm($collectionHolder, $newLinkLi);
+            }
+
+            function addTagForm($collectionHolder, $newLinkLi) {
+                // Get the data-prototype explained earlier
+                var prototype = $collectionHolder.data('prototype');
+
+                // get the new index
+                var index = $collectionHolder.data('index');
+
+                var newForm = prototype;
+                // You need this only if you didn't set 'label' => false in your tags field in TaskType
+                // Replace '__name__label__' in the prototype's HTML to
+                // instead be a number based on how many items we have
+                // newForm = newForm.replace(/__name__label__/g, index);
+
+                // Replace '__name__' in the prototype's HTML to
+                // instead be a number based on how many items we have
+                newForm = newForm.replace(/___name__/g, '__name__');
+                newForm = newForm.replace(/__name__/g, index);
+
+                // increase the index with one for the next item
+                $collectionHolder.data('index', index + 1);
+
+                // Display the form in the page in an li, before the "Add a tag" link li
+                var $newFormLi = $('<li></li>').append(newForm);
+                $newLinkLi.before($newFormLi);
+            }
+
+
+
+
+
             /*$('#mailModal').click(function () {
                location.reload();
             });*/

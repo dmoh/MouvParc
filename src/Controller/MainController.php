@@ -21,8 +21,10 @@ use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\HttpFoundation\Response;
@@ -2212,9 +2214,7 @@ Class MainController extends Controller
             $delUrl =substr($delUrl, 6);
             $filename = substr($delUrl, 10);
 
-            
             $image2 = $em->getRepository(Image::class)->findOneBy(array('url'=> $delUrl));
-            
             $image2->deleteFiles($filename);
             $em->remove($image2);
             $em->flush();
@@ -2228,14 +2228,10 @@ Class MainController extends Controller
            /*$ralentisseur = $request->request->get("car")["ralentisseur"];
 
             }*/
-
-
            $car->setMarque($marque);
-
-
-            $em->persist($car);
-            $em->flush();
-            return $this->redirectToRoute('annonce_car', array('id'=> $car->getId()));
+           $em->persist($car);
+           $em->flush();
+           return $this->redirectToRoute('annonce_car', array('id'=> $car->getId()));
         }
 
         return $this->render('front/mev.html.twig', array(
@@ -2279,7 +2275,12 @@ Class MainController extends Controller
 
         $data= array();
         $form =$this->createFormBuilder($data)
-                ->add('mailclient', TextType::class)
+                ->add('mailclients', CollectionType::class, array(
+                    'entry_type'        => EmailType::class,
+                    'allow_add'         => true,
+                    'entry_options'     => array('label'  => false)
+
+                ))
                 ->add('envoyer', SubmitType::class)
                 ->getForm()
         ;
@@ -2305,66 +2306,118 @@ Class MainController extends Controller
 
             // $data is a simply array with your form fields
             // like "query" and "category" as defined above.
+
+
             $data = $form->getData();
-            $mail = $data['mailclient'];
+            $nbMails = count($data['mailclients']);
 
 
+            if($nbMails < 2) {
+                $mailClient = $data['mailclients'][0];
+                $NomClient = explode("@", $mailClient);
+                $nomC = $NomClient[0];
 
-            if (filter_var($mail, FILTER_VALIDATE_EMAIL))
-            {
-                //  $this->returnPDFResponseFROMHtml($car->getId());
-                $carID = 'http://localhost:8000/admin/annoncecar/'.$car->getId();
-                //$carID = 'http://caraps.fr/admin/annoncecar/'.$car->getId();
+                if (filter_var($mailClient, FILTER_VALIDATE_EMAIL)) {
+                    //  $this->returnPDFResponseFROMHtml($car->getId());
+                    $carID = 'http://localhost:8000/admin/annoncecar/' . $car->getId();
+                    //$carID = 'http://caraps.fr/admin/annoncecar/'.$car->getId();
 
-                $mess = (new \Swift_Message('Mouvparc : Mise en Vente'))
-                    ->setFrom('info@caraps.fr', 'Mouv Parc')
-                    ->setTo([
-                        'mkanoute74@gmail.com'  =>  'Mohamed Kanoute',
-                    ])
-                    ->setBody(
-                        $this->renderView(
-                            'emails/mev.html.twig',
-                            array(
-                                'marque'        => $car->getMarque(),
-                                'euro'          => $car->getEuro(),
-                                'puissance'     => $car->getPuissance(),
-                                'energie'       => $car->getEnergie(),
-                                'transmission'  => $car->getTransmission(),
-                                'bv'            => $car->getBv(),
-                                'longueur'      => $car->getLongueur(),
-                                'hauteur'       => $car->getHauteur(),
-                                'nbPlaces'      => $car->getNbPlaces(),
-                                'accessibilite' => $car->getAccessibilite(),
-                                'urlAnnonce'    => $carID,
-                                'mail'          => $mail
-                            )),
-                        'text/html'
-                    )
-                    //->attach(\Swift_Attachment::fromPath('/uploads/annonce'.$id.'.pdf'));
-                ;
-                $mailer->send($mess);
+                    $mess = (new \Swift_Message('Autocars pays de Savoie: Vente autocar'.$car->getMarque().', '. $car->getPrix().'€, '))
+                        ->setFrom('info@autocarspaysdesavoie.fr', 'Autocars Pays de Savoie')
+                        ->setBody(
+                            $this->renderView(
+                                'emails/mev.html.twig',
+                                array(
+                                    'marque' => $car->getMarque(),
+                                    'euro' => $car->getEuro(),
+                                    'puissance' => $car->getPuissance(),
+                                    'energie' => $car->getEnergie(),
+                                    'transmission' => $car->getTransmission(),
+                                    'bv' => $car->getBv(),
+                                    'longueur' => $car->getLongueur(),
+                                    'hauteur' => $car->getHauteur(),
+                                    'nbPlaces' => $car->getNbPlaces(),
+                                    'accessibilite' => $car->getAccessibilite(),
+                                    'urlAnnonce' => $carID,
+                                    'mail' => $mailClient
+                                )),
+                            'text/html'
+                        )//->attach(\Swift_Attachment::fromPath('/uploads/annonce'.$id.'.pdf'));
+                    ;
+                    $mailer->send($mess);
+                }
 
-                $data= array();
-                $form =$this->createFormBuilder($data)
-                    ->add('mailclient', TextType::class)
-                    ->add('envoyer', SubmitType::class)
-                    ->getForm()
-                ;
-
-                $this->addFlash("success", "This is a success message");
-
-                return $this->render('front/annonceCar.html.twig',
-                    array(
-                        "car"    => $car,
-                        "form"   => $form->createView(),
-                    )
-                    );
             }
             else
             {
-                echo "C'est MORT !";
-                die();
+                //On modifie le format de la date pour envoyer par mail
+                $dateMar = $car->getDateMar();
+                $dateSend = date_format($dateMar, 'Y');
+                $mess = (new \Swift_Message('Vente autocar '.$car->getMarque().', '. $car->getPrix().'€, '.$dateSend))
+                    ->setFrom('info@caraps.fr', 'Autocars Pays de Savoie');
+
+                for ($i = 0 ; $i < $nbMails; $i++)
+                {
+                    $mailClient = $data['mailclients'][$i];
+                    $NomClient = explode("@", $mailClient);
+                    $nomC = $NomClient[0];
+
+                    if (filter_var($mailClient, FILTER_VALIDATE_EMAIL)) {
+                       // $addresses[$i] = array($mailClient => $nomC);
+                        $mess->addTo($mailClient);
+                    }
+
+
+                }
+
+                //  $this->returnPDFResponseFROMHtml($car->getId());
+                $carID = 'http://localhost:8000/admin/annoncecar/' . $car->getId();
+                //$carID = 'http://caraps.fr/admin/annoncecar/'.$car->getId();
+
+                $mess->setBody(
+                        $this->renderView(
+                            'emails/mev.html.twig',
+                            array(
+                                'marque' => $car->getMarque(),
+                                'euro' => $car->getEuro(),
+                                'puissance' => $car->getPuissance(),
+                                'energie' => $car->getEnergie(),
+                                'transmission' => $car->getTransmission(),
+                                'bv' => $car->getBv(),
+                                'longueur' => $car->getLongueur(),
+                                'hauteur' => $car->getHauteur(),
+                                'nbPlaces' => $car->getNbPlaces(),
+                                'accessibilite' => $car->getAccessibilite(),
+                                'urlAnnonce' => $carID,
+                            )),
+                        'text/html'
+                    )//->attach(\Swift_Attachment::fromPath('/uploads/annonce'.$id.'.pdf'));
+                ;
+                $mailer->send($mess);
             }
+
+
+            $data= array();
+            $form =$this->createFormBuilder($data)
+                ->add('mailclients', CollectionType::class, array(
+                    'entry_type'        => EmailType::class,
+                    'allow_add'         => true,
+                    'entry_options'     => array('label'  => false)
+
+                ))
+                ->add('envoyer', SubmitType::class)
+                ->getForm()
+            ;
+
+            $this->addFlash("success", "This is a success message");
+
+            return $this->render('front/annonceCar.html.twig',
+                array(
+                    "car"    => $car,
+                    "form"   => $form->createView(),
+                )
+            );
+
         }
 
         return $this->render('front/annonceCar.html.twig',
@@ -2372,7 +2425,7 @@ Class MainController extends Controller
                    "car"    => $car,
                    "form"   => $form->createView()
                )
-            );
+        );
 
     }
 
