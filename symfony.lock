@@ -83,6 +83,9 @@
     "pagerfanta/pagerfanta": {
         "version": "v1.0.5"
     },
+    "phpoffice/phpspreadsheet": {
+        "version": "1.2.1"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -94,6 +97,9 @@
     },
     "psr/simple-cache": {
         "version": "1.0.0"
+    },
+    "roromix/spreadsheetbundle": {
+        "version": "v1.0.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "4.0",

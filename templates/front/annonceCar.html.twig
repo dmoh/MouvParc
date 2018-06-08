@@ -49,9 +49,15 @@
                                     <img src="../../{{ car.url }}" alt="{{ car.alt }}">
                                 </a>
                                 {% else %}
-                                    <a href="../../{{ car.url }}" data-fancybox="gallery">
-                                        <img style="width: 14%; height: 14%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
-                                    </a>
+                                    {% if car.alt != "Photo du Car :  {{ car.id }}" %}
+                                        <a href="../../{{ car.url }}" data-fancybox="gallery">
+                                            <img style="width: 14%; height: 14%; margin-top: 15px"  src="../../{{ car.url }}" alt="Annexe pdf">
+                                        </a>
+                                    {% else %}
+                                        <a href="../../{{ car.url }}" data-fancybox="gallery">
+                                            <img style="width: 14%; height: 14%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
+                                        </a>
+                                    {% endif %}
                             {% endif %}
                         {% endfor %}
                     {% else %}

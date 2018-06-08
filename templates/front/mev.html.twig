@@ -317,7 +317,7 @@
                     </div>
 
                     <div class=" form-group col-md-3">
-                        {{ form_widget(form.repose_mollet, {'attr': {'class': 'form-control'}}) }}<b>Repose mollet </b>
+                        {{ form_widget(form.repose_mollet, {'attr': {'class': 'form-control'}}) }}<b>Repose pieds</b>
 
                         {{ form_errors(form.repose_mollet, {'attr': {'class': 'form-control'}}) }}
                     </div>
@@ -333,14 +333,14 @@
                 </div>
 
                 <div class="form-row">
-                    <div class=" form-group col-md-4">
+                    <div class=" form-group col-md-3">
 
                         {{ form_label(form.ceinture_securite, "Ceintures Sécu.: ", {'label_attr': {'class': ' control-label'}}) }}
                         {{ form_widget(form.ceinture_securite, {'attr': {'class': 'form-control'}}) }}
 
                         {{ form_errors(form.ceinture_securite, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    <div class=" form-group col-md-4">
+                    <div class=" form-group col-md-3">
 
                         {{ form_label(form.video, "Vidéo: ", {'label_attr': {'class': ' control-label'}}) }}
                         {{ form_widget(form.video, {'attr': {'class': 'form-control'}}) }}
@@ -348,11 +348,18 @@
                         {{ form_errors(form.video, {'attr': {'class': 'form-control'}}) }}
                     </div>
 
-                    <div class=" form-group col-md-4">
+                    <div class=" form-group col-md-3">
                         {{ form_label(form.camera, "Caméra: ", {'label_attr': {'class': ' control-label'}}) }}
                         {{ form_widget(form.camera, {'attr': {'class': 'form-control'}}) }}
 
                         {{ form_errors(form.camera, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class=" form-group col-md-3">
+                        {{ form_label(form.clim, "Clim : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {{ form_widget(form.clim, {'attr': {'class': 'form-control'}}) }}
+
+                        {{ form_errors(form.clim, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
                 <div class="form-row">
@@ -523,7 +530,7 @@
                 var car_prix = $('#car_prix').val();
                 var km = $('#car_km').val();
 
-                if(car_prix == '' || car_prix == 0 || car_prix.length < 5 || isNaN(car_prix) )
+                /*if(car_prix == '' || car_prix == 0 || car_prix.length < 5 || isNaN(car_prix) )
                 {
                     alert("le prix est non renseigné ou le format est incorrect");
                     return false;
@@ -536,7 +543,7 @@
                     {
                         return false;
                     }
-                }
+                }*/
 
                 if(km == '' || km == 0 || km.length < 5 || isNaN(km) )
                 {

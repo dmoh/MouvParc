@@ -110,3 +110,7 @@ register:
 miseajour:
     path: /admin/mise-a-jour
     controller: App\Controller\MainController::miseajour
+
+donnees_km:
+    path: /admin/donneeskm
+    controller: App\Controller\MainController::donneesKilometriques

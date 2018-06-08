@@ -408,7 +408,7 @@ class Cars
     protected $transmission;
 
     /**
-     * @ORM\Column(name="bv", type="integer", nullable=true)
+     * @ORM\Column(name="bv", type="string", nullable=true)
      */
     protected $bv;
 

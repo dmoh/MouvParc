@@ -52,6 +52,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use App\Entity\Miseajour;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -572,7 +574,7 @@ Class MainController extends Controller
         //&& $immat !== "EV-910-DF" && $immat !== "EV-855-DF"
         if($immat !== "CS-223-JK" && $immat !== "BZ-668-TH" && $immat !== "BM-276-ZC" && $immat !== "BL-182-AH" )
         {
-             $hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/fleet/vehicles?vehicle_vrn=".$immat."".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
+            $hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/fleet/vehicles?vehicle_vrn=".$immat."".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
             $opts = array(
                 'http' => array(
                     'method'=>'GET',
@@ -2186,7 +2188,10 @@ Class MainController extends Controller
                     "Boite automatique"      =>  "boite automatique",
                     "Boite robotisée"       =>  "boite robotisée",
                 )))
-            ->add('bv', NumberType::class)
+            ->add('bv', TextType::class)
+            ->add('clim', CheckboxType::class, array(
+                'required'  => false,
+            ))
             ->add('longueur', NumberType::class, array(
                 'grouping'  => true,
             ))
@@ -2201,7 +2206,9 @@ Class MainController extends Controller
                     "Ascenseur"             =>  "ascenseur",
                     "Rampe électrique"    =>  "rampe électrique",
                 )))
-            ->add('prix', NumberType::class)
+            ->add('prix', NumberType::class, array(
+                'required' => false
+            ))
 
         ;
 
@@ -2322,8 +2329,11 @@ Class MainController extends Controller
                     $carID = 'http://localhost:8000/admin/annoncecar/' . $car->getId();
                     //$carID = 'http://caraps.fr/admin/annoncecar/'.$car->getId();
 
-                    $mess = (new \Swift_Message('Autocars pays de Savoie: Vente autocar'.$car->getMarque().', '. $car->getPrix().'€, '))
+                    $dateMar = $car->getDateMar();
+                    $dateSend = date_format($dateMar, 'Y');
+                    $mess = (new \Swift_Message('Vente autocar '.$car->getMarque().', '. $car->getPrix().'€, '.$dateSend))
                         ->setFrom('info@autocarspaysdesavoie.fr', 'Autocars Pays de Savoie')
+                        ->setTo($mailClient)
                         ->setBody(
                             $this->renderView(
                                 'emails/mev.html.twig',
@@ -2468,12 +2478,21 @@ Class MainController extends Controller
         $media = $request->files->get('file');
         $sizeImage = $media->getClientSize();
         $extensionImage = $media->guessExtension();
+
         $photoName = $this->generateUniqueFileName().'.'.$extensionImage;
 
 
         //set Name photo
         $images->setUrl($this->getUploadDir().'/'.$photoName);
-        $images->setAlt("Photo du Car : ". $car->getId());
+        if($extensionImage == "pdf" || $extensionImage == "PDF")
+        {
+            $images->setAlt("Annexe_pdf".$car->getId());
+        }
+        else
+        {
+            $images->setAlt("Photo du Car : ". $car->getId());
+        }
+
 
 
         //On lie l'image au car
@@ -2600,5 +2619,92 @@ Class MainController extends Controller
         $em->flush();
         return $this->redirectToRoute('add_rubrique');
 
+    }
+
+
+
+    public function donneesKilometriques(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT c.immat, c.km FROM App\Entity\Cars c";
+        $queryC = $em->createQuery($dql);
+
+        $listeCars = $queryC->getResult();
+        $ti = time();
+        //Date de récupération chaque mois le premier
+        $dateDuPremier = date('c',mktime(23,59,0,date('m'),1,date('y')));
+        $dateDuPremier = substr($dateDuPremier, 0, -6);
+
+        $dateDuPremier1 = date('c',mktime(00,05,0,date('m'),1,date('y')));
+        $immat= "BW-904-WP";
+        $nbCars = count($listeCars);
+
+        $chaineImmat =implode('|', array_map(function ($entry) {
+            return $entry['immat'];
+        }, $listeCars));
+
+
+        $lesVehicules =
+        //Recherche km 1 de chaque mois via truckonline
+        //gpstracking?vehicle_uids=*&date=2018-06-01T21:59:00Z&count=1
+        $hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?vehicle_vrn=EF-063-VL&date=".$dateDuPremier."Z&count=1".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
+        $opts = array(
+            'http' => array(
+                'method'=>'GET',
+                'header' => "x-tonl-client-id:  apa-aps-t39-c1\r\n".
+                    "x-tonl-timestamp:  ".$ti."\r\n".
+                    "x-tonl-signature: ".$hache.""
+            )
+        );
+        /*
+          $hache2 = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?count=1&vehicles.$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
+
+            $opts2 = array(
+                'http' => array(
+                    'method'=>'GET',
+                    'header' => "x-tonl-client-id:  apa-aps-t39-c1\r\n".
+                        "x-tonl-timestamp:  ".$ti."\r\n".
+                        "x-tonl-signature: ".$hache2.""
+                )
+            );
+            $context2 = stream_context_create($opts2);
+            $kil2 = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?count=1&vehicles", false, $context2);
+            $result2 = json_decode($kil2, true);
+        */
+
+
+        // Recherche api truck online tous les vehicules
+        $context = stream_context_create($opts);
+        $kil = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?vehicle_vrn=EF-063-VL&date=".$dateDuPremier."Z&count=1", false, $context);
+        $result = json_decode($kil, true);
+        var_dump($result);
+        die();
+        if($result[0])
+        {
+            $kms = $result[0]["totalKms"];
+
+        }
+
+
+
+
+        var_dump($listeCars);
+        die();
+
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $nbImmat = count($listeCars);
+        for ($i = 0; $i < $nbImmat; $i++)
+        {
+            $sheet->setCellValueByColumnAndRow($i, 1, $listeCars[$i]["immat"]);
+        }
+
+
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('hello world.xlsx');
+        var_dump($writer);
+        die();
     }
 }
