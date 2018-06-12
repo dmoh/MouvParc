@@ -134,9 +134,11 @@
         /* What it does: Hover styles for buttons */
         .button-td,
         .button-a {
+            font-size: xx-large;
+            color: #ffffff;
             transition: all 100ms ease-in;
-            padding: 20px;
-            background: #229cff;
+            padding: 7px;
+            background: #87c0ef;
             border-radius: 5px ;
             text-decoration: none;
         }
@@ -253,7 +255,12 @@
             <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #555555; text-align: center;">
                 <p style="margin: 0;">Nous vous envoyons une annonce concernant l'autocar <em>{{ marque | upper }}</em></p>
                 <br>
-                <a href="{{ urlAnnonce }}" class="button-a">Voir l'annonce </a>
+                <a href="{{ urlAnnonce }}" class="button-a">Cliquez pour voir l'annonce et les photos </a>
+                <br>
+                <br>
+                <br>
+                <br>
+                <a href="{{ urlAnnonce }}" class="button-a">click here to see announcement and pictures </a>
             </td>
         </tr>
         <tr>

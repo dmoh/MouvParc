@@ -430,6 +430,13 @@ class Cars
     protected $accessibilite;
 
 
+    /**
+     *
+     * @ORM\Column(name="idTruck", type="string", length=25, nullable= true)
+     */
+    protected $idTruck;
+
+
 
 
 
@@ -1702,6 +1709,22 @@ class Cars
     public function setAccessibilite($accessibilite): void
     {
         $this->accessibilite = $accessibilite;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdTruck()
+    {
+        return $this->idTruck;
+    }
+
+    /**
+     * @param mixed $idTruck
+     */
+    public function setIdTruck($idTruck): void
+    {
+        $this->idTruck = $idTruck;
     }
 
 

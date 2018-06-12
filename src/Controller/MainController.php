@@ -135,176 +135,195 @@ Class MainController extends Controller
             $carDansBDD = array();
 
 
+
             $tt = count($litLeFicheir);
             //unset($litLeFicheir[0]);
 
             //Boucle Fichier envoyé
             for ($i = 1; $i < $tt; $i++) {
                 $car = explode(";", $litLeFicheir[$i]);
-                $immat = $car[1];
-
-
-                //Boucle BDD
-                for ($j = 0; $j < $nbCars; $j++) {
-                    if($immat != $listeCars[$j]['immat'])
+                $test = array();
+                //MAj du fichier identifiants truck et immat
+                if(!isset($car[10]) && isset($car[0]) && isset($car[1]) && strlen($car[1]) === 9 && strlen($car[0]) > 4)
+                {
+                    $immatFichier = $car[1];
+                    $idTruck = $car[0];
+                    //fIchier csv 2 colonnes avec idTruck et Immat
+                    $majCar = $em->getRepository(Cars::class)->findOneBy(array(
+                       "immat" => $immatFichier
+                    ));
+                    if(null !== $majCar)
                     {
-                        array_push($carLouper, $immat);
-                        array_push($carDansBDD, $listeCars[$j]['immat']);
+                        $majCar->setIdTruck($idTruck);
+                        $em->persist($majCar);
                     }
-                    else if ($immat == $listeCars[$j]['immat']) {
-                        $carMiseAjour++;
-                        $nb_places = $car[4];
-                        if ($nb_places != $listeCars[$j]['nb_places']) {
-                            $nb_places = (int)$nb_places;
-                        }
 
-                        $marque = $car[6];
-
-                        if ($marque != $listeCars[$j]['marque']) {
-                            $marque = $listeCars[$j]['marque'];
-                        }
-
-
-                        $centre = $car[10];
-
-
-                        if ($centre != 'LRF' || $centre != 'ACY') {
-                            $centre = 'LRF';
-                        }
-
-
-                        $date_entree = $car[12];
-                        //$date_entree = substr($date_entree, 0, 10);
-
-                        if($date_entree == "")
+                    array_push($test, $immatFichier);
+                    var_dump($test);
+                    $em->flush();
+                }
+                else
+                {
+                    $immat = $car[1];
+                    //Boucle BDD
+                    for ($j = 0; $j < $nbCars; $j++) {
+                        if($immat != $listeCars[$j]['immat'])
                         {
-                            $date_entree = new \DateTime('-1 year');
+                            array_push($carLouper, $immat);
+                            array_push($carDansBDD, $listeCars[$j]['immat']);
                         }
-                        else if ($date_entree != $listeCars[$j]['date']) {
+                        else if ($immat == $listeCars[$j]['immat']) {
+                            $carMiseAjour++;
+                            $nb_places = $car[4];
+                            if ($nb_places != $listeCars[$j]['nb_places']) {
+                                $nb_places = (int)$nb_places;
+                            }
 
-                            $date_entree = date_create_from_format('d/m/Y', $date_entree);
-                            $date_entree = date_format($date_entree, 'Y-m-d');
-                        } else {
-                            $date_entree = new \DateTime();
+                            $marque = $car[6];
+
+                            if ($marque != $listeCars[$j]['marque']) {
+                                $marque = $listeCars[$j]['marque'];
+                            }
+
+
+                            $centre = $car[10];
+
+
+                            if ($centre != 'LRF' || $centre != 'ACY') {
+                                $centre = 'LRF';
+                            }
+
+
+                            $date_entree = $car[12];
+                            //$date_entree = substr($date_entree, 0, 10);
+
+                            if($date_entree == "")
+                            {
+                                $date_entree = new \DateTime('-1 year');
+                            }
+                            else if ($date_entree != $listeCars[$j]['date']) {
+
+                                $date_entree = date_create_from_format('d/m/Y', $date_entree);
+                                $date_entree = date_format($date_entree, 'Y-m-d');
+                            } else {
+                                $date_entree = new \DateTime();
+                            }
+
+
+                            $date_mar = $car[13];
+
+                            if($date_mar == "")
+                            {
+                                $date_mar = new \DateTime('-1 year');
+                            }else if ($date_mar != $listeCars[$j]['date_mar']) {
+                                $date_mar = date_create_from_format('d/m/Y', $date_mar);
+                                $date_mar = date_format($date_mar, 'Y-m-d');
+                            } else if ($listeCars[$j]['date_mar']) {
+                                $date_mar = $listeCars[$j]['date_mar'];
+                            } else {
+                                $date_mar = new \DateTime('-1 year');
+                            }
+
+
+                            $siege_guide = $car[17];
+
+                            if ($siege_guide == 'O') {
+                                $siege_guide = (int)1;
+
+                            } else if ($siege_guide == 'N') {
+                                $siege_guide = 0;
+                            } else {
+                                $siege_guide = NULL;
+                            }
+
+                            $euro = $car[35];
+
+                            if ($euro == '') {
+                                $euro = NULL;
+                            }
+                            /**/
+
+                            $num_serie = $car[36];
+
+
+                            $len = strlen($num_serie);
+                            if ($len < 15 || $len > 25) {
+                                $num_serie = "ENTREZLENUMSERIESVP";
+                            }
+
+
+                            //Changer format date
+                            $date_ethylo = $car[48];
+
+                            if ($date_ethylo != $listeCars[$j]['date_ethylo']) {
+                                $date_ethylo = date_create_from_format('d/m/Y', $date_ethylo);
+                                $date_ethylo = date_format($date_ethylo, 'Y-m-d');
+                            } else {
+                                $date_ethylo = NULL;
+                            }
+
+                            $date_extincteur = $car[49];
+
+                            if ($date_extincteur != $listeCars[$j]['date_extincteur']) {
+                                $date_extincteur = date_create_from_format('d/m/Y', $date_extincteur);
+                                $date_extincteur = date_format($date_extincteur, 'Y-m-d');
+
+                            } else {
+                                $date_extincteur = NULL;
+                            }
+
+                            $date_limiteur = $car[50];
+
+                            if ($date_limiteur != $listeCars[$j]['date_limiteur']) {
+                                $date_limiteur = date_create_from_format('d/m/Y', $date_limiteur);
+                                $date_limiteur = date_format($date_limiteur, 'Y-m-d');
+                            } else {
+                                $date_limiteur = NULL;
+                            }
+                            $ct = $car[51];
+
+                            if ($ct != $listeCars[$j]['ct']) {
+                                //$ct = null;
+                                $ct = \DateTime::createFromFormat('d/m/Y', $ct);
+                                //$ct = date_format($ct, 'Y-m-d');
+                            } else {
+                                $ct = NULL;
+                            }
+
+
+                            $date_tachy = $car[53];
+                            $date_tachy = substr($date_tachy, 0, 10);
+                            if ($date_tachy != $listeCars[$j]['date_tachy'] && $date_tachy != 0) {
+                                $date_tachy = date_create_from_format('d/m/Y', $date_tachy);
+                                //$date_tachy = date_format($date_tachy, 'Y-m-d');
+                            } else {
+                                $date_tachy = $listeCars[$j]['date_tachy'];
+                            }
+
+                            $query = $em->createQuery('UPDATE App\Entity\Cars c SET c.nb_places = :nb_places, c.siege_guide = :siege_guide, c.euro = :euro, c.date_ethylo = :date_ethylo, c.date_extincteur = :date_extincteur, c.date_limiteur = :date_limiteur, c.ct = :ct, c.date_tachy = :date_tachy, c.marque = :marque, c.site = :site, c.date = :date_entree, c.date_mar = :date_mar    WHERE c.immat = :immat');
+                            $query->setParameters(array(
+                                'nb_places'         => $nb_places,
+                                'siege_guide'       => $siege_guide,
+                                'euro'              => $euro,
+                                'date_ethylo'       => $date_ethylo,
+                                'date_extincteur'   => $date_extincteur,
+                                'date_limiteur'     => $date_limiteur,
+                                'ct'                => $ct,
+                                'date_tachy'        => $date_tachy,
+                                'immat'             => $immat,
+                                'marque'            => $marque,
+                                'site'              => $centre,
+                                'date_entree'       => $date_entree,
+                                'date_mar'          => $date_mar
+                            ));
+
+                            $query->execute();
+                            $em->flush();
                         }
+                    }//End For BDD
+                }
 
-
-                        $date_mar = $car[13];
-
-                        if($date_mar == "")
-                        {
-                            $date_mar = new \DateTime('-1 year');
-                        }else if ($date_mar != $listeCars[$j]['date_mar']) {
-                            $date_mar = date_create_from_format('d/m/Y', $date_mar);
-                            $date_mar = date_format($date_mar, 'Y-m-d');
-                        } else if ($listeCars[$j]['date_mar']) {
-                            $date_mar = $listeCars[$j]['date_mar'];
-                        } else {
-                            $date_mar = new \DateTime('-1 year');
-                        }
-
-
-                        $siege_guide = $car[17];
-
-                        if ($siege_guide == 'O') {
-                            $siege_guide = (int)1;
-
-                        } else if ($siege_guide == 'N') {
-                            $siege_guide = 0;
-                        } else {
-                            $siege_guide = NULL;
-                        }
-
-                        $euro = $car[35];
-
-                        if ($euro == '') {
-                            $euro = NULL;
-                        }
-                        /**/
-
-                        $num_serie = $car[36];
-
-
-                        $len = strlen($num_serie);
-                        if ($len < 15 || $len > 25) {
-                            $num_serie = "ENTREZLENUMSERIESVP";
-                        }
-
-
-                        //Changer format date
-                        $date_ethylo = $car[48];
-
-                        if ($date_ethylo != $listeCars[$j]['date_ethylo']) {
-                            $date_ethylo = date_create_from_format('d/m/Y', $date_ethylo);
-                            $date_ethylo = date_format($date_ethylo, 'Y-m-d');
-                        } else {
-                            $date_ethylo = NULL;
-                        }
-
-                        $date_extincteur = $car[49];
-
-                        if ($date_extincteur != $listeCars[$j]['date_extincteur']) {
-                            $date_extincteur = date_create_from_format('d/m/Y', $date_extincteur);
-                            $date_extincteur = date_format($date_extincteur, 'Y-m-d');
-
-                        } else {
-                            $date_extincteur = NULL;
-                        }
-
-                        $date_limiteur = $car[50];
-
-                        if ($date_limiteur != $listeCars[$j]['date_limiteur']) {
-                            $date_limiteur = date_create_from_format('d/m/Y', $date_limiteur);
-                            $date_limiteur = date_format($date_limiteur, 'Y-m-d');
-                        } else {
-                            $date_limiteur = NULL;
-                        }
-                        $ct = $car[51];
-
-                        if ($ct != $listeCars[$j]['ct']) {
-                            //$ct = null;
-                           $ct = \DateTime::createFromFormat('d/m/Y', $ct);
-                           //$ct = date_format($ct, 'Y-m-d');
-                        } else {
-                            $ct = NULL;
-                        }
-
-
-                        $date_tachy = $car[53];
-                        $date_tachy = substr($date_tachy, 0, 10);
-                        if ($date_tachy != $listeCars[$j]['date_tachy'] && $date_tachy != 0) {
-                            $date_tachy = date_create_from_format('d/m/Y', $date_tachy);
-                            //$date_tachy = date_format($date_tachy, 'Y-m-d');
-                        } else {
-                            $date_tachy = $listeCars[$j]['date_tachy'];
-                        }
-
-                        $query = $em->createQuery('UPDATE App\Entity\Cars c SET c.nb_places = :nb_places, c.siege_guide = :siege_guide, c.euro = :euro, c.date_ethylo = :date_ethylo, c.date_extincteur = :date_extincteur, c.date_limiteur = :date_limiteur, c.ct = :ct, c.date_tachy = :date_tachy, c.marque = :marque, c.site = :site, c.date = :date_entree, c.date_mar = :date_mar    WHERE c.immat = :immat');
-                        $query->setParameters(array(
-                            'nb_places'         => $nb_places,
-                            'siege_guide'       => $siege_guide,
-                            'euro'              => $euro,
-                            'date_ethylo'       => $date_ethylo,
-                            'date_extincteur'   => $date_extincteur,
-                            'date_limiteur'     => $date_limiteur,
-                            'ct'                => $ct,
-                            'date_tachy'        => $date_tachy,
-                            'immat'             => $immat,
-                            'marque'            => $marque,
-                            'site'              => $centre,
-                            'date_entree'       => $date_entree,
-                            'date_mar'          => $date_mar
-                        ));
-
-                        $query->execute();
-                        $em->flush();
-                    }
-                }//End For BDD
             }//end For Fichier Envoyé
-
-
-
-
 
 
 
@@ -312,54 +331,56 @@ Class MainController extends Controller
 
              $nbCarLouper = count($carLouper);
 
-             $carAbs = array_diff($carLouper, $carDansBDD);
-             $carS = array_filter($carAbs, function($value) { return $value !== ''; });
-             $result = array_unique($carS);
-             array_pop($result);
-
-             $nb = count($result);
-
-             if($nb > 0)
+             if(isset($carAbs) && count($carAbs) > 0)
              {
-                 for ($j = 1; $j < $tt ; $j++)
+                 $carAbs = array_diff($carLouper, $carDansBDD);
+                 $carS = array_filter($carAbs, function($value) { return $value !== ''; });
+                 $result = array_unique($carS);
+                 array_pop($result);
+
+                 $nb = count($result);
+
+                 if($nb > 0)
                  {
-
-                     $car = explode(";", $litLeFicheir[$j]);
-                     $result = array_values($result);
-
-
-
-
-                     for ($t = 0; $t < $nb; $t++)
+                     for ($j = 1; $j < $tt ; $j++)
                      {
-                         if ($result[$t] == $car[1])
+
+                         $car = explode(";", $litLeFicheir[$j]);
+                         $result = array_values($result);
+
+
+
+
+                         for ($t = 0; $t < $nb; $t++)
                          {
-                             $carNew = new Cars();
+                             if ($result[$t] == $car[1])
+                             {
+                                 $carNew = new Cars();
 
-                             $nb_places = $car[4];
-                             if ($nb_places != $listeCars[$j]['nb_places']) {
-                                 $nb_places = (int)$nb_places;
-                             }
-
-
-
-                             $marque = $car[6];
-
-                             if ($marque != $listeCars[$j]['marque']) {
-                                 $marque = $listeCars[$j]['marque'];
-                             }
+                                 $nb_places = $car[4];
+                                 if ($nb_places != $listeCars[$j]['nb_places']) {
+                                     $nb_places = (int)$nb_places;
+                                 }
 
 
-                             $centre = $car[10];
+
+                                 $marque = $car[6];
+
+                                 if ($marque != $listeCars[$j]['marque']) {
+                                     $marque = $listeCars[$j]['marque'];
+                                 }
 
 
-                             if ($centre != 'LRF' || $centre != 'ACY') {
-                                 $centre = 'LRF';
-                             }
+                                 $centre = $car[10];
 
 
-                             $date_entree = $car[12];
-                             //$date_entree = substr($date_entree, 0, 10);
+                                 if ($centre != 'LRF' || $centre != 'ACY') {
+                                     $centre = 'LRF';
+                                 }
+
+
+                                 $date_entree = $car[12];
+                                 //$date_entree = substr($date_entree, 0, 10);
 
 
 
@@ -369,137 +390,139 @@ Class MainController extends Controller
                                  //$date_entree = date_format($date_entree, 'Y-m-d');
 
 
-                             $date_mar = $car[13];
+                                 $date_mar = $car[13];
 
-                             if($date_mar == "")
-                             {
-                                 $date_mar = new \DateTime('-1 year');
-                             }else {
-                                 $date_mar = \DateTime::createFromFormat('d/m/Y', $date_mar);
-                                 //$date_mar = date_format($date_mar, 'Y-m-d');
+                                 if($date_mar == "")
+                                 {
+                                     $date_mar = new \DateTime('-1 year');
+                                 }else {
+                                     $date_mar = \DateTime::createFromFormat('d/m/Y', $date_mar);
+                                     //$date_mar = date_format($date_mar, 'Y-m-d');
+                                 }
+
+
+
+                                 $siege_guide = $car[17];
+
+                                 if ($siege_guide == 'O') {
+                                     $siege_guide = (int)1;
+
+                                 } else if ($siege_guide == 'N') {
+                                     $siege_guide = 0;
+                                 } else {
+                                     $siege_guide = NULL;
+                                 }
+
+                                 $euro = $car[35];
+
+                                 if ($euro == '') {
+                                     $euro = NULL;
+                                 }
+                                 /**/
+
+                                 $num_serie = $car[36];
+
+
+                                 $len = strlen($num_serie);
+                                 if ($len < 15 || $len > 25) {
+                                     $num_serie = "ENTREZLENUMSERIESVP";
+                                 }
+
+
+                                 //Changer format date
+                                 $date_ethylo = $car[48];
+
+                                 if ($date_ethylo != "") {
+                                     $date_ethylo = \DateTime::createFromFormat('d/m/Y', $date_ethylo);
+                                 } else {
+                                     $date_ethylo = NULL;
+                                 }
+
+
+
+                                 $date_extincteur = $car[49];
+
+                                 if ($date_extincteur != "") {
+                                     $date_extincteur = \DateTime::createFromFormat('d/m/Y', $date_extincteur);
+
+                                 } else {
+                                     $date_extincteur = NULL;
+                                 }
+
+
+
+                                 $date_limiteur = $car[50];
+
+                                 if ($date_limiteur != "") {
+                                     $date_limiteur = \DateTime::createFromFormat('d/m/Y', $date_limiteur);
+                                 } else {
+                                     $date_limiteur = NULL;
+                                 }
+
+
+                                 $ct = $car[51];
+
+
+
+                                 if ($ct != "") {
+                                     $ct = \DateTime::createFromFormat('d/m/Y', $ct);
+                                 } else {
+                                     $ct = NULL;
+                                 }
+
+
+                                 $date_tachy = $car[53];
+                                 $date_tachy = substr($date_tachy, 0, 10);
+                                 if ($date_tachy != "") {
+                                     $date_tachy = \DateTime::createFromFormat('d/m/Y', $date_tachy);
+                                 } else {
+                                     $date_tachy = NULL;
+                                 }
+
+
+
+                                 $carNew->setImmat($result[$t]);
+                                 //
+                                 $carNew->setAuteur('Guillaume');
+                                 $carNew->setMarque($marque);
+                                 $carNew->setSite($centre);
+                                 $carNew->setNumSerie($num_serie);
+
+                                 $carNew->setDateMar($date_mar);
+
+                                 $carNew->setNbPlaces($nb_places);
+                                 $carNew->setEtatCar('roulant');
+                                 $carNew->setSiegeGuide($siege_guide);
+                                 $carNew->setCt($ct);
+                                 $carNew->setEuro($euro);
+                                 $carNew->setDateEthylo($date_ethylo);
+
+                                 $carNew->setDateTachy($date_tachy);
+                                 $carNew->setDateExtincteur($date_extincteur);
+                                 $carNew->setDateLimiteur($date_limiteur);
+
+
+                                 $em->persist($carNew);
+                                 $em->flush();
                              }
-
-
-
-                             $siege_guide = $car[17];
-
-                             if ($siege_guide == 'O') {
-                                 $siege_guide = (int)1;
-
-                             } else if ($siege_guide == 'N') {
-                                 $siege_guide = 0;
-                             } else {
-                                 $siege_guide = NULL;
-                             }
-
-                             $euro = $car[35];
-
-                             if ($euro == '') {
-                                 $euro = NULL;
-                             }
-                             /**/
-
-                             $num_serie = $car[36];
-
-
-                             $len = strlen($num_serie);
-                             if ($len < 15 || $len > 25) {
-                                 $num_serie = "ENTREZLENUMSERIESVP";
-                             }
-
-
-                             //Changer format date
-                             $date_ethylo = $car[48];
-
-                             if ($date_ethylo != "") {
-                                 $date_ethylo = \DateTime::createFromFormat('d/m/Y', $date_ethylo);
-                             } else {
-                                 $date_ethylo = NULL;
-                             }
-
-
-
-                             $date_extincteur = $car[49];
-
-                             if ($date_extincteur != "") {
-                                 $date_extincteur = \DateTime::createFromFormat('d/m/Y', $date_extincteur);
-
-                             } else {
-                                 $date_extincteur = NULL;
-                             }
-
-
-
-                             $date_limiteur = $car[50];
-
-                             if ($date_limiteur != "") {
-                                 $date_limiteur = \DateTime::createFromFormat('d/m/Y', $date_limiteur);
-                             } else {
-                                 $date_limiteur = NULL;
-                             }
-
-
-                             $ct = $car[51];
-
-
-
-                             if ($ct != "") {
-                                 $ct = \DateTime::createFromFormat('d/m/Y', $ct);
-                             } else {
-                                 $ct = NULL;
-                             }
-
-
-                             $date_tachy = $car[53];
-                             $date_tachy = substr($date_tachy, 0, 10);
-                             if ($date_tachy != "") {
-                                 $date_tachy = \DateTime::createFromFormat('d/m/Y', $date_tachy);
-                             } else {
-                                 $date_tachy = NULL;
-                             }
-
-
-
-                             $carNew->setImmat($result[$t]);
-                             //
-                             $carNew->setAuteur('Guillaume');
-                             $carNew->setMarque($marque);
-                             $carNew->setSite($centre);
-                             $carNew->setNumSerie($num_serie);
-
-                             $carNew->setDateMar($date_mar);
-
-                             $carNew->setNbPlaces($nb_places);
-                             $carNew->setEtatCar('roulant');
-                             $carNew->setSiegeGuide($siege_guide);
-                             $carNew->setCt($ct);
-                             $carNew->setEuro($euro);
-                             $carNew->setDateEthylo($date_ethylo);
-
-                             $carNew->setDateTachy($date_tachy);
-                             $carNew->setDateExtincteur($date_extincteur);
-                             $carNew->setDateLimiteur($date_limiteur);
-
-
-                             $em->persist($carNew);
-                             $em->flush();
                          }
+
                      }
 
+                     return $this->render('front/miseajour.html.twig', array(
+                         'form' => $form->createView(),
+                         'carMaj'=> $carMiseAjour,
+                         'carLouper' => $result,
+                         'saveOK' => 'Les modifications sont bien enregistrés dans la BDD'
+                     ));
+
                  }
-
              }
-
-
-
-
 
 
             return $this->render('front/miseajour.html.twig', array(
                 'form' => $form->createView(),
-                'carMaj'=> $carMiseAjour,
-                'carLouper' => $result,
-                'saveOK' => 'Les modifications sont bien enregistrés dans la BDD'
+                'listeCars' => $listeCars
             ));
 
         }
@@ -2262,6 +2285,11 @@ Class MainController extends Controller
     public function annonceCar(Request $request, $id, \Swift_Mailer $mailer, AuthorizationCheckerInterface $authorizationChecker)
     {
 
+        //Voir si nous sommmes en local ou non
+        $varDirectory = __DIR__;
+        $varDirectory = substr($varDirectory, 0, 6);
+
+
 
         $em = $this->getDoctrine()->getManager();
         $car = $em->getRepository(Cars::class)->find($id);
@@ -2272,10 +2300,10 @@ Class MainController extends Controller
 
         $carPrix = $car->getPrix();
 
-        if(false === $authorizationChecker->isGranted('ROLE_USER') && $carPrix === null)
+        /*if(false === $authorizationChecker->isGranted('ROLE_USER') && $carPrix === null)
         {
             throw new AccessDeniedException('VOUS n\'êtes pas autorisé a accéder a cette page ! ');
-        }
+        }*/
 
 
 
@@ -2326,7 +2354,14 @@ Class MainController extends Controller
 
                 if (filter_var($mailClient, FILTER_VALIDATE_EMAIL)) {
                     //  $this->returnPDFResponseFROMHtml($car->getId());
-                    $carID = 'http://localhost:8000/admin/annoncecar/' . $car->getId();
+                    if($varDirectory == "C:\\wam")
+                    {
+                        $carID = 'http://localhost:8000/admin/annoncecar/' . $car->getId();
+                    }
+                    else
+                    {
+                        $carID = 'http://caraps.fr/admin/annoncecar/'.$car->getId();
+                    }
                     //$carID = 'http://caraps.fr/admin/annoncecar/'.$car->getId();
 
                     $dateMar = $car->getDateMar();
@@ -2381,7 +2416,14 @@ Class MainController extends Controller
                 }
 
                 //  $this->returnPDFResponseFROMHtml($car->getId());
-                $carID = 'http://localhost:8000/admin/annoncecar/' . $car->getId();
+                if($varDirectory == "C:\\wam")
+                {
+                    $carID = 'http://localhost:8000/admin/annoncecar/' . $car->getId();
+                }
+                else
+                {
+                    $carID = 'http://caraps.fr/admin/annoncecar/'.$car->getId();
+                }
                 //$carID = 'http://caraps.fr/admin/annoncecar/'.$car->getId();
 
                 $mess->setBody(
@@ -2626,28 +2668,23 @@ Class MainController extends Controller
     public function donneesKilometriques(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $dql = "SELECT c.immat, c.km FROM App\Entity\Cars c";
+        $dql = "SELECT c.idTruck, c.immat FROM App\Entity\Cars c WHERE c.idTruck is not null";
         $queryC = $em->createQuery($dql);
-
         $listeCars = $queryC->getResult();
         $ti = time();
         //Date de récupération chaque mois le premier
         $dateDuPremier = date('c',mktime(23,59,0,date('m'),1,date('y')));
         $dateDuPremier = substr($dateDuPremier, 0, -6);
-
-        $dateDuPremier1 = date('c',mktime(00,05,0,date('m'),1,date('y')));
-        $immat= "BW-904-WP";
         $nbCars = count($listeCars);
 
         $chaineImmat =implode('|', array_map(function ($entry) {
-            return $entry['immat'];
+            return $entry['idTruck'];
         }, $listeCars));
 
 
-        $lesVehicules =
         //Recherche km 1 de chaque mois via truckonline
         //gpstracking?vehicle_uids=*&date=2018-06-01T21:59:00Z&count=1
-        $hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?vehicle_vrn=EF-063-VL&date=".$dateDuPremier."Z&count=1".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
+        $hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?vehicles_vrns=*&date=".$dateDuPremier."Z&count=1".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
         $opts = array(
             'http' => array(
                 'method'=>'GET',
@@ -2656,55 +2693,109 @@ Class MainController extends Controller
                     "x-tonl-signature: ".$hache.""
             )
         );
-        /*
-          $hache2 = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?count=1&vehicles.$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
-
-            $opts2 = array(
-                'http' => array(
-                    'method'=>'GET',
-                    'header' => "x-tonl-client-id:  apa-aps-t39-c1\r\n".
-                        "x-tonl-timestamp:  ".$ti."\r\n".
-                        "x-tonl-signature: ".$hache2.""
-                )
-            );
-            $context2 = stream_context_create($opts2);
-            $kil2 = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?count=1&vehicles", false, $context2);
-            $result2 = json_decode($kil2, true);
-        */
-
-
         // Recherche api truck online tous les vehicules
         $context = stream_context_create($opts);
-        $kil = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?vehicle_vrn=EF-063-VL&date=".$dateDuPremier."Z&count=1", false, $context);
+        $kil = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?vehicles_vrns=*&date=".$dateDuPremier."Z&count=1", false, $context);
         $result = json_decode($kil, true);
-        var_dump($result);
-        die();
-        if($result[0])
-        {
-            $kms = $result[0]["totalKms"];
 
-        }
+        //$nbResult = count($result);
+        /*var_dump($result);
+        die();*/
 
+        /*$hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?vehicle_vrn=DM-207-AB&date=".$dateDuPremier."Z&count=1".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
+        $opts = array(
+            'http' => array(
+                'method'=>'GET',
+                'header' => "x-tonl-client-id:  apa-aps-t39-c1\r\n".
+                    "x-tonl-timestamp:  ".$ti."\r\n".
+                    "x-tonl-signature: ".$hache.""
+            )
+        );
+        // Recherche api truck online tous les vehicules
+        $context = stream_context_create($opts);
+        $kil = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?vehicle_vrn=DM-207-AB&date=".$dateDuPremier."Z&count=1", false, $context);
+        $result = json_decode($kil, true);*/
 
-
-
-        var_dump($listeCars);
-        die();
+        $nbResult = count($result);
+        /*var_dump($result);
+        die();*/
 
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $nbImmat = count($listeCars);
-        for ($i = 0; $i < $nbImmat; $i++)
+
+        /*var_dump($result[1]["gpsInfo"]["totalKm"]);
+        die();*/
+
+        $kmManquants = array();
+
+        //Associer les uids au immats
+        for ($i = 0; $i < $nbResult; $i++)
         {
-            $sheet->setCellValueByColumnAndRow($i, 1, $listeCars[$i]["immat"]);
+            for($j=0; $j < $nbCars; $j++)
+            {
+
+                $idTruckBdd = $listeCars[$j]["idTruck"];
+
+                if($result[$i]["vehicleUid"] == $idTruckBdd)
+                {
+
+                    $gpsInfo = $result[$i]["gpsInfo"];
+                    if(isset($gpsInfo["totalKm"])) {
+                        $totalKm = $gpsInfo["totalKm"];
+
+
+                        if ($i < 114 && $totalKm > 0) {
+                            //Ecriture dans le fichier excel
+                            $sheet->setCellValueByColumnAndRow($j, 1, $listeCars[$j]["immat"]);
+                            $sheet->setCellValueByColumnAndRow($j, 2, $totalKm);
+                            //Enregistrement en BDD
+                            $CarsT = $em->getRepository(Cars::class)->findOneBy(array(
+                                "immat" => $listeCars[$j]["immat"]
+                            ));
+                            $CarsT->setKm($totalKm);
+                            $em->persist($CarsT);
+                        } else {
+                            array_push($kmManquants, $listeCars[$j]["immat"]);
+                        }
+                    }
+
+                }
+                else
+                {
+                    $sheet->setCellValueByColumnAndRow($j, 1, $listeCars[$j]["immat"]);
+                   //array_push($kmManquants, $listeCars[$j]["immat"]);
+                }
+            }
+
         }
 
 
 
+        $kmM = implode('|', $kmManquants);
+        $ti2 = time();
+        /*if(count($kmManquants) > 0)
+        {
+            $hache1 = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?vehicle_uids=*&date=".$dateDuPremier."Z&count=1".$ti2."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
+            $opts1 = array(
+                'http' => array(
+                    'method'=>'GET',
+                    'header' => "x-tonl-client-id:  apa-aps-t39-c1\r\n".
+                        "x-tonl-timestamp:  ".$ti2."\r\n".
+                        "x-tonl-signature: ".$hache1.""
+                )
+            );
+            // Recherche api truck online tous les vehicules
+            $context1 = stream_context_create($opts1);
+            $kil1 = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?vehicle_uids=*&date=".$dateDuPremier."Z&count=1", false, $context1);
+            $result2 = json_decode($kil1, true);
+        }*/
+        $em->flush();
         $writer = new Xlsx($spreadsheet);
-        $writer->save('hello world.xlsx');
-        var_dump($writer);
-        die();
+        $writer->save('DonneesKm2.xlsx');
+
+        return $this->render("front/donneesKm.html.twig", array(
+            "datePremier" => $dateDuPremier
+        ));
     }
 }

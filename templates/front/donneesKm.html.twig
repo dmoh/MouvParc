@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Les valeurs kilométriques du {{ datePremier | date('d/m/Y') }} à 23h59</h1>
+                <p>Ces valeurs ont été mises à jour automatiquement, le fichier excel créé est accessible en cliquant sur ce lien</p>
+                <a href="/DonneesKm1.xlsx" class="btn btn-primary" target="_blank">Télécharger</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
