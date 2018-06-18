@@ -14,7 +14,8 @@
     <section class="container">
         <div class="row pb-40">
             <div class="col-md-12">
-                <a class="btn btn-primary ml-40 tee" href="{{ path('ajout_panne', { 'id': car.id }) }}">Ajouter une panne</a>
+                <a href="{{ path('carrosserie_car', {'id': car.id}) }}" class="btn btn-primary">Ajouter accrochage</a>
+                <a class="btn btn-primary tee" href="{{ path('ajout_panne', { 'id': car.id }) }}">Ajouter une panne</a>
                 <a class="btn btn-primary " href="{{ path('edit_car', { 'id': car.id }) }}">Editer fiche du car</a>
                 <a href="{{ path('mev_car',{ 'id': car.id} ) }}" class="btn btn-primary">Mise en vente</a>
                 <a class="btn btn-danger " href="{{ path('effacer_car', { 'id': car.id }) }}">Supprimer fiche du car</a>

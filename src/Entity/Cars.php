@@ -180,6 +180,11 @@ class Cars
      */
     protected $images;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Carrosserie", mappedBy="car", orphanRemoval=true, cascade={"persist", "remove", "merge"})
+     */
+    protected $carrosseries;
+
 
 
     /**
@@ -438,17 +443,12 @@ class Cars
 
 
 
-
-
-
-
-
-
     public function __construct()
     {
         $this->date = new \DateTime();
         $this->pannes = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->carrosseries = new ArrayCollection();
     }
 
     /**
@@ -502,6 +502,21 @@ class Cars
         $image->setCar(null);
     }
 
+    public function addCarrosseries(Carrosserie $carrosseries)
+    {
+        $this->$carrosseries[] = $carrosseries;
+
+        $carrosseries->setCar($this);
+
+        return $this;
+    }
+
+    public function removeCarrosseries(Carrosserie $carrosseries)
+    {
+        $this->$carrosseries->removeElement($carrosseries);
+
+        $carrosseries->setCar(null);
+    }
 
 
 
@@ -907,7 +922,7 @@ class Cars
        return $this;
     }*/
 
-       /**
+    /**
      * @param mixed $pannes
      */
     public function setPannes($pannes): void
@@ -1725,6 +1740,22 @@ class Cars
     public function setIdTruck($idTruck): void
     {
         $this->idTruck = $idTruck;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCarrosseries()
+    {
+        return $this->carrosseries;
+    }
+
+    /**
+     * @param mixed $carrosseries
+     */
+    public function setCarrosseries($carrosseries): void
+    {
+        $this->carrosseries = $carrosseries;
     }
 
 

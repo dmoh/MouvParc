@@ -51,7 +51,12 @@ ajax_snippet_image_send:
     requirements:
         id: '\d+'
 
-
+ajax_snippet_image_carrosserie:
+    path: /ajax/snippet/image/carrosserie/{id}
+    controller: App\Controller\MainController::ajaxSnippetImageCarrosserie
+    methods: [GET, POST]
+    requirements:
+        id: '\d+'
 
 effacer_car:
     path: /admin/effacer-car/{id}
@@ -114,3 +119,13 @@ miseajour:
 donnees_km:
     path: /admin/donneeskm
     controller: App\Controller\MainController::donneesKilometriques
+
+etat_carrosseries:
+    path: /admin/etatCarrosseries
+    controller: App\Controller\MainController::etatCarrosseries
+
+carrosserie_car:
+    path: /admin/carosserie/{id}
+    controller: App\Controller\MainController::carrosserieCar
+    requirements:
+        id: '\d+'

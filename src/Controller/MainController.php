@@ -7,8 +7,10 @@
  */
 namespace App\Controller;
 
+use App\Entity\Carrosserie;
 use App\Entity\Image;
 use App\Entity\Rubrique;
+use App\Form\CarrosserieType;
 use App\Form\MiseajourType;
 use App\Form\RubriqueType;
 use App\Form\UserType;
@@ -1693,6 +1695,10 @@ Class MainController extends Controller
             $car->removeImage($image);
         }
 
+        foreach ($car->getCarrosserie() as $carroserie){
+            $car->removeCarrosserie($carroserie);
+        }
+
         $em->remove($car);
         $em->flush();
         return $this->redirectToRoute('consultation');
@@ -2512,12 +2518,80 @@ Class MainController extends Controller
 
     public function ajaxSnippetImageSend(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
+        //on vérifie d'ou vient la requete
+        $routeName = $request->get('_route');
 
-        $images = new Image();
+        $em = $this->getDoctrine()->getManager();
         $car = $em->getRepository(Cars::class)->find($id);
 
+        $images = new Image();
         $media = $request->files->get('file');
+        if($routeName != "carrosserie_car")
+        {
+            $sizeImage = $media->getClientSize();
+            $extensionImage = $media->guessExtension();
+
+            $photoName = $this->generateUniqueFileName().'.'.$extensionImage;
+            //set Name photo
+            $images->setUrl($this->getUploadDir().'/'.$photoName);
+            if($extensionImage == "pdf" || $extensionImage == "PDF")
+            {
+                $images->setAlt("Annexe_pdf".$car->getId());
+            }
+            else
+            {
+                $images->setAlt("Photo du Car : ". $car->getId());
+            }
+            //On lie l'image au car
+            $images->setCar($car);
+        }
+        else
+        {
+            //Carrosserie
+            $sizeImage = $media->getClientSize();
+            $extensionImage = $media->guessExtension();
+
+            $carrosserie = new Carrosserie();
+
+            $photoName = $this->generateUniqueFileName().'.'.$extensionImage;
+            //set Name photo
+            $images->setUrl($this->getUploadDir().'/'.$photoName);
+            if($extensionImage == "pdf" || $extensionImage == "PDF")
+            {
+                $images->setAlt("Annexe_pdf".$car->getId());
+            }
+            else
+            {
+                $images->setAlt("Photo accrochage : ". $car->getId());
+            }
+            //On lie l'image  à la carrosserie($car);
+            $images->setCarrosserie($carrosserie);
+        }
+
+
+        $images->setFile($media);
+        $images->setPath($media->getPathName());
+        //$images->setName($media->getClientOriginalName());
+        $images->upload();
+        $em->persist($images);
+        $em->flush();
+
+        //infos sur le document envoyé
+        //var_dump($request->files->get('file'));die;
+        return new JsonResponse(array('success' => true));
+    }
+
+    public function ajaxSnippetImageCarrosserie(Request $request, $id)
+    {
+        //on vérifie d'ou vient la requete
+        $routeName = $request->get('_route');
+
+        $em = $this->getDoctrine()->getManager();
+        $car = $em->getRepository(Cars::class)->find($id);
+
+        $images = new Image();
+        $media = $request->files->get('file');
+        //Carrosserie
         $sizeImage = $media->getClientSize();
         $extensionImage = $media->guessExtension();
 
@@ -2525,21 +2599,19 @@ Class MainController extends Controller
 
 
         //set Name photo
-        $images->setUrl($this->getUploadDir().'/'.$photoName);
+        $images->setUrl($this->getUploadDir().'/carro_'.$photoName);
         if($extensionImage == "pdf" || $extensionImage == "PDF")
         {
             $images->setAlt("Annexe_pdf".$car->getId());
         }
         else
         {
-            $images->setAlt("Photo du Car : ". $car->getId());
+            $images->setAlt("Photo accrochage : ". $car->getId());
         }
+        //On lie l'image  à la carrosserie($car);
+        //$images->setCarrosserie($carrosserie);
 
-
-
-        //On lie l'image au car
         $images->setCar($car);
-
         $images->setFile($media);
         $images->setPath($media->getPathName());
         //$images->setName($media->getClientOriginalName());
@@ -2684,7 +2756,7 @@ Class MainController extends Controller
 
         //Recherche km 1 de chaque mois via truckonline
         //gpstracking?vehicle_uids=*&date=2018-06-01T21:59:00Z&count=1
-        $hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?vehicles_vrns=*&date=".$dateDuPremier."Z&count=1".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
+        /**/$hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?vehicle_uids=*&date=".$dateDuPremier."Z&count=1".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
         $opts = array(
             'http' => array(
                 'method'=>'GET',
@@ -2695,14 +2767,14 @@ Class MainController extends Controller
         );
         // Recherche api truck online tous les vehicules
         $context = stream_context_create($opts);
-        $kil = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?vehicles_vrns=*&date=".$dateDuPremier."Z&count=1", false, $context);
+        $kil = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?vehicle_uids=*&date=".$dateDuPremier."Z&count=1", false, $context);
         $result = json_decode($kil, true);
 
         //$nbResult = count($result);
         /*var_dump($result);
         die();*/
 
-        /*$hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?vehicle_vrn=DM-207-AB&date=".$dateDuPremier."Z&count=1".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
+        /*$hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?vehicle_vrn=DL-193-TZ&date=".$dateDuPremier."Z&count=1".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
         $opts = array(
             'http' => array(
                 'method'=>'GET',
@@ -2713,11 +2785,11 @@ Class MainController extends Controller
         );
         // Recherche api truck online tous les vehicules
         $context = stream_context_create($opts);
-        $kil = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?vehicle_vrn=DM-207-AB&date=".$dateDuPremier."Z&count=1", false, $context);
+        $kil = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?vehicle_vrn=DL-193-TZ&date=".$dateDuPremier."Z&count=1", false, $context);
         $result = json_decode($kil, true);*/
 
         $nbResult = count($result);
-        /*var_dump($result);
+        /*ar_dump($result);
         die();*/
 
 
@@ -2798,4 +2870,88 @@ Class MainController extends Controller
             "datePremier" => $dateDuPremier
         ));
     }
+
+    public function etatCarrosseries(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $listeAccrochages = $em->getRepository(Carrosserie::class)->findAll();
+        return $this->render("front/etatCarrosseries.html.twig", array(
+            "liste" => $listeAccrochages
+        ));
+    }
+
+    public function carrosserieCar(Request $request,$id)
+    {
+
+        $routeName = $request->get('_route');
+
+        $em = $this->getDoctrine()->getManager();
+        $car = $em->getRepository(Cars::class)->find($id);
+        $carrosserieCar = new Carrosserie();
+        $form = $this->createForm(CarrosserieType::class, $carrosserieCar);
+
+        if($request->isMethod("POST"))
+        {
+            //$carID = $carrosserieCar->getId();
+            $medias = $request->files->get('file');
+
+
+            $dataCarro = $request->request->get('carrosserie');
+            if($dataCarro != NULL)
+            {
+                $form->handleRequest($request);
+                $carrosserieCar->setCar($car);
+                $em->persist($carrosserieCar);
+                $em->flush();
+
+                //$carId = $carrosserieCar->getId();
+
+                if($medias != NULL)
+                {
+                    //$cccc = $em->getRepository(Carrosserie::class)->find($carId);
+
+                    foreach ($medias as $media) {
+                        $images = new Image();
+                        $sizeImage = $media->getClientSize();
+                        $extensionImage = $media->guessExtension();
+                        $photoName = $this->generateUniqueFileName().'.'.$extensionImage;
+
+                        //set Name photo
+                        $images->setUrl($this->getUploadDir().'/'.$photoName);
+                        $images->setAlt("Photo accrochage: ". $car->getId());
+                        $images->setFile($media);
+                        $images->setPath($media->getPathName());
+                        //$images->setName($media->getClientOriginalName());
+                        $images->upload();
+                        //On lie l'image au car
+                        $images->setCarrosserie($carrosserieCar);
+                        $images->setCar($car);
+                        $em->persist($images);
+                        $em->flush();
+                    }
+
+                }
+            }
+
+             return $this->redirectToRoute("etat_carrosseries");
+        }
+
+
+        if($request->isXmlHttpRequest())
+        {
+
+            //bloc la validation jusqu'a envoie photo
+
+
+                var_dump($request->getContent());
+                die();
+            }
+
+        return $this->render("front/carrosserie.html.twig", array(
+            "car"   => $car,
+            "form"  => $form->createView()
+        ));
+    }
+
+
 }

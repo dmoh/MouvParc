@@ -21,10 +21,16 @@ class Image
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cars", inversedBy="images")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cars", inversedBy="images", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $car;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Carrosserie", inversedBy="images", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $carrosserie;
 
     /**
      * @ORM\Column(name="url", type="string", nullable=false)
@@ -40,6 +46,11 @@ class Image
      * @Assert\File(maxSize="6000000")
      */
     private $file;
+
+    /**
+     * @ORM\Column(name="carro", type="boolean", nullable=true)
+     */
+    protected $carro;
 
     /**
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
@@ -79,6 +90,7 @@ class Image
     public function __construct()
     {
         $this->car = new ArrayCollection();
+        $this->carrosserie = new ArrayCollection();
     }
 
     public function getAbsolutePath()
@@ -256,6 +268,40 @@ class Image
     {
         return $this->path;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCarrosserie(): Carrosserie
+    {
+        return $this->carrosserie;
+    }
+
+    /**
+     * @param mixed $carrosserie
+     */
+    public function setCarrosserie(Carrosserie $carrosserie): void
+    {
+        $this->carrosserie = $carrosserie;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCarro()
+    {
+        return $this->carro;
+    }
+
+    /**
+     * @param mixed $carro
+     */
+    public function setCarro($carro): void
+    {
+        $this->carro = $carro;
+    }
+
+
 
 
 
