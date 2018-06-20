@@ -44,22 +44,40 @@
             </div>
         </div>
         {% if car.images is not null and car.images is not empty %}
-        {#style="width: 30%; height: auto; display: inline-block"#}
-        <div class="row">
-            <div class="col-md-offset-4 col-md-8 fa_modif">
-                <h3 >Photos de l'autocar</h3>
-                {% for car in car.images %}
-                    <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" data-fancybox="gallery"    href="../{{ car.url }}">
-                        <img style="margin-top: 15px; width: 10%; height: 40%; display: inline-block"  src="../{{ car.url }}" alt="{{ car.alt }}">
-                    </a>
+            {#style="width: 30%; height: auto; display: inline-block"#}
+            <div class="row">
+                <div class="col-md-offset-4 col-md-8 fa_modif">
+                    {% for car in car.images %}
+                        {% if car.alt starts with 'Photo accrochage' %}
+                        {% else %}
+                            {% if loop.first %}
+                                <h3 >Photos de l'autocar</h3>
+                                <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" data-fancybox="gallery"    href="../{{ car.url }}">
+                                <img style="margin-top: 15px; width: 10%; height: 40%; display: inline-block"  src="../{{ car.url }}" alt="{{ car.alt }}">
+                                </a>
+                            {% endif %}
+                            <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" data-fancybox="gallery"    href="../{{ car.url }}">
+                                <img style="margin-top: 15px; width: 10%; height: 40%; display: inline-block"  src="../{{ car.url }}" alt="{{ car.alt }}">
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% if car.images  %}
+                {% for car in car.images  %}
+                    {% if car.alt starts with 'Photo accrochage' %}
+                    {% else %}
+                        {% if loop.first %}
+                            <div class="row">
+                                <div class="col-md-4 no_marg_top">
+                                    <a href="{{ path('annonce_car', {'id': car.id}) }}" class="btn btn-primary">Voir l'Annonce</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
                 {% endfor %}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 no_marg_top">
-                <a href="{{ path('annonce_car', {'id': car.id}) }}" class="btn btn-primary">Voir l'Annonce</a>
-            </div>
-        </div>
+            {% else %}
+            {% endif %}
         {% endif %}
         <div class="row">
             <div class="col-md-12"><h5>Equipements</h5></div>

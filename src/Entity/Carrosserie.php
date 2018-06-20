@@ -59,6 +59,13 @@ class Carrosserie
     private $duree_incident;
 
     /**
+     * @ORM\Column(name="nature_accro", type="string", nullable=false)
+     */
+    private $nature_accro;
+
+
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="carrosserie", orphanRemoval=true, cascade={"persist", "remove", "merge"})
      * @ORM\JoinColumn(nullable=true)
      */
@@ -210,6 +217,23 @@ class Carrosserie
     {
         $this->car = $cars;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNatureAccro()
+    {
+        return $this->nature_accro;
+    }
+
+    /**
+     * @param mixed $nature_accro
+     */
+    public function setNatureAccro($nature_accro): void
+    {
+        $this->nature_accro = $nature_accro;
+    }
+
 
 
 

@@ -260,7 +260,7 @@
                 <br>
                 <br>
                 <br>
-                <a href="{{ urlAnnonce }}" class="button-a">click here to see announcement and pictures </a>
+                <a href="{{ urlAnnonce }}" class="button-a">Click here to see announcement and pictures </a>
             </td>
         </tr>
         <tr>
@@ -268,6 +268,13 @@
                 <!-- Button : BEGIN -->
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto">
                     <tbody>
+                        <tr>
+                            <td>
+                                {% if memo != '' %}
+                                    <p><em style="color: #0f52c7">{{ memo }}</em></p>
+                                {% endif %}
+                            </td>
+                        </tr>
                         <tr>
                             <td style="border-radius: 3px; text-align: left;" class="">
                                 <p>Caractéristiques du véhicule : </p>

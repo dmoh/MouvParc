@@ -129,3 +129,9 @@ carrosserie_car:
     controller: App\Controller\MainController::carrosserieCar
     requirements:
         id: '\d+'
+
+view_carrosserie_car:
+    path: /admin/carrosserie/car/{id}
+    controller: App\Controller\MainController::viewCarrosserieCar
+    requirements:
+        id: '\d+'

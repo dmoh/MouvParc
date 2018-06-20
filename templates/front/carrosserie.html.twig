@@ -34,16 +34,25 @@
                     {{ form_errors(form.date_remise_etat, { 'attr': {'class': 'red' }}) }}
                 </div>
                 <div class="form-group col-md-3">
-                    {{ form_label(form.etat_car, "Déclarant : ", {'label_attr': {'class': ' control-label'}}) }}
+                    {{ form_label(form.etat_car, "Etat : ", {'label_attr': {'class': ' control-label'}}) }}
                     {# Génération de l'input.#}
 
                     {{ form_widget(form.etat_car, {'attr': {'class': 'form-control'}}) }}
                     {{ form_errors(form.etat_car, { 'attr': {'class': 'red' }}) }}
                 </div>
             </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form_label(form.nature_accro, "Nature accro.: ", {'label_attr': {'class': ' control-label'}}) }}
+                {# Génération de l'input.#}
+
+                {{ form_widget(form.nature_accro, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.nature_accro, { 'attr': {'class': 'red' }}) }}
+            </div>
+        </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    {{ form_label(form.desc_accro, "Déclarant : ", {'label_attr': {'class': ' control-label'}}) }}
+                    {{ form_label(form.desc_accro, "Desc. accro : ", {'label_attr': {'class': ' control-label'}}) }}
                     {# Génération de l'input.#}
 
                     {{ form_widget(form.desc_accro, {'attr': {'class': 'form-control'}}) }}
@@ -51,7 +60,7 @@
                 </div>
 
                 <div class="form-group col-md-6">
-                    {{ form_label(form.suite_donnee, "Déclarant : ", {'label_attr': {'class': ' control-label'}}) }}
+                    {{ form_label(form.suite_donnee, "Suite(s) donnée(s) : ", {'label_attr': {'class': ' control-label'}}) }}
                     {# Génération de l'input.#}
 
                     {{ form_widget(form.suite_donnee, {'attr': {'class': 'form-control'}}) }}
@@ -95,7 +104,7 @@
             autoProcessQueue: false,
             uploadMultiple: true,
             parallelUploads: 100,
-            maxFiles: 100,
+            maxFiles: 4,
             clickable: "#form_snippet_image",
 
 
@@ -115,23 +124,22 @@
                     var carrosserie_etat_car = $("#carrosserie_etat_car").val();
                     var carroserie_desc_accro  = $("#carrosserie_desc_accro").val();
                     var carrosserie_suite_donnees = $("#carrosserie_suite_donnee").val();
+                    var nature_accro = $("#carrosserie_nature_accro").val();
 
 
                     if(auteur === '')
                     {
-                        alert(auteur);
                         alert("Erreur auteur");
                         return false;
                     }
                     else if(!/^[0-9]{1,2}\/+[0-9]{1,2}\/+[0-9]{1,2}/.test(dateSignalement))
                     {
-                        alert(dateSignalement);
                         alert("Erreur date signalement");
                         return false;
                     }
-                    else if(!/^[0-9]{1,2}\/+[0-9]{1,2}\/+[0-9]{1,2}/.test(dateRe))
+                    else if(nature_accro === '' || nature_accro.length < 4)
                     {
-                        alert("Erreur date remise en état");
+                        alert("Nature de l'accrochage incorrect");
                         return false;
                     }
                     else if(carroserie_desc_accro === '' || carroserie_desc_accro.length < 2)
@@ -143,8 +151,15 @@
                     {
                         //var tes = $("form#my-awesome-dropzone").serialize();
                         myDropzone.processQueue();
+
+
                     }
 
+                    /*else if(!/^[0-9]{1,2}\/+[0-9]{1,2}\/+[0-9]{1,2}/.test(dateRe))
+                    {
+                        alert("Erreur date remise en état");
+                        return false;
+                    }*/
 
                 });
 
@@ -162,8 +177,7 @@
                 this.on("successmultiple", function(files, response) {
                     // Gets triggered when the files have successfully been sent.
                     // Redirect user or notify of success.
-
-
+                    window.location.href = "/admin/etatCarrosseries";
                 });
                 this.on("errormultiple", function(files, response) {
                     // Gets triggered when there was an error sending the files.
@@ -173,87 +187,7 @@
 
 
         });
-        /*var myDropzone = new Dropzone(document.body, {
-            url: _actionToDropZone,
-            autoProcessQueue: false,
-            uploadMultiple: true,
-            parallelUploads: 100,
-            maxFiles: 100,
-            clickable: '#form_snippet_image',
-            acceptedFiles: "image/jpg, image/jpeg",
 
-            init: function() {
-                var myDropzone = this;
-                this.element.querySelector("button[type=submit]").addEventListener("click", function (e) {
-                    // Make sure that the form isn't actually being sent.
-                    e.preventDefault();
-                    e.stopPropagation();
-                    myDropzone.processQueue();
-                });
-            }
-
-        });*/
-
-
-      /*  Dropzone.options.myAwesomeDropzone = { // The camelized version of the ID of the form element
-
-            // The configuration we've talked about above
-            autoProcessQueue: false,
-            uploadMultiple: true,
-            parallelUploads: 100,
-            maxFiles: 100,
-
-            // The setting up of the dropzone
-            init: function() {
-                var myDropzone = this;
-
-                // First change the button to actually tell Dropzone to process the queue.
-                this.element.querySelector("#carrosserie_envoyer").addEventListener("click", function(e) {
-                    // Make sure that the form isn't actually being sent.
-                    e.preventDefault();
-                    e.stopPropagation();
-                    myDropzone.processQueue();
-                });
-
-                // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
-                // of the sending event because uploadMultiple is set to true.
-                this.on("sendingmultiple", function() {
-                    // Gets triggered when the form is actually being sent.
-                    // Hide the success button or the complete form.
-                    alert("send");
-                });
-                this.on("successmultiple", function(files, response) {
-                    // Gets triggered when the files have successfully been sent.
-                    // Redirect user or notify of success.
-                    alert('success');
-                });
-                this.on("errormultiple", function(files, response) {
-                    // Gets triggered when there was an error sending the files.
-                    // Maybe show form again, and notify user of error
-                    alert('ok');
-                });
-
-            }
-
-
-        }
-
-    */
-
-
-        //je récupère l'action où sera traité l'upload en PHP
-        /*var _actionToDropZone = $("#form_snippet_image").attr('action');
-        //je définis ma zone de drop grâce à l'ID de ma div citée plus haut.
-        Dropzone.autoDiscover = false;
-        $("div#form_snippet_image").dropzone({
-            url: _actionToDropZone,
-            autoProcessQueue: false,
-            paramName: "file",
-            maxFilesize: 2,
-            resizeWidth: 450,
-            resizeHeight: 250,
-
-        });*/
     });
 
 </script>

@@ -41,15 +41,16 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4 affichage_image">
                     {% if car.images is not null and car.images is not empty %}
                         {% for car in car.images  %}
-                            {% if loop.first %}
-                                <a href="../../{{ car.url }}" data-fancybox="gallery">
-                                    <img src="../../{{ car.url }}" alt="{{ car.alt }}">
-                                </a>
+                            {% if car.alt starts with 'Photo du Car' %}
+                                {% if loop.first %}
+                                    <a  href="../../{{ car.url }}" data-fancybox="gallery">
+                                        <img style="width: 100%; height: 100%" src="../../{{ car.url }}" alt="{{ car.alt }}">
+                                    </a>
                                 {% else %}
-                                    {% if car.alt != "Photo du Car :  {{ car.id }}" %}
+                                    {% if car.alt starts with "Photo du Car" %}
                                         <a href="../../{{ car.url }}" data-fancybox="gallery">
                                             <img style="width: 14%; height: 14%; margin-top: 15px"  src="../../{{ car.url }}" alt="Annexe pdf">
                                         </a>
@@ -58,6 +59,8 @@
                                             <img style="width: 14%; height: 14%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
                                         </a>
                                     {% endif %}
+                                {% endif %}
+                            {% else %}
                             {% endif %}
                         {% endfor %}
                     {% else %}
@@ -429,6 +432,16 @@
 
 
         $(document).ready(function(){
+
+            //Affiche l'image en grand
+            $('div.affichage_image a:first-child img').css({
+                "width": "90%",
+                "height": "75%"
+            });
+
+
+
+
             $collectionHolder = $('ul.mails');
 
             $collectionHolder.append($newLinkLi);

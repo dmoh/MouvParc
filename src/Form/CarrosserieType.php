@@ -18,12 +18,13 @@ class CarrosserieType extends AbstractType
     {
         $builder
             ->add('auteur',             TextType::class)
+            ->add('nature_accro', TextType::class)
             ->add('etat_car',           ChoiceType::class, array(
                 'choices' => array(
                     'IMMOBILISATION' => 'immobilisation',
                     'Gênant' => "genant",
                     'Sans incidence' => "sans incidence",
-                    'ras'   => "atelier"
+                    'RAS'   => "ras"
                 ),'choice_attr' => function($val, $key, $index) {
                     // adds a class like attending_yes, attending_no, etc
                     return ['class' => 'etat_'.strtolower($key)];

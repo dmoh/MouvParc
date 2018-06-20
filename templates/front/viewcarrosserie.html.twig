@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="text-center">Carrosserie du car : <em style="color: #0be765">{{ carro.car.immat }}, {{ carro.car.marque }}</em></h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p>Nature accrochage : <em style="font-family: 'Roboto', sans-serif; color: #045cab">{{ carro.natureAccro }}</em></p>
+            </div>
+            <div class="col-md-6">
+                <p>Date de signalement : <em style="font-family: 'Roboto', sans-serif; color: #045cab">{{ carro.dateSignalement| date('d/m/y') }} {% if carro.dateRemiseEtat %}, date de remise en état : {{ carro.dateRemiseEtat | date('d/m/y') }}{% endif %} </em></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Desc : <em style="font-family: 'Roboto', sans-serif; color: #045cab">{{ carro.descAccro }}</em></p>
+            </div>
+        </div>
+        {% if carro.images %}
+            <div class="row">
+                <div style="text-align: center" class="col-md-12">
+                    <h4 class="text-center">Photo(s) de l'accrochage</h4>
+                    <p><em>Cliquez sur la photo pour l'afficher en grand</em></p>
+                    {% for image in carro.images  %}
+                        {% if image.alt starts with 'Photo accrochage' %}
+                            <a href="../../../{{ image.url }}" data-fancybox="gallery">
+                                <img style="max-width: 30%; max-height: 30%;     border: 3px solid #ccc; box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.3);" src="../../../{{ image.url }}" alt="{{ image.alt }}">
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

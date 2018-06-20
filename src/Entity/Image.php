@@ -90,7 +90,7 @@ class Image
     public function __construct()
     {
         $this->car = new ArrayCollection();
-        $this->carrosserie = new ArrayCollection();
+        ///$this->carrosserie = new ArrayCollection();
     }
 
     public function getAbsolutePath()
@@ -300,11 +300,6 @@ class Image
     {
         $this->carro = $carro;
     }
-
-
-
-
-
 
 
 }

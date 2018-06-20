@@ -20,20 +20,19 @@
                     <table class="table pt-30  table-bordered">
                         <thead class="text-uppercase">
                         <tr>
-                            <th>
+                            <th colspan="2">
                                 Immatriculation
                             </th>
-                            <th>Marque</th>
-                            <th>Accro depuis le</th>
+                            <th>Nature accro.</th>
+                            <th>Accro signalé le</th>
                         </tr>
                         </thead>
                         {% for accro in liste %}
                             {% if accro.etatCar == "immobilisation" %}
                                 <tr>
-                                    <td><i class="fa fa-paint-brush"></i></td>
-                                    <td>{{ accro.etatCar | upper }}</td>
+                                    <td><i class="fa fa-paint-brush"></i></td><td><a href="{{ path('view_carrosserie_car', {'id': accro.id }) }}">{{ accro.car.immat | upper }}</a></td>
+                                    <td>{{ accro.natureAccro }}</td>
                                     <td>{{ accro.dateSignalement | date("d/m/y") }}</td>
-
                                 </tr>
                             {% endif %}
                         {% endfor %}
@@ -52,20 +51,20 @@
                     <table class="table pt-30  table-bordered">
                         <thead class="text-uppercase">
                         <tr>
-                            <th>
+                            <th colspan="2">
                                 Immatriculation
                             </th>
-                            <th>Marque</th>
-                            <th>Accro depuis le</th>
+                            <th>Nature accro.</th>
+                            <th>Accro signalé le</th>
                         </tr>
                         </thead>
                         {% for accro in liste %}
                             {% if accro.etatCar == "genant" %}
                                 <tr>
                                     <td><i style="color: #ffa679" class="fa fa-paint-brush"></i></td>
-                                    <td>{{ accro.etatCar | upper }}</td>
+                                    <td><a href="{{ path('view_carrosserie_car', {'id': accro.id }) }}">{{ accro.car.immat | upper }}</a></td>
+                                    <td>{{ accro.natureAccro }}</td>
                                     <td>{{ accro.dateSignalement | date("d/m/y") }}</td>
-
                                 </tr>
                             {% endif %}
                         {% endfor %}
@@ -84,20 +83,20 @@
                     <table class="table pt-30  table-bordered">
                         <thead class="text-uppercase">
                         <tr>
-                            <th>
+                            <th colspan="2">
                                 Immatriculation
                             </th>
-                            <th>Marque</th>
-                            <th>Accro depuis le</th>
+                            <th>Nature accro.</th>
+                            <th>Accro signalé le</th>
                         </tr>
                         </thead>
                         {% for accro in liste %}
                             {% if accro.etatCar == "sans incidence" %}
                                 <tr>
                                     <td><i style="color: #41da97" class="fa fa-paint-brush"></i></td>
-                                    <td>{{ accro.etatCar | upper }}</td>
+                                    <td><a href="{{ path('view_carrosserie_car', {'id': accro.id }) }}">{{ accro.car.immat | upper }}</a></td>
+                                    <td>{{ accro.natureAccro }}</td>
                                     <td>{{ accro.dateSignalement | date("d/m/y") }}</td>
-
                                 </tr>
                             {% endif %}
                         {% endfor %}

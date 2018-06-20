@@ -114,6 +114,7 @@ div#form_snippet_image {
     border: 2px dashed #ccc;
     background: #fbfbfb;
     overflow: auto;
+    cursor: pointer;
 }
 
 .bg-grey

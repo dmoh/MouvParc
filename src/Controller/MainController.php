@@ -29,6 +29,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -2322,6 +2323,9 @@ Class MainController extends Controller
                     'entry_options'     => array('label'  => false)
 
                 ))
+                ->add('memo', TextareaType::class, array(
+                    'required' => false,
+                ))
                 ->add('envoyer', SubmitType::class)
                 ->getForm()
         ;
@@ -2351,6 +2355,10 @@ Class MainController extends Controller
 
             $data = $form->getData();
             $nbMails = count($data['mailclients']);
+
+            $memo = '';
+
+            $memo = $data['memo'];
 
 
             if($nbMails < 2) {
@@ -2390,7 +2398,9 @@ Class MainController extends Controller
                                     'nbPlaces' => $car->getNbPlaces(),
                                     'accessibilite' => $car->getAccessibilite(),
                                     'urlAnnonce' => $carID,
-                                    'mail' => $mailClient
+                                    'mail' => $mailClient,
+                                    'memo' => $memo
+
                                 )),
                             'text/html'
                         )//->attach(\Swift_Attachment::fromPath('/uploads/annonce'.$id.'.pdf'));
@@ -2523,6 +2533,7 @@ Class MainController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $car = $em->getRepository(Cars::class)->find($id);
+        $carrosserie = new Carrosserie();
 
         $images = new Image();
         $media = $request->files->get('file');
@@ -2544,30 +2555,8 @@ Class MainController extends Controller
             }
             //On lie l'image au car
             $images->setCar($car);
+
         }
-        else
-        {
-            //Carrosserie
-            $sizeImage = $media->getClientSize();
-            $extensionImage = $media->guessExtension();
-
-            $carrosserie = new Carrosserie();
-
-            $photoName = $this->generateUniqueFileName().'.'.$extensionImage;
-            //set Name photo
-            $images->setUrl($this->getUploadDir().'/'.$photoName);
-            if($extensionImage == "pdf" || $extensionImage == "PDF")
-            {
-                $images->setAlt("Annexe_pdf".$car->getId());
-            }
-            else
-            {
-                $images->setAlt("Photo accrochage : ". $car->getId());
-            }
-            //On lie l'image  à la carrosserie($car);
-            $images->setCarrosserie($carrosserie);
-        }
-
 
         $images->setFile($media);
         $images->setPath($media->getPathName());
@@ -2950,6 +2939,16 @@ Class MainController extends Controller
         return $this->render("front/carrosserie.html.twig", array(
             "car"   => $car,
             "form"  => $form->createView()
+        ));
+    }
+
+
+    public function viewCarrosserieCar(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $carrosserie = $em->getRepository(Carrosserie::class)->find($id);
+        return $this->render('front/viewcarrosserie.html.twig', array(
+            "carro" => $carrosserie
         ));
     }
 
