@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CarrosserieRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Carrosserie
 {
@@ -62,7 +63,6 @@ class Carrosserie
      * @ORM\Column(name="nature_accro", type="string", nullable=false)
      */
     private $nature_accro;
-
 
 
     /**
@@ -236,7 +236,10 @@ class Carrosserie
 
 
 
+    public function removeImages(Image $image)
+    {
+        $this->$image->removeElement($image);
 
-
-
+        $image->setCarrosserie(null);
+    }
 }

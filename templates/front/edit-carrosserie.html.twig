@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section>
+        {{ form_start(form) }}
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>Editer un accrochage</h1>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        {{ form_label(form.auteur, "Déclarant : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+
+                        {{ form_widget(form.auteur, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.auteur, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                    <div class="form-group col-md-3">
+                        {{ form_label(form.date_signalement, "Date signalement : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+
+                        {{ form_widget(form.date_signalement, {'attr': {'class': 'js-datepicker form-control', 'autocomplete':'off'}}) }}
+                        {{ form_errors(form.date_signalement, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                    <div class="form-group col-md-3">
+                        {{ form_label(form.date_remise_etat, "Date remise en état : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+
+                        {{ form_widget(form.date_remise_etat, {'attr': {'class': 'js-datepicker form-control', 'autocomplete': 'off'}}) }}
+                        {{ form_errors(form.date_remise_etat, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                    <div class="form-group col-md-3">
+                        {{ form_label(form.etat_car, "Etat : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+
+                        {{ form_widget(form.etat_car, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.etat_car, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        {{ form_label(form.nature_accro, "Nature accro.: ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+
+                        {{ form_widget(form.nature_accro, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.nature_accro, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        {{ form_label(form.desc_accro, "Desc. accro : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+
+                        {{ form_widget(form.desc_accro, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.desc_accro, { 'attr': {'class': 'red' }}) }}
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        {{ form_label(form.suite_donnee, "Suite(s) donnée(s) : ", {'label_attr': {'class': ' control-label'}}) }}
+                        {# Génération de l'input.#}
+
+                        {{ form_widget(form.suite_donnee, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.suite_donnee, { 'attr': {'class': 'red' }}) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        {% if images %}
+                            {% for image in images %}
+                                <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" data-fancybox="gallery"    href="../../../{{ image.url }}">
+                                <img style="margin-top: 15px; width: 20%; height: 20%; display: inline-block"  src="../../../{{ image.url }}" alt="{{ image.alt }}">
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-row">
+                    {{ form_widget(form.envoyer, {'attr': { 'class': 'btn btn-block btn-primary' }}) }}
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.del_photo').on('click', function(e){
+                e.preventDefault();
+                var mmd = $(this).next('a').attr('href');
+
+                if(confirm("Supprimer cette photo ?"))
+                {
+                    $(this).hide().next().hide();
+                    var url= window.location.href;
+
+
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {'del' : mmd},
+                        dataType: 'json',
+                        success: function(data){
+                            console.log(data);
+                        }
+                    });
+                }
+
+            });
+        });
+    </script>
+{% endblock %}

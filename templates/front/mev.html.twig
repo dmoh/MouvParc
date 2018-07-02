@@ -394,26 +394,26 @@
                         {% for car in car.images  %}
                             {% if car.alt starts with 'Photo accrochage' %}
                             {% else %}
-                                {% if car.images | length == 1 or car.images | length == 2 %}
-                                    {% for car in car.images  %}
+                                {% if car | length == 1 or car | length == 2 %}
+                                    {% for car in car  %}
                                         <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" href="../../{{ car.url }}" data-fancybox="gallery">
                                         <img style="width: 49%; height: 100%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
                                     </a>
                                     {% endfor %}
-                                {% elseif car.images | length == 3 %}
-                                    {% for car in car.images  %}
+                                {% elseif car | length == 3 %}
+                                    {% for car in car  %}
                                         <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" href="../../{{ car.url }}" data-fancybox="gallery">
                                         <img style="width: 33%; height: 100%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
                                     </a>
                                     {% endfor %}
-                                {% elseif car.images | length == 4  %}
-                                    {% for car in car.images  %}
+                                {% elseif car | length == 4  %}
+                                    {% for car in car  %}
                                         <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" href="../../{{ car.url }}" data-fancybox="gallery">
                                         <img style="width: 24%; height: 100%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
                                     </a>
                                     {% endfor %}
-                                {% elseif car.images | length > 4  %}
-                                    {% for car in car.images  %}
+                                {% elseif car | length > 4  %}
+                                    {% for car in car  %}
                                         <i title="Supprimer" class="fa del_photo"><i class="fa fa-trash-o"></i></i><a class="del_img" href="../../{{ car.url }}" data-fancybox="gallery">
                                         <img style="width: 14%; height: 100%; margin-top: 15px"  src="../../{{ car.url }}" alt="{{ car.alt }}">
                                     </a>

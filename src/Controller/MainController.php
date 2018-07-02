@@ -2361,6 +2361,7 @@ Class MainController extends Controller
             $memo = $data['memo'];
 
 
+
             if($nbMails < 2) {
                 $mailClient = $data['mailclients'][0];
                 $NomClient = explode("@", $mailClient);
@@ -2400,7 +2401,6 @@ Class MainController extends Controller
                                     'urlAnnonce' => $carID,
                                     'mail' => $mailClient,
                                     'memo' => $memo
-
                                 )),
                             'text/html'
                         )//->attach(\Swift_Attachment::fromPath('/uploads/annonce'.$id.'.pdf'));
@@ -2457,6 +2457,8 @@ Class MainController extends Controller
                                 'nbPlaces' => $car->getNbPlaces(),
                                 'accessibilite' => $car->getAccessibilite(),
                                 'urlAnnonce' => $carID,
+                                'mail' => $mailClient,
+                                'memo' => $memo
                             )),
                         'text/html'
                     )//->attach(\Swift_Attachment::fromPath('/uploads/annonce'.$id.'.pdf'));
@@ -2472,6 +2474,9 @@ Class MainController extends Controller
                     'allow_add'         => true,
                     'entry_options'     => array('label'  => false)
 
+                ))
+                ->add('memo', TextareaType::class, array(
+                    'required' => false,
                 ))
                 ->add('envoyer', SubmitType::class)
                 ->getForm()
@@ -2864,16 +2869,15 @@ Class MainController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $listeAccrochages = $em->getRepository(Carrosserie::class)->findAll();
-        return $this->render("front/etatCarrosseries.html.twig", array(
+        return $this->render("front/etatcarrosseries.html.twig", array(
             "liste" => $listeAccrochages
         ));
     }
 
-    public function carrosserieCar(Request $request,$id)
+    public function carrosserieCar(Request $request,$id, \Swift_Mailer $mailer)
     {
 
         $routeName = $request->get('_route');
-
         $em = $this->getDoctrine()->getManager();
         $car = $em->getRepository(Cars::class)->find($id);
         $carrosserieCar = new Carrosserie();
@@ -2883,8 +2887,6 @@ Class MainController extends Controller
         {
             //$carID = $carrosserieCar->getId();
             $medias = $request->files->get('file');
-
-
             $dataCarro = $request->request->get('carrosserie');
             if($dataCarro != NULL)
             {
@@ -2892,6 +2894,37 @@ Class MainController extends Controller
                 $carrosserieCar->setCar($car);
                 $em->persist($carrosserieCar);
                 $em->flush();
+
+
+
+                //Envoie de mail
+                $mess = (new \Swift_Message('Mouvparc : Accrochage'))
+                    ->setFrom('info@caraps.fr', 'Mouv Parc')
+                    ->setTo([
+                        'mkanoute74@gmail.com'                          =>  'Mohamed Kanoute',
+                        'guillaume-aps@outlook.fr'                      =>  'Guillaume Waquet',
+                        'kevin.perrillat@autocarspaysdesavoie.fr'     =>  'Kevin Perrillat',
+                        'thierry.janeriat@autocarspaysdesavoie.fr'      =>  'Thierry Janeriat',
+                        'mounir.smirani@autocarspaysdesavoie.fr'        =>  'Mounir Smirani',
+                        'cedric.coppin@autocarspaysdesavoie.fr'         =>  'Cedric Coppin',
+                        'cyril.bogdan@autocarspaysdesavoie.fr'          =>  'Cyril Bogdan'/**/
+                    ])
+                    ->setBody(
+                        $this->renderView(
+                            'emails/carrosserie.html.twig',
+                            array(
+                                'immat'             => $car->getImmat(),
+                                'marque'            => $car->getMarque(),
+                                'etatCar'           => $carrosserieCar->getEtatCar(),
+                                'natureAccro'       => $carrosserieCar->getNatureAccro(),
+                                'descAccro'         => $carrosserieCar->getDescAccro(),
+                                'suiteDonnee'       => $carrosserieCar->getSuiteDonnee(),
+                                'dateSignalement'   => $carrosserieCar->getDateSignalement(),
+                                'accrochage'        => $carrosserieCar->getId()
+                            )),
+                        'text/html'
+                    );
+                $mailer->send($mess);
 
                 //$carId = $carrosserieCar->getId();
 
@@ -2920,21 +2953,14 @@ Class MainController extends Controller
                     }
 
                 }
+                return new JsonResponse(array('data' => "OK"));
             }
-
-             return $this->redirectToRoute("etat_carrosseries");
+             //return $this->redirectToRoute("etat_carrosseries");
         }
 
 
         if($request->isXmlHttpRequest())
-        {
-
-            //bloc la validation jusqu'a envoie photo
-
-
-                var_dump($request->getContent());
-                die();
-            }
+        {}
 
         return $this->render("front/carrosserie.html.twig", array(
             "car"   => $car,
@@ -2952,5 +2978,89 @@ Class MainController extends Controller
         ));
     }
 
+    public function deleteCarrosserie(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $carrosserie = $em->getRepository(Carrosserie::class)->find($id);
+        $lesImages = $carrosserie->getImages();
+        if(null !== $lesImages)
+        {
+            foreach ($lesImages as $image) {
+                $webPath = $image->getUrl();
+                $filename = substr($webPath,10);
+                var_dump($filename." Va etre supprimé");
+                $image->deleteFiles($filename);
+                var_dump($filename." est supprimé");
+                $em->remove($image);
+            }
+        }
+
+        $em->remove($carrosserie);
+        $em->flush();
+        return new JsonResponse(array('data'=> 'ok'));
+    }
+
+
+    public function editCarrosserie(Request $request, $id)
+    {
+        $em= $this->getDoctrine()->getManager();
+        $carrosserie = $em->getRepository(Carrosserie::class)->find($id);
+
+        if($carrosserie->getImages())
+        {
+            $images = $carrosserie->getImages();
+        }
+
+        $nb = var_dump(count($images));
+
+        if( $images !== null )
+        {
+            foreach ($images as $image) {
+                var_dump($image->getUrl());
+            }
+            var_dump("plus d'image lol ");
+        }
+
+
+        //On hydrate le formulaire avec les entrées sauvegardés de la bdd
+        $form = $this->createForm(CarrosserieType::class, $carrosserie);
+
+        if($request->isXmlHttpRequest())
+        {
+            $delUrl =  $request->get('del');
+            $delUrl =substr($delUrl, 9);
+            $filename = substr($delUrl, 10);
+            $image2 = $em->getRepository(Image::class)->findOneBy(array('url'=> $delUrl));
+            $image2->deleteFiles($filename);
+            $em->remove($image2);
+            $em->flush();
+            return new JsonResponse(array('success' => true));
+        }
+
+
+        if ($request->isMethod("POST"))
+        {
+            //manipuler le formulaire soumis
+            $form->handleRequest($request);
+            //on persist les changements apporté par l'entité  carrosserie
+            $em->persist($carrosserie);
+            //on enregistre les nouvelles modifications
+            $em->flush();
+
+            return $this->redirectToRoute("etat_carrosseries");
+        }
+
+
+
+
+
+
+
+        return $this->render('front/edit-carrosserie.html.twig', array(
+            'form'  => $form->createView(),
+            'images' => $images
+        ));
+    }
 
 }

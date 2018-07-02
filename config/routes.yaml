@@ -135,3 +135,15 @@ view_carrosserie_car:
     controller: App\Controller\MainController::viewCarrosserieCar
     requirements:
         id: '\d+'
+
+delete_carrosserie:
+    path: /admin/sup/carrosserie/{id}
+    controller: App\Controller\MainController::deleteCarrosserie
+    requirements:
+        id: '\d+'
+
+edit_carrosserie:
+    path: /admin/edit/carrosserie/{id}
+    controller: App\Controller\MainController::editCarrosserie
+    requirements:
+        id: '\d+'

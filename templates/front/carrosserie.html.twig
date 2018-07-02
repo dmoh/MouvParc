@@ -122,70 +122,106 @@
                     var dateSignalement = $("#carrosserie_date_signalement").val();
                     var dateRe = $("#carrosserie_date_remise_etat").val();
                     var carrosserie_etat_car = $("#carrosserie_etat_car").val();
-                    var carroserie_desc_accro  = $("#carrosserie_desc_accro").val();
+                    var carroserie_desc_accro = $("#carrosserie_desc_accro").val();
                     var carrosserie_suite_donnees = $("#carrosserie_suite_donnee").val();
                     var nature_accro = $("#carrosserie_nature_accro").val();
 
 
-                    if(auteur === '')
+                    if ($('div.dz-preview').length > 0)
                     {
-                        alert("Erreur auteur");
-                        return false;
-                    }
-                    else if(!/^[0-9]{1,2}\/+[0-9]{1,2}\/+[0-9]{1,2}/.test(dateSignalement))
-                    {
-                        alert("Erreur date signalement");
-                        return false;
-                    }
-                    else if(nature_accro === '' || nature_accro.length < 4)
-                    {
-                        alert("Nature de l'accrochage incorrect");
-                        return false;
-                    }
-                    else if(carroserie_desc_accro === '' || carroserie_desc_accro.length < 2)
-                    {
-                        alert('Erreur description accrochage ');
-                        return false;
+                        alert('OK');
+                        if(auteur === '')
+                        {
+                            alert("Erreur auteur");
+                            return false;
+                        }
+                        else if(!/^[0-9]{1,2}\/+[0-9]{1,2}\/+[0-9]{1,2}/.test(dateSignalement))
+                        {
+                            alert("Erreur date signalement");
+                            return false;
+                        }
+                        else if(nature_accro === '' || nature_accro.length < 4)
+                        {
+                            alert("Nature de l'accrochage incorrect");
+                            return false;
+                        }
+                        else if(carroserie_desc_accro === '' || carroserie_desc_accro.length < 2)
+                        {
+                            alert('Erreur description accrochage ');
+                            return false;
+                        }
+                        else
+                        {
+                            //var tes = $("form#my-awesome-dropzone").serialize();
+
+                            myDropzone.processQueue();
+                        }
+
+                        /*else if(!/^[0-9]{1,2}\/+[0-9]{1,2}\/+[0-9]{1,2}/.test(dateRe))
+                        {
+                            alert("Erreur date remise en état");
+                            return false;
+                        }*/
+
+                        myDropzone.on("addedfile", function(file) {
+                            /* Maybe display some more file information on your page */
+                        });
+
+                        myDropzone.on("successmultiple", function(files, response) {
+                            // Gets triggered when the files have successfully been sent.
+                            // Redirect user or notify of success.
+                            window.location.href = "/admin/etatCarrosseries";
+                        });
+                        this.on("errormultiple", function(files, response) {
+                            // Gets triggered when there was an error sending the files.
+                            // Maybe show form again, and notify user of error
+                        });
                     }
                     else
                     {
-                        //var tes = $("form#my-awesome-dropzone").serialize();
-                        myDropzone.processQueue();
+                        if(auteur === '')
+                        {
+                            alert("Erreur auteur");
+                            return false;
+                        }
+                        else if(!/^[0-9]{1,2}\/+[0-9]{1,2}\/+[0-9]{1,2}/.test(dateSignalement))
+                        {
+                            alert("Erreur date signalement");
+                            return false;
+                        }
+                        else if(nature_accro === '' || nature_accro.length < 4)
+                        {
+                            alert("Nature de l'accrochage incorrect");
+                            return false;
+                        }
+                        else if(carroserie_desc_accro === '' || carroserie_desc_accro.length < 2)
+                        {
+                            alert('Erreur description accrochage ');
+                            return false;
+                        }
+                        else
+                        {
+                            var tes = $("form#my-awesome-dropzone").serialize();
+                            $.ajax({
+                                type: "POST",
+                                url: _actionToDropZone,
+                                data: tes,
+                                dataType: "json",
+                                success: function(data){
+                                    //console.log(data);
+                                    if(data)
+                                    {
+                                        document.location.href="/admin/etatCarrosseries";
+                                        //window.location.reload(true);
+                                    }
+                                }
 
-
+                            });
+                        }
                     }
 
-                    /*else if(!/^[0-9]{1,2}\/+[0-9]{1,2}\/+[0-9]{1,2}/.test(dateRe))
-                    {
-                        alert("Erreur date remise en état");
-                        return false;
-                    }*/
-
-                });
-
-                myDropzone.on("addedfile", function(file) {
-                    /* Maybe display some more file information on your page */
-                });
-
-                // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
-                // of the sending event because uploadMultiple is set to true.
-                this.on("sendingmultiple", function() {
-                    // Gets triggered when the form is actually being sent.
-                    // Hide the success button or the complete form.
-
-                });
-                this.on("successmultiple", function(files, response) {
-                    // Gets triggered when the files have successfully been sent.
-                    // Redirect user or notify of success.
-                    window.location.href = "/admin/etatCarrosseries";
-                });
-                this.on("errormultiple", function(files, response) {
-                    // Gets triggered when there was an error sending the files.
-                    // Maybe show form again, and notify user of error
                 });
             }
-
-
         });
 
     });

@@ -133,6 +133,11 @@
 
                                     {# Génération de l'input.#}
                                 </ul>
+                                {{ form_label(form.memo, "Memo : ", {'label_attr': {'class': ' control-label'}}) }}
+                                {# Génération de l'input.#}
+
+                                {{ form_widget(form.memo, {'attr': {'class': ' form-control'}}) }}
+                                {{ form_errors(form.memo, { 'attr': {'class': 'red' }}) }}
                                 {{ form_widget(form.envoyer, {'attr': {'class': 'btn btn-primary'}}) }}
                             {{ form_end(form) }}
                         </div>
