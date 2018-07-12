@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-center">
+                    Position actuelle du Car
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="elem_gps">
+                    <p id="geoc_lat">{{ geoc_lat }}</p><p id="geoc_long">{{ geoc_long }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="map"></div>
+                <div id="infowindow-content">
+                    <img src="" width="16" height="16" id="place-icon">
+                    <span id="place-name"  class="title"></span><br>
+                    <span id="place-address"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="content-resultat">
+                </div>
+            </div>
+        </div>
+
+        {{ form_start(form) }}
+        <div class="form-row">
+
+            <div style="text-align: center; color: #0f52c7; padding-top: 15px;" class="form-group col-md-6">
+                {{ form_label(form.lieu, "Lieu où est attendu le car : ", {'label_attr': {'class': ' control-label'}}) }}
+                {{ form_widget(form.lieu, {'attr': {'class': 'form-control', 'placeholder': ' exemple : Grenoble'}}) }}
+                {{ form_errors(form.lieu, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div style="padding-top: 15px" class="form-group col-md-6">
+                {{ form_widget(form.calcul , {'attr': {'class': 'btn btn-block btn-primary'}}) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+        <div class="row">
+            <div class="col-md-6">
+                <a href="{{ path('geolocbus') }}" class="btn btn-block btn-primary">Nouvelle recherche</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        function initMap() {
+
+            var geoc_lat= document.getElementById("geoc_lat").textContent;
+            var f = parseFloat(geoc_lat);
+            var geoc_long = document.getElementById("geoc_long").textContent;
+            var c = parseFloat(geoc_long);
+            var uluru = {lat: f, lng: c};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: uluru
+            });
+
+            var input = document.getElementById('form_lieu');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo('bounds', map);
+
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map,
+            });
+
+            autocomplete.addListener('place_changed', function() {
+
+                //marker.setVisible(false);
+                var place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    window.alert("Aucun lieu ne correspond a cette recherche.");
+                    return;
+                }
+
+            });
+            var coord =[ geoc_lat,  geoc_long];
+            return coord;
+
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var coord = initMap();
+            console.log(coord);
+            $('.elem_gps').css('display', 'none');
+            $('div#map').show();
+            $('#form_calcul').click(function (e) {
+                e.preventDefault();
+                var lat = parseFloat(coord[0]);
+                var lng = parseFloat(coord[1]);
+
+                var lieuDuCar = $('#form_lieu').val();
+                if(lieuDuCar.length < 2)
+                {
+                    alert("Au moins deux caractères pour l'immatriculation ");
+                    return false;
+                }
+                else {
+
+                    calculTrajet(lat, lng, lieuDuCar);
+                }
+            });
+
+        });
+        function calculTrajet(lattitude, longitude, destination)
+        {
+            var service2 = new google.maps.DistanceMatrixService();
+
+
+            var dep = new google.maps.LatLng(lattitude, longitude);
+
+            //distance Lieu de rdv à destination
+            service2.getDistanceMatrix(
+                {
+                    origins: [dep],
+                    destinations:[destination],
+                    travelMode: 'DRIVING',
+                }, function(response, status){
+                    if (status === 'OK')
+                    {
+                        var origins = response.originAddresses;
+                        var destinations = response.destinationAddresses;
+
+                        var outputDiv = document.getElementById('content-resultat');
+                        outputDiv.innerHTML="";
+                        for (var i = 0; i < origins.length; i++) {
+                            var results = response.rows[i].elements;
+                            for (var j = 0; j < results.length; j++) {
+                                var element = results[j];
+                                distance = element.distance.text;
+                                duration = element.duration.text;
+                                distance =  distance.replace(/km/g, '');
+                                distance = distance.replace(/ /g, '');
+                                //alert(distance);
+                                dist = parseInt(distance);
+                                outputDiv.innerHTML =
+                                '<h2 class="text-center">Distance</h2>'+
+                                '<p>Distance entre le lieu de prise en charge et la position actuelle du car :  <strong style="    color: #39b539; font-size: 1.2em;"><span id="dist">' + distance + '</span> km</strong></p>'
+                                ;
+                            }
+                        }
+
+                    }
+                }
+            );
+
+        }
+    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxxntbu5GzWaibeaV07aubkdq1rnRC_i4&libraries=places&callback=initMap"></script>
+{% endblock %}

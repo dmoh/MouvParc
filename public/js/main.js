@@ -41,15 +41,6 @@ $(document).ready(function(){
 
 
 
-    $('#form_enregistrer').on('click', function(e){
-        e.preventDefault();
-
-        var r = valeurs.length;
-        for (i = 0; i < r ; i++)
-        {
-
-        }
-        });
     /*
     
     $('input#form_recherche').click(function(){

@@ -27,6 +27,8 @@
                 <div class="collapse navbar-collapse" id="myNavbarCar">
                     <ul class="navbar-nav ml-auto">
                         {% if app.user %}
+                            <li><a class="nav-link active" href="{{ path('geolocbus') }}">Geolocbus</a></li>
+                            <li><a class="nav-link active" href="{{ path('editionCars') }}">Edition</a></li>
                             <li><a class="nav-link active" href="{{ path('etat_carrosseries') }}">Carrosserie</a></li>
                             <li><a class="nav-link active" href="{{ path('add_rubrique') }}">Rubrique</a></li>
                             <li><a class="nav-link active" href="{{ path('miseajour') }}">Màj BDD</a></li>

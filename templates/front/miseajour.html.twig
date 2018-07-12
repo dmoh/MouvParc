@@ -27,6 +27,27 @@
             </div>
         </div>
         <div class="container">
+            {% if carAbsBdd is defined and carAbsBdd is not empty %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Les autocars suivants on été enregistrés dans la Bdd automatiquement</h3>
+                    </div>
+                    <div class="col-md-12">
+                        <ul>
+                            {% for carAbs in carAbsBdd  %}
+                                <li style="font-size: 15px; color: #00bf00">{{ carAbs }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    {% if majBdd is defined and majBdd is not null %}
+                        <p>{{ majBdd }}</p>
+                    {% endif %}
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     {% if erreurImmat is defined and immat is defined %}
@@ -34,38 +55,6 @@
                     {% endif %}
                     {% if saveOk is defined %}
                         <strong style="color: #5ccc4d">{{ saveOk }}</strong>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="row">
-                {% if listeCars is defined%}
-                    <ul>
-                    {% for car in listeCars  %}
-                        <li>{{ car.id }}, <em>{{ car.immat }}</em> </li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
-            <div class="row">
-                {% if carMaj is defined%}
-                    <div class="col-md-12">
-                        <span  style="padding-top: 20px;" class="text-center"><em style="color: #00e765; font-size: large;">{{ carMaj }}</em> véhicules ont été mis à jour. </span>
-                    </div>
-                {% endif %}
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    {% if carLouper is defined and carLouper is not empty %}
-                        <p>Les véhicules suivants ont été ajoutés à la base de donnée :  </p>
-                        <ul class="list-group">
-                            {% for car in carLouper  %}
-                            <li class="list-group-item">
-                                {% if car != " " and car != "" %}
-                                    <p>{{ car }}</p>
-                                {% endif %}
-                            </li>
-                            {% endfor %}
-                        </ul>
                     {% endif %}
                 </div>
             </div>

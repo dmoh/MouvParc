@@ -30,7 +30,9 @@ class CarrosserieType extends AbstractType
                     return ['class' => 'etat_'.strtolower($key)];
                 },))
             ->add('desc_accro',         TextareaType::class)
-            ->add('suite_donnee',       TextareaType::class)
+            ->add('suite_donnee',       TextareaType::class, array(
+                'required' => false
+            ))
             ->add('date_signalement', DateType::class, array(
                 'widget'    => 'single_text',
                 'html5'     => false,

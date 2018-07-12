@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <h3 class="text-center">
+                Position actuelle d'un autocar
+            </h3>
+        </div>
+        {{ form_start(form) }}
+            <div class="form-row">
+
+                <div class="form-group col-md-6">
+                    {{ form_label(form.immatriculation, "Immatriculation : ", {'label_attr': {'class': ' control-label'}}) }}
+                    {{ form_widget(form.immatriculation, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.immatriculation, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form_widget(form.rechercher , {'attr': {'class': 'btn btn-block btn-primary'}}) }}
+                </div>
+
+            </div>
+        {{ form_end(form) }}
+        <div class="row">
+            <div class="col-md-6 ras">
+                {% if ras is defined %}
+                    <h4>Pas d'immatriculation</h4>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {% if cars_immat is defined %}
+                    <ul>
+                        {% for car in cars_immat   %}
+                            <li><a href="{{ path('position_car', {'immat': car }) }}">{{ car }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+           /*$("#form_immatriculation").keyup(function () {
+              if ($(this).val().length > 1)
+              {
+                  setTimeout(
+                      $.ajax({
+                      type: 'post',
+                      url: '/geolocbus',
+                      data: {'imat' : $(this).val()},
+                      beforeSend: function () {
+                          console.log("Ca charge");
+                      },
+                      success: function (data) {
+                          $(".resultat").append(data.immats);
+
+                      }
+                  })
+                      , 3000 );
+
+              }
+              else
+              {
+
+              }
+           });*/
+
+           /* $( "#form_immatriculation").autocomplete({
+                source: '/geolocbus',
+                minLength: 2,
+                select: function( event, ui ) {
+                    log( ui.item ?
+                        "Selected: " + ui.item.value + " aka " + ui.item.label:
+                        "Nothing selected, input was " + this.value );
+                    $("#form_immatriculation").val(ui.item.label);
+                    $("#form_immatriculation").val(ui.item.value);
+                    return false;
+                },
+                change: function( event, ui ) {
+                    $( "#form_immatriculation" ).val( ui.item? ui.item.value : 0 );
+                }
+            });*/
+
+        });
+    </script>
+{% endblock %}

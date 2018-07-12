@@ -147,3 +147,17 @@ edit_carrosserie:
     controller: App\Controller\MainController::editCarrosserie
     requirements:
         id: '\d+'
+
+
+editionCars:
+    path: /admin/editionCars
+    controller: App\Controller\MainController::editionCars
+
+geolocbus:
+    path: /geolocbus
+    controller: App\Controller\MainController::geolocbus
+
+position_car:
+    path: /geolocbus/{immat}
+    controller: App\Controller\MainController::positionCar
+

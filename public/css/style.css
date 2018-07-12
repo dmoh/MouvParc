@@ -505,6 +505,24 @@ img{
     font-size: 2rem;
     box-shadow: #777777;
 }
+
+
+/*****************************GOOGLE MAPS API*************************************/
+#infowindow-content .title {
+    font-weight: bold;
+}
+
+#infowindow-content {
+    display: none;
+}
+
+#map #infowindow-content {
+    display: inline;
+}
+
+
+
+
 /**********
 *****************************MEDIA QUERIES*************************************************/
 
@@ -520,6 +538,27 @@ img{
 
     .ml-40{
         margin-left: 5%;
+    }
+
+    #myNavbarCar li {
+        padding-bottom: 0;
+        padding-top: 4px;
+    }
+
+
+}
+
+@media print {
+    form {
+        display: none;
+    }
+    section{
+        margin-top: 10px;
+        padding-top: 25px;
+        padding-bottom: 20PX;
+    }
+    [id^="sf-toolbarMaincontent"]{
+        display: none !important;
     }
 
 }

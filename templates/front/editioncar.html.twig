@@ -1,0 +1,288 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center no-print">Edition des cars</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                </div>
+            </div>
+            {{ form_start(form) }}
+            <div class="form-row">
+
+                <div class="form-group col-md-3">
+                    {{ form_label(form.modele_car, "Marque : ", {'label_attr': {'class': ' control-label'}}) }}
+                    {{ form_widget(form.modele_car, {'attr': {'class': 'form-control'}}) }}
+
+                    {{ form_errors(form.modele_car, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group col-md-3">
+                    {{ form_label(form.annee, "Année : ", {'label_attr': {'class': ' control-label'}}) }}
+                    {{ form_widget(form.annee, {'attr': {'class': 'form-control', 'placeholder': '2011 par exemple'}}) }}
+
+                    {{ form_errors(form.annee, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group col-md-3">
+                    {{ form_label(form.nb_places, "Nbre places : ", {'label_attr': {'class': ' control-label'}}) }}
+                    {{ form_widget(form.nb_places, {'attr': {'class': 'form-control', 'placeholder': '50 par exemple'}}) }}
+
+                    {{ form_errors(form.nb_places, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.siege_guide, {'attr': {'class': 'form-control'}}) }}<b>Siège guide </b>
+
+                    {{ form_errors(form.siege_guide, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.wc, {'attr': {'class': 'form-control'}}) }}<b>Toilettes </b>
+
+                    {{ form_errors(form.wc, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.ufr, {'attr': {'class': 'form-control'}}) }}<b>Rampe PMR :</b>
+
+                    {{ form_errors(form.ufr, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.usb, {'attr': {'class': 'form-control'}}) }}<b>Prises USB :</b>
+
+                    {{ form_errors(form.usb, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.prises_elec, {'attr': {'class': 'form-control'}}) }}<b>Prises élec.</b>
+
+                    {{ form_errors(form.prises_elec, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.porte_ski, {'attr': {'class': 'form-control'}}) }}<b>Porte ski </b>
+
+                    {{ form_errors(form.porte_ski, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class=" form-group col-md-3">
+                    {{ form_widget(form.regulateur_vitesse, {'attr': {'class': 'form-control'}}) }}<b>Regulateur Vit. </b>
+
+                    {{ form_errors(form.regulateur_vitesse, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class=" form-group col-md-3">
+                    {{ form_widget(form.gps, {'attr': {'class': 'form-control'}}) }}<b>GPS </b>
+
+                    {{ form_errors(form.gps, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+            </div>
+            <div class="form-row">
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.abs, {'attr': {'class': 'form-control'}}) }}<b>ABS</b>
+
+                    {{ form_errors(form.abs, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.esp, {'attr': {'class': 'form-control'}}) }}<b>ESP </b>
+
+                    {{ form_errors(form.esp, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class=" form-group col-md-3">
+                    {{ form_widget(form.asr, {'attr': {'class': 'form-control'}}) }}<b>ASR</b>
+
+                    {{ form_errors(form.asr, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class=" form-group col-md-3">
+                    {{ form_widget(form.frigo, {'attr': {'class': 'form-control'}}) }}<b>Frigo</b>
+
+                    {{ form_errors(form.frigo, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+            </div>
+            <div class="form-row">
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.micro_conducteur, {'attr': {'class': 'form-control'}}) }}<b>Micro Cond.</b>
+
+                    {{ form_errors(form.micro_conducteur, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.micro_guide, {'attr': {'class': 'form-control'}}) }}<b>Micro Guide</b>
+
+                    {{ form_errors(form.micro_guide, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class=" form-group col-md-3">
+                    {{ form_widget(form.girouette, {'attr': {'class': 'form-control'}}) }}<b>Girouette</b>
+
+                    {{ form_errors(form.girouette, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class=" form-group col-md-3">
+                    {{ form_widget(form.tablettes, {'attr': {'class': 'form-control'}}) }}<b>Tablettes</b>
+
+                    {{ form_errors(form.tablettes, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+            </div>
+            <div class="form-row">
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.chauffage_independant, {'attr': {'class': 'form-control'}}) }}<b>Chauffage Indépandant</b>
+
+                    {{ form_errors(form.chauffage_independant, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class=" form-group col-md-3">
+
+                    {{ form_widget(form.buses_individuelles, {'attr': {'class': 'form-control'}}) }}<b>Buses individuelles</b>
+
+                    {{ form_errors(form.buses_individuelles, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class=" form-group col-md-3">
+                    {{ form_widget(form.sieges_decalables, {'attr': {'class': 'form-control'}}) }}<b>Sièges décalables</b>
+
+                    {{ form_errors(form.sieges_decalables, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class=" form-group col-md-3">
+                    {{ form_widget(form.repose_mollet, {'attr': {'class': 'form-control'}}) }}<b>Repose pieds</b>
+
+                    {{ form_errors(form.repose_mollet, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+            </div>
+            <div class="form-row">
+                <div class=" form-group col-md-3">
+                    {{ form_widget(form.rideaux, {'attr': {'class': 'form-control'}}) }}<b>Rideaux</b>
+
+                    {{ form_errors(form.rideaux, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class=" form-group col-md-3">
+                    {{ form_widget(form.clim, {'attr': {'class': 'form-control'}}) }}<b>Clim</b>
+
+                    {{ form_errors(form.clim, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class=" form-group col-md-3">
+                    {{ form_widget(form.garantie, {'attr': {'class': 'form-control'}}) }}<b>Garantie</b>
+
+                    {{ form_errors(form.garantie, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    {{ form_widget(form.rechercher, {'attr': {'class' : 'btn btn-primary'}}) }}
+                </div>
+            </div>
+            {{ form_end(form) }}
+            {% if cars_trouver is defined and nb_trouver is defined %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 style="color: #0bb10b; text-transform: uppercase; " class="text-center"><b>{{ nb_trouver }}</b> <em>Autocar(s) trouvé(s)</em></h5>
+                        <p style="text-align: center;padding-bottom: 2%; font-size: 0.75em; font-style: italic">correspondant à votre recherche</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Immat</th>
+                                    <th scope="col">Marque</th>
+                                    <th scope="col">Nb Places</th>
+                                    <th scope="col">Km</th>
+                                    <th scope="col">Date mise en Circu.</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for car in cars_trouver  %}
+                                    <tr>
+                                        <th scope="row"><a href="{{ path('car', {'id': car.id}) }}">{{ car.immat }}</a></th>
+                                        <td>{{ car.marque |  upper }}</td>
+                                        {% if car.nb_places is defined %}
+                                            <td>{{ car.nb_places }}</td>
+                                        {% else %}
+                                            <td>{{ car.nbPlaces }}</td>
+                                        {% endif %}
+                                        <td>{{ car.km }}</td>
+                                        {% if car.date_mar is defined %}
+                                            <td>{{ car.date_mar | date('d/m/Y') }}</td>
+                                        {% else %}
+                                            <td>{{ car.dateMar | date('d/m/Y') }}</td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {#<div class="row">
+                <div class="col-md-6">
+                    <ul>
+                        <li>
+                            {% for car in listeCars %}
+                                <p>{{ car.immat }}, {{ car.marque | upper }}</p>
+                            {% endfor %}
+                        </li>
+                    </ul>
+                </div>
+            </div>#}
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("form input:checkbox").css('visibility', 'visible');
+            var marque = $("#form_modele_car").val();
+            var annee = $('#form_annee').val();
+
+
+
+
+
+            $("#form_rechercher").click(function (e) {
+               /*if(annee !== "")
+               {
+                   if(isNaN(annee) || annee.length < 4 )
+                   {
+                       alert("Erreur format date !");
+                       return false;
+                   }
+               }*/
+                var url= window.location.href;
+                /*$.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {'marque': marque},
+                    dataType: 'json',
+                    success: function(data){
+                        console.log(data);
+                    }
+                });*/
+            });
+
+        });
+    </script>
+{% endblock %}
