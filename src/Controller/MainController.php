@@ -45,6 +45,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Repository\CarsRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Entity\User;
@@ -2685,8 +2686,8 @@ Class MainController extends Controller
         $dateDuPremier = substr($dateDuPremier, 0, -6);
 
 
-        var_dump($dateDuPremier);
-        die();
+
+
         $nbCars = count($listeCars);
 
         $chaineImmat =implode('|', array_map(function ($entry) {
@@ -2696,7 +2697,7 @@ Class MainController extends Controller
 
         //Recherche km 1 de chaque mois via truckonline
         //gpstracking?vehicle_uids=*&date=2018-06-01T21:59:00Z&count=1
-        /**/$hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?vehicle_uids=*&date=".$dateDuPremier."Z&count=1".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
+        /**/$hache = base64_encode(hash_hmac("SHA1", "apa-aps-t39-c1ws.truckonline.proGET/apis/rest/v2.2/gpstracking?vehicles_vrn=*&date=".$dateDuPremier."Z&count=1".$ti."", "5a35101a-62ae-4cba-b70a-b1efd5cd75f0", true));
         $opts = array(
             'http' => array(
                 'method'=>'GET',
@@ -2707,8 +2708,10 @@ Class MainController extends Controller
         );
         // Recherche api truck online tous les vehicules
         $context = stream_context_create($opts);
-        $kil = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?vehicle_uids=*&date=".$dateDuPremier."Z&count=1", false, $context);
+        $kil = file_get_contents("https://ws.truckonline.pro/apis/rest/v2.2/gpstracking?vehicles_vrn=*&date=".$dateDuPremier."Z&count=1", false, $context);
         $result = json_decode($kil, true);
+
+
 
         //$nbResult = count($result);
         /*var_dump($result);
@@ -2729,8 +2732,6 @@ Class MainController extends Controller
         $result = json_decode($kil, true);*/
 
         $nbResult = count($result);
-        /*ar_dump($result);
-        die();*/
 
 
         $spreadsheet = new Spreadsheet();
@@ -2740,11 +2741,32 @@ Class MainController extends Controller
         die();*/
 
         $kmManquants = array();
+        $compteurExcel = 1;
 
         //Associer les uids au immats
         for ($i = 0; $i < $nbResult; $i++)
         {
-            for($j=0; $j < $nbCars; $j++)
+            $testUid =array_search($result[$i]["vehicleUid"], array_column($listeCars, 'idTruck'));
+
+
+                if( $testUid !== false)
+                {
+                    $totalKm = $result[$i]["gpsInfo"]["totalKm"];
+                    $immat = $listeCars[$testUid]["immat"];
+                    $sheet->setCellValueByColumnAndRow(1, $compteurExcel, $immat);
+                    $sheet->setCellValueByColumnAndRow(2, $compteurExcel, $totalKm);
+                    //Enregistrement en BDD
+                    /* $CarsT = $em->getRepository(Cars::class)->findOneBy(array(
+                        "immat" => $immat
+                    ));
+                    $CarsT->setKm($totalKm);
+                    $em->persist($CarsT);*/
+                    $compteurExcel = $compteurExcel+1;
+                }
+
+
+
+            /*for($j=0; $j < $nbCars; $j++)
             {
 
                 $idTruckBdd = $listeCars[$j]["idTruck"];
@@ -2757,7 +2779,7 @@ Class MainController extends Controller
                         $totalKm = $gpsInfo["totalKm"];
 
 
-                        if ($i < 114 && $totalKm > 0) {
+                        if ($i < 162 && $totalKm > 0) {
                             //Ecriture dans le fichier excel
                             $sheet->setCellValueByColumnAndRow($j, 1, $listeCars[$j]["immat"]);
                             $sheet->setCellValueByColumnAndRow($j, 2, $totalKm);
@@ -2778,7 +2800,7 @@ Class MainController extends Controller
                     $sheet->setCellValueByColumnAndRow($j, 1, $listeCars[$j]["immat"]);
                    //array_push($kmManquants, $listeCars[$j]["immat"]);
                 }
-            }
+            }*/
 
         }
 
@@ -2840,8 +2862,6 @@ Class MainController extends Controller
                 $carrosserieCar->setCar($car);
                 $em->persist($carrosserieCar);
                 $em->flush();
-
-
 
                 //Envoie de mail
                 $mess = (new \Swift_Message('Mouvparc : Accrochage'))
@@ -3133,7 +3153,7 @@ Class MainController extends Controller
             }
             else
             {
-                $garantie_bdd = "IS NULL OR c.garantie IS NOT NULL";
+                $garantie_bdd = "AND c.garantie IS NULL OR c.garantie IS NOT NULL";
             }
 
             if($marque && $annee && !empty($mld))
@@ -3386,6 +3406,15 @@ Class MainController extends Controller
                 ->add('immatriculation', TextType::class)
                 ->add('rechercher', SubmitType::class)
                 ->getForm();
+        if($authorizationChecker->isGranted('ROLE_USER'))
+        {
+            $form->add('nomConducteur', TextType::class, array(
+                'required' => false
+            ));
+        }
+
+
+
         if($request->isMethod("POST"))
         {
             $immat = $request->request->get('form')['immatriculation'];
@@ -3434,10 +3463,7 @@ Class MainController extends Controller
                 ));
             }/**/
 
-
         }
-
-
         if ($request->isXmlHttpRequest())
         {
 
@@ -3544,9 +3570,7 @@ Class MainController extends Controller
                 'geoc_lat'  => $geoc_lat,
                 'geoc_long' => $geoc_long,
             ));
-
         }
-
     }
 
 }
