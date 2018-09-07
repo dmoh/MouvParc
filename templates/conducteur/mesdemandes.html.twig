@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-center">Mes Demandes</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="text-center">Les demandes d'accompte</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Num °</th>
+                            <th>Date demande</th>
+                            <th>Montant</th>
+                            <th>Réponse</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for accompte in mesDemandesAccompte  %}
+                            <tr>
+                                <td>{{ accompte.id }}</td>
+                                <td><strong>{{ accompte.dateDemande | date('d/m/Y') }}</strong></td>
+                                <td><strong>{{ accompte.montantAccompte }} €</strong></td>
+                                {% if accompte.statueDemande == 1 or accompte.statueDemande == true %}
+                                    <td><span><i style="color: #00bf00" class="fa fa-pause"></i> En attente</span></td>
+                                {% else %}
+                                    {% if accompte.reponseDirection == "ACCORD" or accompte.reponseDirection == "accord" %}
+                                        <td><span><i style="color: #00bf00" class="fa fa-check"></i><strong>{{ accompte.reponseDirection | upper }}</strong></span></td>
+                                        {% else %}
+                                            <td><span><i class="fa fa-close"></i><strong>{{ accompte.reponseDirection | upper }}</strong></span></td>
+                                    {% endif %}
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Num °</th>
+                            <th>Date demande</th>
+                            <th>Type de Congé</th>
+                            <th>Du <i style="color: #045cab" class="fa fa-arrow-right"></i> Au</th>
+                            <th>Répondre</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for lC in mesDemandesConges  %}
+                            <tr>
+                                <td>{{ lC.id }}</td>
+                                <td><strong>{{ lC.dateDemande | date('d/m/Y') }}</strong></td>
+                                <td><strong>{{ lC.typeDeConge | upper }} </strong></td>
+                                <td><strong>{{ lC.duDateConge | date('d/m/Y') }} <i style="color: #045cab" class="fa fa-arrow-right"></i> {{ lC.auDateConge | date('d/m/Y') }}</strong></td>
+                                {% if lC.accordRefusDirection == "ACCORD" or lC.accordRefusDirection == "accord" %}
+                                    <td><span><i style="color: green" class="fa fa-check"></i> ACCORD</span></td>
+                                {% else %}
+                                    <td><span><i class="fa fa-close"></i>REFUS</span></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

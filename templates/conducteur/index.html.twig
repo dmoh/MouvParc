@@ -1,0 +1,407 @@
+{% extends 'base.html.twig' %}
+{% block title %}Conducteur {{ controller_name }}!{% endblock %}
+
+{% block sideBar %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+        <section class="container">
+            {% if app.flashes('info') is defined %}
+                {% for message in app.flashes('info') %}
+                    <div class="alert alert-success alert-dismissible" style="margin-top: 18px;">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="page-header">Bienvenue dans votre espace <em style="color: #00bf00">{{ user.username }}</em></h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3 col-md-3 col-lg-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 col-md-9 col-lg-9 text-right">
+                                    <div class="huge"><em>{{ nbreDemandeAttente }}</em></div>
+                                    <div style="font-size: 0.84rem;">Rapports envoyés</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left" style="font-size: 0.8rem;">Voir les rapports</span>
+                                <span class="pull-right">
+                                    <i class="fa fa-arrow-circle-right">
+                                    </i>
+                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3 col-md-3 col-lg-3">
+                                    <i class="fa fa-pause fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 col-md-9 col-lg-9 text-right">
+                                    <div class="huge"><em>{{ nbCongeEnAttente }}</em></div>
+                                    <div style="font-size: 0.84rem;">Congés en attente</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left" style="font-size: 0.8rem;">Voir les demandes</span>
+                                <span class="pull-right">
+                                    <i class="fa fa-arrow-circle-right">
+                                    </i>
+                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3 col-md-3 col-lg-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 col-md-9 col-lg-9 text-right">
+                                    <div class="huge"><em>{{ nbreDemandeAttente }}</em></div>
+                                    <div style="font-size: 0.84rem;">Mes Demandes traités</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left" style="font-size: 0.8rem;">Voir les demandes</span>
+                                <span class="pull-right">
+                                    <i class="fa fa-arrow-circle-right">
+                                    </i>
+                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3 col-md-3 col-lg-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 col-md-9 col-lg-9 text-right">
+                                    <div class="huge"><em>{{ nbdemandeAccompteAttente }}</em></div>
+                                    <div style="font-size: 0.84rem;">Accompte en Attente</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left" style="font-size: 0.8rem;">Voir les rapports</span>
+                                <span class="pull-right">
+                                    <i class="fa fa-arrow-circle-right">
+                                    </i>
+                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <a style="color: #fff" target="_blank" href="http://www.planningaps.fr">
+                            <div style="background-color: #124ca3" class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3 col-md-3 col-lg-3">
+                                        <i class="fa fa-calendar fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 col-md-9 col-lg-9 text-right">
+                                        <div class="huge"><em>PLANNING APS</em></div>
+                                        <div style="font-size: 0.84rem;">Consulter son planning</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <span class="pull-left" style="font-size: 0.8rem; color: #045cab">www.planningaps.fr</span>
+                                <span class="pull-right">
+                                    <i class="fa fa-arrow-circle-right">
+                                    </i>
+                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div  class="panel panel-primary">
+                        <div style="background-color: #a31291" class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3 col-md-3 col-lg-3">
+                                    <i class="fa fa-bus fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 col-md-9 col-lg-9 text-right">
+                                    <div class="huge"><em>APSCAR</em></div>
+                                    <div style="font-size: 0.84rem;">PRISE EN CHARGE D'UN AUTOCAR </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="http://apscar.fr">
+                            <div class="panel-footer">
+                                <span class="pull-left" style="font-size: 0.8rem; color: #045cab;">www.apscar.fr</span>
+                                <span class="pull-right">
+                                    <i class="fa fa-arrow-circle-right">
+                                    </i>
+                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <a class="btn btn-block btn-primary" data-toggle="collapse" href="#rapportHebdo" role="button" aria-expanded="false" aria-controls="rapporthebdo">Déclarer un rapport hebdo.</a>
+                </div>
+                <div class="col-md-4">
+                    <a class="btn btn-block btn-primary" data-toggle="modal" href="#" data-target="#demandeConge1" role="button" aria-expanded="false" aria-controls="demandeConge1">Demande de Congé</a>
+                </div>
+                <div class="col-md-4">
+                    <a class="btn btn-block btn-primary" href="{{ path('demande_accompte', {'user_id': user.id}) }}">Demande d'accompte</a>
+                </div>
+            </div>
+            {% if rapportsHebdo is defined and rapportsHebdo is not empty %}
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-bell "></i>
+                                Derniers rapports hebdo.
+                            </div>
+                        </div>
+                        <div class="list-group">
+                            {% for d in rapportsHebdo  %}
+                                <div class="list-group-item"><span>Date : {{ d.dateReclame|date('d/m/Y') }} </span><span>Observations : {{ d.observationsRapport }} </span></div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="collapse" id="rapportHebdo">
+                {#{{ form_start(form1) }}
+                {{ form_widget(form1.rapportHebdoConducteur.vars.prototype)}}
+                {{ form_end(form1) }}#}
+                {{ form(form1) }}
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="demandeConge1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            {{ form_start(form2, {'attr':{'id':'formDemandeConge'}}) }}
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    {{ form_label(form2.nom, "Nom : ", {'label_attr': {'class': ' control-label'}}) }}
+                                    {# Génération de l'input.#}
+
+                                    {{ form_widget(form2.nom, {'attr': {'class': ' form-control'}}) }}
+                                    {{ form_errors(form2.nom, { 'attr': {'class': 'red' }}) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ form_label(form2.prenom, "Prénom : ", {'label_attr': {'class': ' control-label'}}) }}
+                                    {# Génération de l'input.#}
+
+                                    {{ form_widget(form2.prenom, {'attr': {'class': ' form-control'}}) }}
+                                    {{ form_errors(form2.prenom, { 'attr': {'class': 'red' }}) }}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    {{ form_label(form2.typeDeConge, "Congé pour: ", {'label_attr': {'class': ' control-label'}}) }}
+                                    {# Génération de l'input.#}
+
+                                    {{ form_widget(form2.typeDeConge, {'attr': {'class': ' form-control'}}) }}
+                                    {{ form_errors(form2.typeDeConge, { 'attr': {'class': 'red' }}) }}
+                                </div>
+                                <div class="form-group col-md-4">
+                                    {{ form_label(form2.duDateConge, "Du : ", {'label_attr': {'class': ' control-label'}}) }}
+                                    {# Génération de l'input.#}
+
+                                    {{ form_widget(form2.duDateConge, {'attr': {'class': ' form-control js-datepicker ', 'autocomplete':'off'}}) }}
+                                    {{ form_errors(form2.duDateConge, { 'attr': {'class': 'red' }}) }}
+                                </div>
+                                <div class="form-group col-md-4">
+                                    {{ form_label(form2.auDateConge, "Au : ", {'label_attr': {'class': ' control-label'}}) }}
+                                    {# Génération de l'input.#}
+
+                                    {{ form_widget(form2.auDateConge, {'attr': {'class': ' form-control js-datepicker ', 'autocomplete':'off'}}) }}
+                                    {{ form_errors(form2.auDateConge, { 'attr': {'class': 'red' }}) }}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    {{ form_label(form2.dateDemande, "Date de la demande : ", {'label_attr': {'class': ' control-label'}}) }}
+                                    {# Génération de l'input.#}
+
+                                    {{ form_widget(form2.dateDemande, {'attr': {'class': ' form-control js-datepicker', 'autocomplete': 'off'}}) }}
+                                    {{ form_errors(form2.dateDemande, { 'attr': {'class': 'red' }}) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ form_widget(form2.Envoyer, {'attr': {'class': 'btn btn-block btn-primary'}}) }}
+                                </div>
+                            </div>
+                        {{ form_end(form2) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.7.9/metisMenu.min.js" ></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#side-menu').metisMenu();
+
+            $('button#form_Envoyer').addClass('btn btn-primary');
+            $('.js-datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                language: 'fr',
+                orientation: 'bottom',
+                todayHighlight: 'true',
+                startDate: 0
+            });
+
+
+            //Demnde de Congés
+            //disable le changement de nom et prénom
+            $("input#demande_conges_nom").prop('disabled', true);
+            $("input#demande_conges_prenom").prop('disabled', true);
+            //TODO a chaque fois que Autre alors apparition champ text précision
+            $("select#demande_conges_typeDeConge").val();
+
+
+
+            //Vérification date Congé
+            var envoyerConge = $('button#demande_conges_Envoyer');
+
+            envoyerConge.click(function (e) {
+                e.preventDefault();
+                var valDateDu = $('input#demande_conges_duDateConge').val();
+                var valDateau = $('input#demande_conges_auDateConge').val();
+                var valDateDemande = $('input#demande_conges_dateDemande').val();
+
+
+                if(!/^[0-9\/\ ]/.test(valDateDu) || !/^[0-9\/\ ]/.test(valDateau) || !/^[0-9\/\ ]/.test(valDateDu) || valDateDu > valDateau)
+                {
+                    alert('Date incorrect ! ');
+                    return false;
+                }
+                else
+                {
+                    var formDataConge = new FormData();
+                    var formEnvoyerConge = $('form#formDemandeConge').serialize();
+
+                    var path = window.location.href;
+
+
+                    $.ajax({
+                        url: path,
+                        type: 'POST',
+                        processData: false,
+                        data:  formEnvoyerConge,
+                        success: function(data)
+                        {
+                            location.reload();
+
+                            //console.log(data.ok);
+                        }
+                    });
+                }
+
+                //if(valDateDu )
+            });
+
+
+
+
+            //RAPPORTS HEBDO
+            if ($('div#form_rapportHebdoConducteur_0'))
+            {
+                var container = $('div#form_rapportHebdoConducteur');
+
+                //Lien ajout journée
+                var ajoutRapportHebdo = $('<a href="#" id="ajouter_rapport" class ="btn btn-block btn-info">Ajouter une journée</a>');
+                //ajout du lien au formulaire
+                //container.append(ajoutRapportHebdo);
+
+                ajoutRapportHebdo.click(function(e){
+                    ajoutRapport(container);
+                    e.preventDefault();
+                    return false;
+                });
+
+                var index = container.find(':input').length;
+
+                if(index === 0)
+                {
+                    ajoutRapport(container);
+                }else{
+                    container.children('div').each(function ()
+                    {
+                        ajoutLienSuppression($(this));
+                    });
+                }
+
+
+                function ajoutRapport(container)
+                {
+                    var prototype = $(container.attr('data-prototype').replace(/__name__label__/g, 'Rapport Jour '+(index+1)).replace(/___name___/g, index).replace(/__name__/g, index));
+                    ajoutLienSuppression(prototype);
+                    container.append(prototype);
+                    container.append(ajoutRapportHebdo);
+
+                    index++;
+                }
+
+                function ajoutLienSuppression(prototype)
+                {
+                    var lienSuppression = $('<a href="#" class="btn btn-danger">Supprimer</a>');
+                    prototype.append(lienSuppression);
+
+                    // Ajout du listener sur le clic du lien
+                    lienSuppression.click(function(e) {
+                        if(index > 0)
+                        {
+                            index--;
+                        }
+                        prototype.remove();
+                        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                        return false;
+                    });
+                }
+            }
+
+
+        });
+    </script>
+{% endblock %}

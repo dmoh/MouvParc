@@ -108,7 +108,7 @@ logout:
     controller: App\Controller\MainController::logout
 
 register:
-    path: /register
+    path: /superadmin/register
     defaults:
     controller: App\Controller\MainController::register
 
@@ -153,12 +153,41 @@ editionCars:
     controller: App\Controller\MainController::editionCars
 
 geolocbus:
-    path: /geolocbus
+    path: /conducteur/geolocbus
     controller: App\Controller\MainController::geolocbus
 
 position_car:
-    path: /geolocbus/{immat}
+    path: /conducteur/geolocbus/{immat}
     controller: App\Controller\MainController::positionCar
+
+edit_user:
+    path: /superadmin/edituser/{id}
+    controller: App\Controller\MainController::editUser
+    requirements:
+        id: '\d+'
+
+delete_user:
+    path: /superadmin/deleteuser/{id}
+    controller: App\Controller\MainController::deleteUser
+    requirements:
+        id: '\d+'
+
+dashboard_users:
+    path: /superadmin/dashboardusers
+    controller: App\Controller\MainController::dashboardUsers
+
+maj_conducteur:
+    path: /superadmin/maj_conducteur
+    controller: App\Controller\MainController::envoiBox
+
+acces_smartsheet:
+    path: /superdamin/acces-smartsheet
+    controller: App\Controller\MainController::accesApiSmartSheet
+
+envoi_bulletin:
+    path: /superadmin/envoi-bulletins
+    controller: App\Controller\MainController::envoiBulletindePaye
+
 
 
 

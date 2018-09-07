@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réponse direction accompte{% endblock %}
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-center">Demande d'Accompte n° {{ id }} </h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Num °</th>
+                            <th>NOM Prénom</th>
+                            <th>Date demande</th>
+                            <th>Montant</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ accompte.id }}</td>
+                                <td><strong>{{ accompte.demandeAccompteConducteur.nomConducteur | upper }}</strong> {{ accompte.demandeAccompteConducteur.prenomConducteur | capitalize }} </td>
+                                <td><strong>{{ accompte.dateDemande | date('d/m/Y') }}</strong></td>
+                                <td><strong>{{ accompte.montantAccompte }} €</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {{ form_start(form) }}
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form_label(form.ouiDir, "ACCORD / REFUS DIRECTION", {'label_attr':{'class': 'form-label'}}) }}
+                {{ form_widget(form.ouiDir, {'attr': {'class': 'form-control' }}) }}
+                {{ form_errors(form.ouiDir, {'attr': {'class': 'red'}}) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                    {{ form_label(form.obsDirection, "Commentaire Direction", {'label_attr':{'class': 'form-label'}}) }}
+                    {{ form_widget(form.obsDirection, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.obsDirection, {'attr': {'class': 'red'}}) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form_widget(form.Envoyer, {'attr': {'class': 'btn btn-block btn-primary'}}) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+           /* $('form input').prop('disabled', true);
+
+            $('#demande_accompte_reponseDirection').prop('disabled', false);
+            $('#demande_accompte_obsDirection').prop('disabled', false);*/
+
+
+        });
+    </script>
+{% endblock %}

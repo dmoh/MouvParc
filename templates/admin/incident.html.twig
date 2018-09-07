@@ -1,0 +1,59 @@
+{%  extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="container">
+        {{ form_start(form) }}
+        <div class="form-row">
+            <div class="for-group col-md-3">
+                {{ form_label(form.declarant, "Déclarant : ", {'label_attr': {'class': ' control-label'}}) }}
+                {{ form_widget(form.declarant, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.declarant, { 'attr': {'class': 'red' }}) }}
+            </div>
+            <div class="form-group col-md-3">
+                {{ form_label(form.nomClient, "Nom du Client : ", {'label-attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.nomClient, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.nomClient, { 'attr': {'class': 'red' }}) }}
+            </div>
+            <div class="form-group col-md-3">
+                {{ form_label(form.nomFautif, "Nom du fautif : ", {'label-attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.nomFautif, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.nomFautif, {'attr': {'class': 'red'}}) }}
+            </div>
+            <div class="form-group col-md-3">
+                {{ form_label(form.natureIncident, "Nature incident : ", {'label-attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.natureIncident, {'attr': {'class':'form-control'}}) }}
+                {{ form_errors(form.natureIncident, {'attr': {'class': 'red'}}) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="for-group col-md-6">
+                {{ form_label(form.consequenceIncident, "Conséquence Incident : ", {'label_attr': {'class': ' control-label'}}) }}
+                {{ form_widget(form.consequenceIncident, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.consequenceIncident, { 'attr': {'class': 'red' }}) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.avisDeclarantSurSuite, "Avis déclarant suite : ", {'label-attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.avisDeclarantSurSuite, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.avisDeclarantSurSuite, { 'attr': {'class': 'red' }}) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="for-group col-md-6">
+                {{ form_label(form.sanctionProposer, "Sanction proposée : ", {'label_attr': {'class': ' control-label'}}) }}
+                {{ form_widget(form.sanctionProposer, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.sanctionProposer, { 'attr': {'class': 'red' }}) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.actionValiderParDirection, "Action valider par Direction : ", {'label-attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.actionValiderParDirection, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.actionValiderParDirection, { 'attr': {'class': 'red' }}) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="for-group col-md-12">
+                {{ form_widget(form.envoyer, {'attr': {'class': 'btn btn-block btn-info'}}) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}

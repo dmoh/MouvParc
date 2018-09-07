@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello {{ controller_name }}!{% endblock %}
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="text-center">DEMANDE D'ACCOMPTE (en attente)</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Num °</th>
+                            <th>NOM Prénom</th>
+                            <th>Date demande</th>
+                            <th>Montant</th>
+                            {% if is_granted('ROLE_SUPER_MASTER') %}
+                                <th>Répondre</th>
+                                {% else %}
+                                    <th>EN ATTENTE</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for accompte in listingAccompte  %}
+                            {% if  accompte.statueDemande == true or accompte.statueDemande == 1   %}
+                                <tr>
+                                    <td>{{ accompte.id }}</td>
+                                    <td><strong>{{ accompte.demandeAccompteConducteur.nomConducteur | upper }}</strong> {{ accompte.demandeAccompteConducteur.prenomConducteur | capitalize }} </td>
+                                    <td><strong>{{ accompte.dateDemande | date('d/m/Y') }}</strong></td>
+                                    <td><strong>{{ accompte.montantAccompte }} €</strong></td>
+                                    {% if is_granted('ROLE_SUPER_MASTER') %}
+                                        <td><a href="{{ path('reponse_accompte', {'id': accompte.id }) }}"><i class="fa fa-reply"></i></a></td>
+                                    {% else %}
+                                        <td><i class="fa fa-exclamation-triangle"></i> Pas de réponse Direction</td>
+                                    {% endif %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="text-center">
+                    ACCOMPTES CLOTURER
+                </h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Num °</th>
+                            <th>NOM Prénom</th>
+                            <th>Date demande</th>
+                            <th>Montant</th>
+                            <th><i style="color: green !important;" class="fa fa-check"></i>ACCORD/REFUS<i class="fa fa-close"></i></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for accompte in listingAccompte  %}
+                            {% if  accompte.statueDemande == false or accompte.statueDemande == 0   %}
+                                {% if accompte.reponseDirection == "ACCORD" %}
+                                    <tr style="background-color: lightgreen">
+                                    {% else %}
+                                        <tr>
+                                    {% endif %}
+                                    <td>{{ accompte.id }}</td>
+                                    <td><strong>{{ accompte.demandeAccompteConducteur.nomConducteur | upper }}</strong> {{ accompte.demandeAccompteConducteur.prenomConducteur | capitalize }} </td>
+                                    <td><strong>{{ accompte.dateDemande | date('d/m/Y') }}</strong></td>
+                                    <td><strong>{{ accompte.montantAccompte }} €</strong></td>
+                                    {% if accompte.reponseDirection == "ACCORD" %}
+                                        <td><i style="color: green !important;" class="fa fa-check"></i></td>
+                                        {% else %}
+                                        <td><i class="fa fa-close"></i></td>
+                                    {% endif %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

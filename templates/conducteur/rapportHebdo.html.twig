@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}APS | Rapport Hebdo {% endblock %}
+{% block sideBar %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {{ form(form) }}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //RAPPORTS HEBDO
+
+                var container = $('div#form_rapportHebdoConducteur');
+
+
+                //Lien ajout journée
+                var ajoutRapportHebdo = $('<a href="#" id="ajouter_rapport" class ="btn btn-block btn-info">Ajouter une journée</a>');
+                //ajout du lien au formulaire
+                //container.append(ajoutRapportHebdo);
+
+                ajoutRapportHebdo.click(function(e){
+                    ajoutRapport(container);
+                    setTimeout(function () {
+                        $("input[id*='dateReclame']").addClass('js-datepicker1').attr('autocomplete', 'off');
+                        $('.js-datepicker1').datepicker({
+                            format: 'dd/mm/yyyy',
+                            language: 'fr',
+                            orientation: 'bottom',
+                            todayHighlight: 'true',
+                        });
+                    }, 500);
+
+                    e.preventDefault();
+                    return false;
+                });
+
+                var index = container.find(':input').length;
+
+                if(index === 0)
+                {
+                    ajoutRapport(container);
+                    setTimeout(function () {
+                        $("input[id*='dateReclame']").addClass('js-datepicker1').attr('autocomplete', 'off');
+                        $('.js-datepicker1').datepicker({
+                            format: 'dd/mm/yyyy',
+                            language: 'fr',
+                            orientation: 'bottom',
+                            todayHighlight: 'true',
+                        });
+                    }, 500);
+
+                }else{
+                    container.children('div').each(function ()
+                    {
+                        ajoutLienSuppression($(this));
+
+                    });
+                }
+
+
+
+                function ajoutRapport(container)
+                {
+                    var prototype = $(container.attr('data-prototype').replace(/__name__label__/g, 'Rapport Jour '+(index+1)).replace(/___name___/g, index).replace(/__name__/g, index));
+                    ajoutLienSuppression(prototype);
+                    container.append(prototype);
+                    container.append(ajoutRapportHebdo);
+
+                    index++;
+                }
+
+                function ajoutLienSuppression(prototype)
+                {
+                    var lienSuppression = $('<a href="#" class="btn btn-danger">Supprimer</a>');
+                    prototype.append(lienSuppression);
+
+                    // Ajout du listener sur le clic du lien
+                    lienSuppression.click(function(e) {
+                        if(index > 0)
+                        {
+                            index--;
+                        }
+                        prototype.remove();
+                        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                        return false;
+                    });
+                }
+
+
+
+
+        });
+    </script>
+{% endblock %}

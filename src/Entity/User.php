@@ -54,19 +54,37 @@ class User implements UserInterface, \Serializable
      */
     private $isActive;
 
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    private $roles;
+
+    /**
+     * @ORM\Column(name="matricule_conducteur", nullable=true, type="string")
+     */
+    private $matricule_conducteur;
+
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Conducteur", mappedBy="user", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $conducteur;
 
 
     public function __construct()
     {
         $this->isActive = true;
-        $this->roles = array('ROLE_USER');
+        $this->roles = ['ROLE_USER'];
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid('', true));
     }
 
     public function getUsername()
     {
-        return $this->email;
+        return $this->username;
     }
 
     public function getSalt()
@@ -83,7 +101,14 @@ class User implements UserInterface, \Serializable
 
     public function getRoles()
     {
-        return array('ROLE_USER');
+        $tmpRoles = $this->roles;
+
+        if($tmpRoles !== ['ROLE_USER'] && $tmpRoles !== ['ROLE_ADMIN'] && $tmpRoles !== ['ROLE_MASTER'] && $tmpRoles !== ['ROLE_SUPER_MASTER'] && $tmpRoles !== ['ROLE_RH'])
+        {
+            $tmpRoles = ['ROLE_USER'];
+        }
+
+        return $tmpRoles;
     }
 
     public function eraseCredentials()
@@ -113,6 +138,10 @@ class User implements UserInterface, \Serializable
             // $this->salt
             ) = unserialize($serialized);
     }
+
+
+
+
 
     /**
      * @return mixed
@@ -177,6 +206,56 @@ class User implements UserInterface, \Serializable
     {
         $this->plainPassword = $plainPassword;
     }
+
+    /**
+     * @param array $roles
+     */
+    public function setRoles( array $roles): void
+    {
+        $this->roles = $roles;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMatriculeConducteur()
+    {
+        return $this->matricule_conducteur;
+    }
+
+    /**
+     * @param mixed $matricule_conducteur
+     */
+    public function setMatriculeConducteur($matricule_conducteur): void
+    {
+        $this->matricule_conducteur = $matricule_conducteur;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConducteur()
+    {
+        return $this->conducteur;
+    }
+
+    /**
+     * @param mixed $conducteur
+     */
+    public function setConducteur(Conducteur $conducteur): void
+    {
+        $this->conducteur = $conducteur;
+    }
+
+
 
 
 }

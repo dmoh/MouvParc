@@ -316,7 +316,7 @@ input[type="checkbox" i] {
     margin: 3px 3px 3px 4px;
 }
 input[type=checkbox] {
-    visibility: hidden;
+   /* visibility: hidden;*/
 }
 input[type="checkbox" i] {
     -webkit-appearance: checkbox;
@@ -506,7 +506,159 @@ img{
     box-shadow: #777777;
 }
 
+.slide_bar_left
+{
+    color: #0d2d62;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 14px;
+}
+.slide_bar_left ul .nav-heading{
+    font-family: 'Source Sans Pro', sans-serif;
+    padding: 12px 15px;
+    color: #97a0b3;
+    font-size: 13px;
+    letter-spacing: 0.035em;
+}
+.slide_bar_left ul a{
+    font-family: 'Source Sans Pro', sans-serif;
+    padding: 12px 15px;
+    text-transform: uppercase;
+    color: #2499b3;
+    font-size: 13px;
+    letter-spacing: 0.035em;
+}
 
+i.fa.fa-home
+{
+    width: 0px;
+    height: 0px;
+    z-index: 10000;
+    padding-top: 0px;
+    font-size: 25px;
+    color: white;
+
+}
+
+/****************************NAVIGATION CONDUCTEUR************************/
+
+@media (min-width: 768px) {
+    .sidebar {
+        z-index: 1;
+        position: absolute;
+        width: 250px;
+        margin-top: 0px;
+        background: #828282;
+        height: 100%;
+        top: 83px;
+    }
+    #page-wrapper-conducteur {
+        position: inherit;
+        margin: 0 0 0 250px;
+        padding: 0 30px;
+        border-left: 1px solid #e7e7e7;
+    }
+
+    #sidebar-conducteur{
+        height: 100%;
+    }
+}
+ul.nav{
+    margin-left: 0px !important;
+}
+ul#side-menu>li{
+    padding-top: 0;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+}
+ul#side-menu>li>a{
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    padding-left: 62px;
+    font-size: 14px;
+}
+a#ajouter_rapport.btn-info{
+    color: #fff;
+    background-color: #3ba618;
+    border-color: #17b823;
+}
+
+ul#side-menu.nav.in li i.fa{
+    width: 0px;
+    height: 0px;
+    z-index: 10000;
+    padding-top: 14px;
+    padding-left: 15px;
+    color: white;
+    position: absolute;
+    font-size: 14px;
+
+}
+
+
+.page-header {
+    font-size: 2.2rem;
+    padding-bottom: 9px;
+    margin: 25px 0 20px;
+    border-bottom: 1px solid #eee;
+}
+
+
+.close{
+    font-size: 0.9rem;
+}
+.panel {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+
+.panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.panel-primary{
+
+    border-bottom: 2px solid #ccc;
+}
+
+.panel-primary>.panel-heading {
+    color: #fff;
+    background-color: #28b74d;
+    border-color: #28b779;
+}
+.huge{
+    font-size: 40px;
+}
+
+.pull-left{
+    padding-bottom: 10px;
+}
+
+
+.panel-footer {
+    padding: 10px 15px;
+    /*background-color: #f5f5f5;*/
+    border-top: 1px solid #ddd;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+div.panel.panel-primary .fa{
+     width: 0px;
+     height: 0px;
+    z-index: 10000;
+    padding-top: 0px;
+    color: white;
+
+}
+.pull-right {
+    float: right!important;
+}
 /*****************************GOOGLE MAPS API*************************************/
 #infowindow-content .title {
     font-weight: bold;
@@ -519,8 +671,56 @@ img{
 #map #infowindow-content {
     display: inline;
 }
+/*******************STYLE ACCORD REFUS*********************************************/
+select option[value="accord"]
+{
+    background-color: lightgreen ;
+}
 
+.badge {
+    display: inline-block;
+    padding: .25em .4em;
+    font-size: 78%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background: red;
+    border-radius: 43px;
+}
 
+a#dropdownMenuLink.dropdown-toggle::after{
+    display: none;
+}
+
+a#dropdownMenuLink {
+    color: #fff;
+}
+div.dropdown-menu{
+    position: absolute;
+    /* top: 100%; */
+    /* left: 0; */
+    left: auto;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 10rem;
+    padding: .5rem 0;
+    margin: .125rem 0 0;
+    font-size: 1rem;
+    color: #212529;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: .25rem;
+}
+
+div.dropdown-menu.show{
+    right: 0px !important;
+}
 
 
 /**********

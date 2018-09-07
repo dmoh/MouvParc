@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <span>Nom d'utilisateur : <strong><em>{{ user.username }}</em></strong></span>
+            </div>
+            <div class="col-md-6">
+                <span>mail : <strong><em>{{ user.email }}</em></strong></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+            </div>
+        </div>
+        {{ form_start(form) }}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.roles, "Roles  : ", {'label_attr': {'class': ' control-label'}}) }}
+                {{ form_widget(form.roles, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.roles, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-group col-md-6">
+                <input type="submit" class="btn btn-block btn-primary" value="Enregistrer">
+            </div>
+        </div>
+        {{ form_end(form) }}
+        <div class="row">
+            <div class="col-md-6">
+                <a href="{{ path('delete_user', {'id': user.id }) }}" class="btn btn-block btn-danger">Supprimer utilisateur</a>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+           $("input").css(
+               'visibility', 'visible'
+           );
+
+           var aDelete = $("a.btn-danger").attr("href");
+
+          $("a.btn-danger").click(function (e) {
+              e.preventDefault();
+              if (confirm("Supprimé cette utilisateur ?"))
+              {}
+          });
+
+
+        });
+    </script>
+{% endblock %}

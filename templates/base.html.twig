@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
             <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
             <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('fontAwe/css/font-awesome.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker3.standalone.min.css') }}">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
@@ -18,70 +19,116 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar sticky-top navbar-inverse navbar-dark bg-dark navbar-expand-md justify-content-between">
-
-                <a class="navbar-brand" href="{{ path('consultation') }}">Autocars APS | FLE</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbarCar" aria-controls="#myNavbarCar" aria-expanded="false" aria-label="Toggle navigation">
-                <span ><i style="font-size: 24px; color: #fff; line-height: 10px" class="fa fa-bars"></i></span>
-            </button>
+        <div id="page-wrapper-entiere">
+            <nav class="navbar sticky-top navbar-inverse navbar-dark bg-dark navbar-expand-md justify-content-between">
+                {% if is_granted('ROLE_MASTER') %}
+                    <a class="navbar-brand" href="{{ path('consultation') }}">Autocars APS | FLE</a>
+                {% endif %}
+                {% if is_granted('ROLE_USER') and is_granted('ROLE_SUPER_MASTER') == false and userId is defined and userId is not null  %}
+                    <a class="navbar-brand" href="{{ path('conducteur', {'user_id': userId}) }}"><i class="fa fa-home"></i></a></li>
+                {% endif %}
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbarCar" aria-controls="#myNavbarCar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span ><i style="font-size: 24px; color: #fff; line-height: 10px" class="fa fa-bars"></i></span>
+                </button>
                 <div class="collapse navbar-collapse" id="myNavbarCar">
                     <ul class="navbar-nav ml-auto">
                         {% if app.user %}
-                            <li><a class="nav-link active" href="{{ path('geolocbus') }}">Geolocbus</a></li>
-                            <li><a class="nav-link active" href="{{ path('editionCars') }}">Edition</a></li>
-                            <li><a class="nav-link active" href="{{ path('etat_carrosseries') }}">Carrosserie</a></li>
-                            <li><a class="nav-link active" href="{{ path('add_rubrique') }}">Rubrique</a></li>
-                            <li><a class="nav-link active" href="{{ path('miseajour') }}">Màj BDD</a></li>
-                            <li><a class="nav-link active" href="{{ path('index') }}">Ajouter un Autocar</a></li>
-                            <li><a class="nav-link active" href="{{ path('liste_panne') }}">Car en panne</a></li>
-                            <li><a class="nav-link active" href="{{ path('consultation') }}">Etat Parc</a></li>
-                            <li><a class="nav-link active" href="{{ path('recherche') }}">Recherche</a></li>
-                            <li><a class="nav-link active" href="{{ path('logout') }}">Se déconnecter</a></li>
+                            <li><a class="nav-link active" href="{{ path('geolocbus') }}"><i style="padding-top: 0px; width: 15px; height: 10px; color: #fff " class="fa fa-map-marker"></i></a></li>
+                            {% if is_granted('ROLE_MASTER') %}
+                                <li><a class="nav-link active" href="{{ path('editionCars') }}">Edition</a></li>
+                                <li><a class="nav-link active" href="{{ path('etat_carrosseries') }}">Carrosserie</a></li>
+                                <li><a class="nav-link active" href="{{ path('add_rubrique') }}">Rubrique</a></li>
+                                <li><a class="nav-link active" href="{{ path('miseajour') }}">Màj BDD</a></li>
+                                <li><a class="nav-link active" href="{{ path('index') }}">Ajouter un Autocar</a></li>
+                                <li><a class="nav-link active" href="{{ path('liste_panne') }}">Car en panne</a></li>
+                                <li><a class="nav-link active" href="{{ path('consultation') }}">Etat Parc</a></li>
+                                <li><a class="nav-link active" href="{{ path('recherche') }}">Recherche</a></li>
+                            {% endif %}
+                            {% if is_granted('ROLE_USER') and is_granted('ROLE_SUPER_MASTER') == false and userId is defined and userId is not null  %}
+                                <li>
+                                    <a class="nav-link active" href="{{ path('conducteur', {'user_id': userId}) }}"><i style="padding-top: 0px; width: 15px; height: 10px; color: #fff " class="fa fa-bell"></i>
+                                        {% if notifs is defined and notifs | length > 0 %}
+                                            <div class="dropdown  dropdown-menu-left">
+                                                <a class="dropdown-toggle" style="position: absolute; top: -36px !important;" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span id="notifs" class="badge">{{ notifs|length }}</span>
+                                                </a>
+                                                <div class="dropdown-menu " aria-labelledby="dropdownMenuLink">
+                                                    {% for nC in notifs  %}
+                                                        <a class="dropdown-item" href="#" id="{{ nC.id }}">{{ nC.sujetNotif }}</a>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li><a class="nav-link active" href="{{ path('logout') }}"><i style="padding-top: 0px; width: 15px; height: 10px; color: #fff " class="fa fa-sign-out"></i></a></li>
                         {% else %}
                             <li><a class="nav-link active" href="#" data-toggle="modal" data-target="#exampleModalLong">Se connecter</a></li>
                         {% endif %}
                     </ul>
                 </div>
-
-        </nav>
-        <!-- Toggle get grouped for better mobile display -->
-
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Se connecter</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                  {% if is_granted('ROLE_USER') %}
-                  {% else %}
-                  <div class="container">
-                      <div class="row">
-                          {% if error is defined %}
-                              {% if error %}
-                                  <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                              {% endif %}
-                          {% endif %}
-                          <form class="form-horizontal" action="{{ path('login') }}" method="post">
-                              <label class="control-label" for="username">Nom d'utilisateur:</label>
-                              <input type="text" class="form-control" id="username" name="_username" value="" autocomplete="off" />
-                              <label class="control-label" for="password">Mot de passe:</label>
-                              <input type="password" class="form-control" id="password" name="_password" />
-                              <input type="checkbox" id="remember_me" name="_remember_me"  />
-                              <label for="remember_me"> Se souvenir de moi</label>
-                              <button class="btn btn-primary" id="valid" type="submit">Se connecter</button>
-                          </form>
-                      </div>
+            </nav>
+            <!-- Toggle get grouped for better mobile display -->
+            <!-- StartSidebar -->
+            {% if is_granted('ROLE_USER') and is_granted('ROLE_SUPER_MASTER') == false and userId is defined and userId is not null  %}
+                {% block sideBar %}
+                <div id="sidebar-conducteur" class="navbar-default sidebar">
+                    <div class="sidebar-nav navbar-collapse">
+                        <ul class="nav in" id="side-menu">
+                            <li>
+                                <i class="fa fa-dashboard"></i><a href="{{ path('conducteur', {'user_id': userId}) }}">Tableau de bord</a></li>
+                            <li>
+                                <i class="fa fa-map-marker"></i><a href="{{ path('geolocbus') }}">Geolocbus</a></li>
+                            <li>
+                                <i class="fa fa-handshake-o"></i><a href="{{ path('mesdemandes', {'user_id': userId}) }}">Mes Demandes</a></li>
+                            <li>
+                                <i class="fa fa-dashboard"></i><a href="#">Tableau de bord</a></li>
+                            <li>
+                                <i class="fa fa-dashboard"></i><a href="#">Tableau de bord</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="page-wrapper-conducteur">
+                {% endblock %}
+            {% endif %}
+            <!-- endSidebar-->
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Se connecter</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
                   </div>
-                  {% endif %}
+                  <div class="modal-body">
+                      {% if is_granted('ROLE_USER') %}
+                      {% else %}
+                      <div class="container">
+                          <div class="row">
+                              {% if error is defined %}
+                                  {% if error %}
+                                      <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                  {% endif %}
+                              {% endif %}
+                              <form class="form-horizontal" action="{{ path('login') }}" method="post">
+                                  <label class="control-label" for="username">Nom d'utilisateur:</label>
+                                  <input type="text" class="form-control" id="username" name="_username" value="" autocomplete="off" />
+                                  <label class="control-label" for="password">Mot de passe:</label>
+                                  <input type="password" class="form-control" id="password" name="_password" />
+                                  <input type="checkbox" id="remember_me" name="_remember_me"  />
+                                  <label for="remember_me"> Se souvenir de moi</label>
+                                  <button class="btn btn-primary" id="valid" type="submit">Se connecter</button>
+                              </form>
+                          </div>
+                      </div>
+                      {% endif %}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
         {% block body %}{% endblock %}
         {% block footer %}{% endblock %}
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -94,6 +141,34 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 var s = $('#valid');
+                if($('span#notifs'))
+                {
+                    $('span#notifs').click(function () {
+                        var lesNotifs = [];
+                        $('a.dropdown-item').each(function(){
+                           lesNotifs.push($(this).attr('id'));
+                        });
+                        var lesIds = lesNotifs.toString();
+
+                        var pathname = window.location.pathname; // Returns path only
+                        var url      = window.location.href;
+                        var statueNotif = 0;
+                        $.ajax({
+                           url: pathname,
+                           type: 'POST',
+                           data: {'notifID':lesIds},
+                           success: function(data){
+
+                               if(data.statueNotif === "OK")
+                               {
+                                   setTimeout(function (){$('div.dropdown').delay(5000).hide();}, 6000);
+
+                               }
+                               console.log(data);
+                           }
+                        });
+                    });
+                }
 
                 if($(window).width() > 767 && $('i.fa.fa-bars').is(':visible'))
                 {
@@ -132,11 +207,13 @@
                     }
                 });
 
-
             });
         </script>
         {% block javascripts %}
-
         {% endblock %}
+        {% if is_granted('ROLE_USER') and is_granted('ROLE_SUPER_MASTER') == false and userId is defined and userId is not null  %}
+                </div>
+        {% endif %}
+        </div>
     </body>
 </html>

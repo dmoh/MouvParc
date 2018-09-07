@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listing Congés{% endblock %}
+
+{% block body %}
+<section class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="text-center">Demande de Congés (en attente)</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Num °</th>
+                        <th>NOM Prénom</th>
+                        <th>Date demande</th>
+                        <th>Type de Congé</th>
+                        <th>Du <i style="color: #045cab" class="fa fa-arrow-right"></i> Au</th>
+                        <th>Répondre</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for lC in listingConges  %}
+                        {% if  lC.statueDemande == true or lC.statueDemande == 1   %}
+                            <tr>
+                                <td>{{ lC.id }}</td>
+                                <td><strong>{{ lC.demandeCongeConducteur.nomConducteur | upper }}</strong> {{ lC.demandeCongeConducteur.prenomConducteur | capitalize }} </td>
+                                <td><strong>{{ lC.dateDemande | date('d/m/Y') }}</strong></td>
+                                <td><strong>{{ lC.typeDeConge }} </strong></td>
+                                <td><strong>{{ lC.duDateConge | date('d/m/Y') }} <i style="color: #045cab" class="fa fa-arrow-right"></i> {{ lC.auDateConge | date('d/m/Y') }}</strong></td>
+                                {% if is_granted('ROLE_SUPER_MASTER') %}
+                                    <td><a href="{{ path('reponse_conge', {'id': lC.id }) }}"><i style="color: #045cab" class="fa fa-reply"></i></a></td>
+                                    {% else %}
+                                    <td><i class="fa fa-exclamation-triangle"></i> Pas de réponse</td>
+                                {% endif %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="text-center">Demandes cloturés</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Num °</th>
+                        <th>NOM Prénom</th>
+                        <th>Date demande</th>
+                        <th>Type de Congé</th>
+                        <th>Du <i style="color: #045cab" class="fa fa-arrow-right"></i> Au</th>
+                        <th><i style="color: green !important;" class="fa fa-check"></i>ACCORD/REFUS<i class="fa fa-close"></i></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for lC in listingConges  %}
+                        {% if  lC.statueDemande == false or lC.statueDemande == 0   %}
+                            {% if lC.accordRefusDirection == "ACCORD" %}
+                                <tr style="background-color: lightgreen">
+                            {% else %}
+                                <tr>
+                            {% endif %}
+                                <td>{{ lC.id }}</td>
+                                <td><strong>{{ lC.demandeCongeConducteur.nomConducteur | upper }}</strong> {{ lC.demandeCongeConducteur.prenomConducteur | capitalize }} </td>
+                                <td><strong>{{ lC.dateDemande | date('d/m/Y') }}</strong></td>
+                                <td><strong>{{ lC.typeDeConge }} </strong></td>
+                                <td><strong>{{ lC.duDateConge | date('d/m/Y') }} <i style="color: #045cab" class="fa fa-arrow-right"></i> {{ lC.auDateConge | date('d/m/Y') }}</strong></td>
+                                {% if lC.accordRefusDirection == "ACCORD" %}
+                                    <td><i style="color: green !important;" class="fa fa-check"></i></td>
+                                {% else %}
+                                    <td><i class="fa fa-close"></i></td>
+                                {% endif %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

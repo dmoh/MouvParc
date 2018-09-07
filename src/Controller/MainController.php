@@ -8,6 +8,7 @@
 namespace App\Controller;
 
 use App\Entity\Carrosserie;
+use App\Entity\Conducteur;
 use App\Entity\Image;
 use App\Entity\Rubrique;
 use App\Form\CarrosserieType;
@@ -18,9 +19,9 @@ use App\Repository\PanneRepository;
 use App\Service\HTML2PDF;
 use App\Service\php;
 use Doctrine\DBAL\Types\DateType;
-
+use App\Service\EnvoiSmartSheet;
 use Doctrine\ORM\Mapping\Entity;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -58,6 +59,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use App\Entity\Miseajour;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -95,7 +97,7 @@ Class MainController extends Controller
              else
              {
                  $this->addFlash('info', 'Ce véhicule existe déjà dans la base');
-                 return $this->render('front/index.html.twig', array(
+                 return $this->render('front/indexAccompte.html.twig', array(
                      'form' => $form->createView(),
                  ));
              }
@@ -104,7 +106,7 @@ Class MainController extends Controller
 
 
 
-        return $this->render('front/index.html.twig', array(
+        return $this->render('front/indexAccompte.html.twig', array(
             'form' => $form->createView(),
         ));
 
@@ -653,18 +655,119 @@ Class MainController extends Controller
     }
 
 
-    public function addPanne(Request $req, $id, \Swift_Mailer $mailer)
+    public function addPanne(Request $req, $id, \Swift_Mailer $mailer, EnvoiSmartSheet $envoi)
     {
         //enntity manager
         $em = $this->getDoctrine()->getManager();
 
+        $username =$this->getUser();
         //repository
         $repo = $this->getDoctrine()->getManager();
+
 
         $panne = new Panne;
         $form = $this->createForm(PanneType::class, $panne);
         $car = $repo->getRepository(Cars::class)->find($id);
         $condition_garantie = $car->getConditionGarantie();
+
+        //Id des feuilles et columns de smartsheet
+        $marques_ID_Smartsheet =array(
+            "MERCEDES" 		=>
+                array(
+                    "id_sheet"              =>  5332176532203396,
+                    "id_colImmat"           =>  8733849107621764,
+                    "id_colNatureP"         =>  148862317946756,
+                    "id_colNumSerie"        =>  4043409812940676,
+                    "id_colDateDeclaration" =>  4771114711836548,
+                    "id_colGarantie"        =>  4863611127523204,
+                    "id_colKmactuel"        =>  5978550277826436,
+                    "id_colLieuIntev"       =>  2563252413589380,
+
+                ),
+            "IVECO" 		=>
+                array(
+                "id_sheet"              =>  7998079912699780,
+                "id_colImmat"           =>  708280734508932,
+                "id_colNatureP"         =>  5211880361879428,
+                "id_colNumSerie"        =>  2960080548194180,
+                "id_colDateDeclaration" =>  7463680175564676,
+                "id_colGarantie"        =>  1834180641351556,
+                "id_colKmactuel"        =>  6337780268722052,
+                "id_colLieuIntev"       =>  4085980455036804,
+
+                ),
+            "VOLVO" 		=>
+                array(
+                "id_sheet"              =>  223776790079364,
+                "id_colImmat"           =>  4136420550961028,
+                "id_colNatureP"         =>  8640020178331524,
+                "id_colNumSerie"        =>  477245853722500,
+                "id_colDateDeclaration" =>  4980845481092996,
+                "id_colGarantie"        =>  2729045667407748,
+                "id_colKmactuel"        =>  7232645294778244,
+                "id_colLieuIntev"       =>  1603145760565124,
+
+            ),
+            "SCANIA" 		=> array(
+                "id_sheet"              =>  3566429577471876,
+                "id_colImmat"           =>  3301186850842500,
+                "id_colNatureP"         =>  7804786478212996,
+                "id_colNumSerie"        =>  2175286943999876,
+                "id_colDateDeclaration" =>  6678886571370372,
+                "id_colGarantie"        =>  4427086757685124,
+                "id_colKmactuel"        =>  8930686385055620,
+                "id_colLieuIntev"       =>  134593362847620,
+
+            ),
+            "BOVA" 			=> array(
+                "id_sheet"              =>  522637794404228,
+                "id_colImmat"           =>  5587002805512068,
+                "id_colNatureP"         =>  3335202991826820,
+                "id_colNumSerie"        =>  7838802619197316,
+                "id_colDateDeclaration" =>  2209303084984196,
+                "id_colGarantie"        =>  6712902712354692,
+                "id_colKmactuel"        =>  4461102898669444,
+                "id_colLieuIntev"       =>  8964702526039940,
+
+            ),
+            "OTOKAR" 		=> array(
+                "id_sheet"              =>  5332176532203396,
+                "id_colImmat"           =>  8733849107621764,
+                "id_colNatureP"         =>  148862317946756,
+                "id_colNumSerie"        =>  4043409812940676,
+                "id_colDateDeclaration" =>  4771114711836548,
+                "id_colGarantie"        =>  4863611127523204,
+                "id_colKmactuel"        =>  5978550277826436,
+                "id_colLieuIntev"       =>  2563252413589380,
+
+            ),
+        );
+
+
+
+        //Associer les marques au modèles
+        $marquesType =array(
+            "MERCEDES"          => array("TOURISMO","TOURISMO RHD-L", "TOURISMO 10M"),
+            "IVECO"             => array("CROSSWAY","CROSSWAY UFR", "RECREO", "MAGELYS", "IRISBUS", "DAILY"),
+            "SCANIA"            => array("TOURING", "TOURING HD"),
+            "VOLVO"             => array("VOLVO 9700", "IRIZAR I4"),
+            "BOVA"              => array("BOVA FUTURA")
+        );
+
+
+        /*"[{"toTop":true,"cells":
+                   	 	 	[
+	                   	  		{\"columnId\": ".$col_Immat.", \"value\": \"".$car->getImmat()."\"},
+	                   	  		{\"columnId\": ".$col_natureP.", \"value\": \"".$test->getNaturePanne()."\"},
+	                   	  		{\"columnId\": ".$col_NumSerie.", \"value\": \"".$car->getNumSerie()."\"},
+	                   	  		{\"columnId\": ".$col_DateDec.", \"value\": \"".$dateDeclaration."\"},
+	                   	  		{\"columnId\": ".$col_Garantie.", \"value\": \"".$garantie_SmartSheet."\"},
+	                   	  		{\"columnId\": ".$col_LieuInter.", \"value\": \"La Roche sur Foron\"},
+	                   	  	]
+                   		}];\r\n";*/
+
+        $request1 = new Request();
+
 
 
 
@@ -2571,12 +2674,12 @@ Class MainController extends Controller
         if($form->isSubmitted() && $form->isValid()){
             $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
-
+            $user->setRoles(["ROLE_USER"]);
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('consultation');
+            return $this->redirectToRoute('dashboard_users');
         }
         return $this->render(
           'front/register.html.twig',
@@ -2586,16 +2689,22 @@ Class MainController extends Controller
 
     public function login(Request $request, AuthenticationUtils $authUtils)
     {
-        if ($this->container->has('profiler'))
+        /*if ($this->container->has('profiler'))
         {
             $this->container->get('profiler')->disable();
-        }
+        }*/
+
+
+
+        $em = $this->getDoctrine()->getManager();
 
         // get the login error if there is one
         $error = $authUtils->getLastAuthenticationError();
 
+
         // last username entered by the user
         $lastUsername = $authUtils->getLastUsername();
+        $username = $em->getRepository(User::class)->findOneBy(array("username" => $lastUsername));
 
         return $this->render('front/login.html.twig', array(
             'last_username' => $lastUsername,
@@ -2612,7 +2721,7 @@ Class MainController extends Controller
         $response->headers->clearCookie('REMEMBERME');
 
         $response->send();
-        return $this->redirectToRoute('consultation');
+        return $this->redirectToRoute('login');
     }
 
 
@@ -2684,9 +2793,6 @@ Class MainController extends Controller
         //Date de récupération chaque mois le premier
         $dateDuPremier = date('c',mktime(23,59,0,date('m'),1,date('y')));
         $dateDuPremier = substr($dateDuPremier, 0, -6);
-
-
-
 
         $nbCars = count($listeCars);
 
@@ -3391,7 +3497,7 @@ Class MainController extends Controller
 
 
 
-    public function geolocbus(Request $request, AuthorizationCheckerInterface $authorizationChecker)
+    public function geolocbus(Request $request,  \Symfony\Component\Security\Core\Security $security, AuthorizationCheckerInterface $authorizationChecker)
     {
         if ($authorizationChecker->isGranted('IS_AUTHENTICATED_ANONYMOUSLY'))
         {
@@ -3399,6 +3505,14 @@ Class MainController extends Controller
             {
                 $this->container->get('profiler')->disable();
             }
+        }
+
+        $userID = null;
+        $usrCurrent= $security->getUser()->getId();
+        //get User Id afficher home dans base html Twig
+        if(isset($usrCurrent))
+        {
+            $userID = $usrCurrent;
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -3491,7 +3605,8 @@ Class MainController extends Controller
         }
 
         return $this->render('front/geolocbus.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'userId' => $userID,
         ));
     }
 
@@ -3571,6 +3686,199 @@ Class MainController extends Controller
                 'geoc_long' => $geoc_long,
             ));
         }
+    }
+
+
+    public function dashboardUsers(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $ListeUsers = $em->getRepository(User::class)->findAll();
+        return $this->render('admin/dashboardUser.html.twig', [
+           'liste_users' => $ListeUsers
+        ]);
+    }
+
+    public function editUser(Request $request,User $user, $id)
+    {
+        $em= $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder()
+            ->add('roles', ChoiceType::class, [
+                'multiple'  => false,
+                'expanded'  => false,
+                'choices'   =>[
+                    'Administrateur'        => 'ROLE_ADMIN',
+                    'Modérateur'            => 'ROLE_MASTER',
+                    'PATRON'                => 'ROLE_SUPER_MASTER',
+                    'RH'                    => 'ROLE_RH'
+                ]
+            ])
+            ->getForm()
+        ;
+        $form->handleRequest($request);
+
+        if ($request->isMethod("POST"))
+        {
+            $role_valider = $form->getData()["roles"];
+            $user->setRoles([$role_valider]);
+            $em->persist($user);
+            $em->flush();
+            return $this->redirectToRoute('dashboard_users');
+        }
+
+        return $this->render('admin/editUser.html.twig',[
+            'form' => $form->createView(),
+            'user' => $user
+        ]);
+    }
+
+    public function deleteUser(Request $request, User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($user);
+        $em->flush();
+        return $this->redirectToRoute('dashboard_users');
+    }
+
+
+    public function envoiBox(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $newMaj = new Miseajour();
+        $form = $this->createForm(MiseajourType::class, $newMaj);
+        $form->handleRequest($request);
+
+        if($request->isMethod('POST'))
+        {
+            $file = $newMaj->getDocExcel();
+            $litLeFicheir = file($file);
+
+            //Supprime le titre des colonnes
+            unset($litLeFicheir[0]);
+
+
+
+            for ($i = 1; $i < count($litLeFicheir); $i++)
+            {
+
+                //$tab_info = str_replace(";", "", str_getcsv($litLeFicheir[$i], "="));
+
+                $mds = explode(";", $litLeFicheir[$i]);
+
+                $numMatriculeFichier =$mds[0];
+                $nom = $mds[1];
+
+                $prenom = $mds[2];
+                if($numMatriculeFichier != "")
+                {
+                    $newConducteur = new Conducteur();
+                    $newUser = new User();
+                    $newUserType = new UserType();
+
+
+                    $newConducteur->setMatriculeConducteur($numMatriculeFichier);
+                    $newConducteur->setNomConducteur(strtoupper($nom));
+                    $newConducteur->setPrenomConducteur(strtolower(ucfirst($prenom)));
+
+
+
+                    //Nouvel User
+                    $nom = strtolower($nom);
+                    $prenom = strtolower($prenom);
+
+                    $email = $nom.".".$prenom."@autocarspaysdesavoie.fr";
+
+                    //Supprime les retours chariots et espaces et email
+                    $email = trim(preg_replace('/\s\s+/', ' ', $email));
+                    $email = str_replace(' ', '',$email);
+
+
+                    //${'form'.$i} = $this->createForm(UserType::class, $newUser);
+                    //${'form'.$i}->handleRequest($request);
+                    $newUser->setEmail($email);
+                    //$password = $passwordEncoder->encodePassword($newUser, $newUser->getPlainPassword());
+                    $newUser->setUsername(ucfirst($prenom));
+
+                    $newUser->setMatriculeConducteur($numMatriculeFichier);
+                    $password = $passwordEncoder->encodePassword($newUser, "test$i");
+                    $newUser->setPassword($password);
+
+                    $newUser->setConducteur($newConducteur);
+                    $newConducteur->setUser($newUser);
+                    $nww = $this->get('form.factory')->create(UserType::class, $newUser);
+
+                    //$this->addFlash('success', 'Votre compte à bien été enregistré.');
+                    $em->persist($newUser);
+                    $em->flush();
+
+                }
+
+            }
+
+
+            return $this->redirectToRoute("dashboard_users");
+        }
+        return $this->render('admin/majconducteur.html.twig', array('form' => $form->createView()));
+    }
+
+    public function accesApiSmartSheet(Request $request)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.smartsheet.com/2.0/sheets/380527527126916",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: Bearer 7ezq7gdmi2p966dk2wu1yht9vz",
+                "Cache-Control: no-cache",
+                "Content-Type: application/json",
+                "Postman-Token: 62b21e32-455a-4d8e-853e-9a30ea62af09"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            echo "cURL Error #:" . $err;
+        } else {
+            echo $response;
+        }
+        var_dump($response);
+        die();
+        $result = curl_exec($ch);
+        var_dump($result);
+        die();
+    }
+
+    public function envoiBulletindePaye(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        if($request->isXmlHttpRequest())
+        {
+            $request->headers->get('Content-Type', 'application/pdf');
+            $media = $request->files->get('file');
+            //$sizeImage = $media->getClientSize();
+            //var_dump($request->files->all()['input-folder-2'][0]->getClientOriginalName());
+            //$file = new F
+            //$file->move($directory, $fileName);
+            //$extensionImage = $media->guessExtension();
+            //$filename = $media->getOriginalClient();
+            return new JsonResponse(array('' =>''));
+
+            die();
+        }
+        $response = new Response($this->renderView('admin/envoibulletin.html.twig'));
+
+        return $response;
     }
 
 }

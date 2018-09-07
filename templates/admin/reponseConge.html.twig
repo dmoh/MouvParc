@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Congé {{ conge.id }}{% endblock %}
+
+{% block stylesheets %}
+    <script type="text/css">
+
+    </script>
+{% endblock %}
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="text-center">Demande de congé num°<strong>{{ conge.id }}</strong></h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Num °</th>
+                            <th>NOM Prénom</th>
+                            <th>Date demande</th>
+                            <th>Type de congé</th>
+                            <th>DU <i style="color: #045cab" class="fa fa-arrow-right"></i> AU</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{ conge.id }}</td>
+                            <td><strong>{{ conge.demandeCongeConducteur.nomConducteur | upper }}</strong> {{ conge.demandeCongeConducteur.prenomConducteur | capitalize }} </td>
+                            <td><strong>{{ conge.dateDemande | date('d/m/Y') }}</strong></td>
+                            <td><strong>{{ conge.typeDeConge }}</strong></td>
+                            <td><strong>{{ conge.duDateConge | date('d/m/Y') }} <i style="color: #045cab" class="fa fa-arrow-right"></i> {{ conge.auDateConge | date('d/m/Y') }}</strong></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {{ form_start(form) }}
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form_label(form.ouiDir, "ACCORD / REFUS DIRECTION", {'label_attr':{'class': 'form-label'}}) }}
+                {{ form_widget(form.ouiDir, {'attr': {'class': 'form-control' }}) }}
+                {{ form_errors(form.ouiDir, {'attr': {'class': 'red'}}) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form_label(form.obsDirection, "Commentaire Direction", {'label_attr':{'class': 'form-label'}}) }}
+                {{ form_widget(form.obsDirection, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.obsDirection, {'attr': {'class': 'red'}}) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form_widget(form.Envoyer, {'attr': {'class': 'btn btn-block btn-primary'}}) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+        });
+    </script>
+{% endblock %}

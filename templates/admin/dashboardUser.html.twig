@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 slide_bar_left">
+                <ul>
+                    <li class="nav-heading">
+                        <span>Navigation</span>
+                    </li>
+                    <li>
+                        <span><i class="fa fa-truck"></i></span><a href="{{ path('liste_panne') }}">Car en panne</a>
+                    </li>
+                    <li>
+                        <span><i class="fa fa-user"></i></span><a href="{{ path('liste_panne') }}">Les conducteurs</a>
+                    </li>
+                    <li>
+                        <span><i class="fa fa-user"></i></span><a href="{{ path('maj_conducteur') }}">Maj conducteurs</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <table class="table table-responsive table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Nom d'utilisateur
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Groupes
+                            </th>
+                            <th>Modifier/Supprimer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in liste_users  %}
+                        <tr>
+                           <td>
+                               <p><strong>{{ user.username }}</strong></p>
+                           </td>
+                           <td>
+                                <p><strong>{{ user.email }}</strong></p>
+                           </td>
+                            <td>
+                                {% for role in user.roles  %}
+                                    {% if role[5:] == 'USER' %}
+                                        <span><i class="fa fa-user"></i></span>
+                                        {% elseif role[5:] == 'SUPER_MASTER' %}
+                                        <span style="font-size: 13px"><i class="fa fa-black-tie"></i></span>
+                                        {% elseif role[5:] == 'RH' %}
+                                        <span style="font-size: 13px"><i class="fa fa-user-secret"></i></span>
+                                    {% endif %}
+                                {% endfor %}
+                                {##}
+                            </td>
+                           <td>
+                                <a href="{{ path('edit_user', {'id': user.id }) }}" class="btn btn-primary">Modifier</a>
+                                <a href="{{ path('delete_user', {'id': user.id }) }}" class="btn btn-danger">Supprimer</a>
+                           </td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td><a href="{{ path('register') }}" class="btn btn-info" colspan="3">Ajouter un Conducteur</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}
