@@ -207,6 +207,17 @@
                     }
                 });
 
+                setInterval(function () {
+                    $.ajax({
+                       url: window.location.pathname,
+                       type: 'GET',
+                       data: "chercheNotif",
+                       success: function (data) {
+                           console.log(data);
+                       }
+                });
+                }, 40000);
+
             });
         </script>
         {% block javascripts %}

@@ -46,6 +46,9 @@ class ConducteurController extends Controller
 
         // TODO mes demandes en cours Traités ou non
         $conducteur = $security->getUser();
+        $conducteur1 = $conducteur->getConducteur();
+        $nom = $conducteur->getConducteur()->getNomConducteur();
+        $prenom = $conducteur->getConducteur()->getPrenomConducteur();
         $idConducteur =$conducteur->getConducteur()->getId();
         $em = $this->getDoctrine()->getManager();
         $demandeAttente = $em->getRepository(RapportHebdo::class)->demandesEnAttente($idConducteur);
@@ -69,6 +72,7 @@ class ConducteurController extends Controller
         // TODO Si pas de conducteur alors role SUPER MASTER
 
         //$conducteur->getConducteur()->getMatriculeConducteur()
+
 
 
 
@@ -113,61 +117,46 @@ class ConducteurController extends Controller
 
                 return new JsonResponse(array('statueNotif' => 'OK'));
 
+            }elseif (isset($request->request->all()["demande_conges"]))
+            {
+
+
+                $formulaireDemandeConge = $request->request->all()["demande_conges"];
+
+                $dateDuDateConge = $formulaireDemandeConge['duDateConge'];
+                $dateAuDateConge = $formulaireDemandeConge['auDateConge'];
+                $dateDemandeConge = $formulaireDemandeConge['dateDemande'];
+
+                //Formatage date pour enregistrement BDD
+                $dateDu = \DateTime::createFromFormat('d/m/Y', $dateDuDateConge);
+                $dateAu = \DateTime::createFromFormat('d/m/Y', $dateAuDateConge);
+                $dateDemande = \DateTime::createFromFormat('d/m/Y', $dateDemandeConge);
+
+
+                $demandeConge->setDuDateConge($dateDu);
+                $demandeConge->setAuDateConge($dateAu);
+                $demandeConge->setDateDemande($dateDemande);
+                $demandeConge->setTypeDeConge($formulaireDemandeConge['typeDeConge']);
+                $demandeConge->setStatueDemande(1);
+
+                $demandeConge->setDemandeCongeConducteur($usrCurrent->getConducteur());
+                $em->persist($demandeConge);
+                $nouvelleNotif = new Notifications();
+                $nouvelleNotif->setSujetNotif("Nouvelle demande d'accompte de ".$nom." ".$prenom." ");
+                $nouvelleNotif->setNotifDirection(1);
+                $nouvelleNotif->setNotifConducteur($conducteur1);
+                $nouvelleNotif->setStatueNotif(0);
+                $em->persist($nouvelleNotif);
+                $em->flush();
+                $this->addFlash('info', 'Votre demande de congé a bien été enregistré');
+                return $this->redirectToRoute("conducteur", ['user_id' => $userId ]);
             }
-            $formulaireDemandeConge = $request->request->all()["demande_conges"];
 
-            $dateDuDateConge = $formulaireDemandeConge['duDateConge'];
-            $dateAuDateConge = $formulaireDemandeConge['auDateConge'];
-            $dateDemandeConge = $formulaireDemandeConge['dateDemande'];
-
-            //Formatage date pour enregistrement BDD
-            $dateDu = \DateTime::createFromFormat('d/m/Y', $dateDuDateConge);
-            $dateAu = \DateTime::createFromFormat('d/m/Y', $dateAuDateConge);
-            $dateDemande = \DateTime::createFromFormat('d/m/Y', $dateDemandeConge);
-
-
-            $demandeConge->setDuDateConge($dateDu);
-            $demandeConge->setAuDateConge($dateAu);
-            $demandeConge->setDateDemande($dateDemande);
-            $demandeConge->setTypeDeConge($formulaireDemandeConge['typeDeConge']);
-            $demandeConge->setStatueDemande(1);
-
-            $demandeConge->setDemandeCongeConducteur($usrCurrent->getConducteur());
-            $em->persist($demandeConge);
-            $em->flush();
-            return new JsonResponse(array('ok' => 'La demande de congé a bien été enregistré !'));
         }
 
 
         if($request->isMethod('POST'))
         {
-            $dataRapport = $request->request->all()['form']['rapportHebdoConducteur'];
-            $nbreRapport = count($dataRapport);
-
-
-            for($i = 0; $i < $nbreRapport; $i++)
-            {
-                $nVeauRapport = new RapportHebdo();
-                //$nVeauRapport->setDateReclame($dataRapport[$i]["dateReclame"]);
-                $nVeauRapport->setDateReclame(new \DateTime());
-                $nVeauRapport->setCompteurRapport($nbreRapport);
-                $nVeauRapport->setTravailHorsTachy($dataRapport[$i]["travailHorsTachy"]);
-                $nVeauRapport->setHeureRapport($dataRapport[$i]["heureRapport"]);
-                $nVeauRapport->setMinRapport($dataRapport[$i]["minRapport"]);
-                $nVeauRapport->setHeureFinRapport($dataRapport[$i]["heureFinRapport"]);
-                $nVeauRapport->setMinFinRapport($dataRapport[$i]["minFinRapport"]);
-                $nVeauRapport->setRepasMidi((bool)$dataRapport[$i]["repasMidi"]);
-                $nVeauRapport->setRepasSoir((bool)$dataRapport[$i]["repasSoir"]);
-                $nVeauRapport->setObservationsRapport($dataRapport[$i]["observationsRapport"]);
-                $nVeauRapport->setStatuDemande(true);
-                $nVeauRapport->setRapportConducteur($conducteur->getConducteur());
-                $em->persist($nVeauRapport);
-                $em->flush();
-
-            }
-            $this->addFlash('info', 'Votre rapport hebdo de '.$nbreRapport.' jours a bien été enregistré ');
-            return $this->redirectToRoute("conducteur", array("user_id" => $user->getId()));
-
         }
 
         return $this->render('conducteur/index.html.twig', [
@@ -223,8 +212,15 @@ class ConducteurController extends Controller
             $demandeAccompte->setDemandeAccompteConducteur($conducteur);
 
             $em->persist($demandeAccompte);
+            $nouvelleNotif = new Notifications();
+            $nouvelleNotif->setSujetNotif("Nouvelle demande d'accompte de ".$nom." ".$prenom." ");
+            $nouvelleNotif->setNotifDirection(1);
+            $nouvelleNotif->setNotifConducteur($conducteur);
+            $nouvelleNotif->setStatueNotif(0);
+            $em->persist($nouvelleNotif);
             $em->flush();
 
+            $this->addFlash('info', 'Votre demande d\'accompte de '.$montantAccompte.'€ a bien été enregistré');
             return $this->redirectToRoute("conducteur", ['user_id' => $userId ]);
         }
 
@@ -242,6 +238,7 @@ class ConducteurController extends Controller
     public  function envoiRapportHebdoConducteur(Security $security, Request $request, User $user)
     {
         $usrCurrent= $security->getUser();
+        $conducteur = $usrCurrent->getConducteur();
         $userId = $usrCurrent->getId();
         if($usrCurrent->getId() != $user->getId() && $usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"])
         {
@@ -249,11 +246,14 @@ class ConducteurController extends Controller
         }
 
         $data = array();
+        $nomConductuer = strtoupper($conducteur->getNomConducteur());
+        $prenomConducteur = ucfirst($conducteur->getPrenomConducteur());
 
         // TODO Si pas de conducteur alors role SUPER MASTER
 
         //$conducteur->getConducteur()->getMatriculeConducteur()
 
+        $em = $this->getDoctrine()->getManager();
 
 
         $form1= $this->createFormBuilder($data)
@@ -272,8 +272,42 @@ class ConducteurController extends Controller
 
         if($request->isMethod('POST'))
         {
-            var_dump($request->request);
-            die();
+            $dataRapport = $request->request->all()['form']['rapportHebdoConducteur'];
+            $nbreJournee = count($dataRapport);
+
+
+            for($i = 0; $i < $nbreJournee; $i++)
+            {
+                $nVeauRapport = new RapportHebdo();
+                //$nVeauRapport->setDateReclame($dataRapport[$i]["dateReclame"]);
+                $nVeauRapport->setDateReclame(new \DateTime());
+                $nVeauRapport->setCompteurRapport($nbreJournee);
+                $nVeauRapport->setTravailHorsTachy($dataRapport[$i]["travailHorsTachy"]);
+                $nVeauRapport->setHeureRapport($dataRapport[$i]["heureRapport"]);
+                $nVeauRapport->setMinRapport($dataRapport[$i]["minRapport"]);
+                $nVeauRapport->setHeureFinRapport($dataRapport[$i]["heureFinRapport"]);
+                $nVeauRapport->setMinFinRapport($dataRapport[$i]["minFinRapport"]);
+                $nVeauRapport->setRepasMidi((bool)$dataRapport[$i]["repasMidi"]);
+                $nVeauRapport->setRepasSoir((bool)$dataRapport[$i]["repasSoir"]);
+                $nVeauRapport->setObservationsRapport($dataRapport[$i]["observationsRapport"]);
+                $nVeauRapport->setStatuDemande(true);
+                $nVeauRapport->setRapportConducteur($conducteur);
+
+
+                $em->persist($nVeauRapport);
+                $em->flush();
+
+            }
+            $nouvelleNotif = new Notifications();
+            $nouvelleNotif->setSujetNotif("Dépos d'un rapport hebdo de ".$nomConductuer." ".$prenomConducteur." ");
+            $nouvelleNotif->setNotifDirection(1);
+            $nouvelleNotif->setNotifConducteur($conducteur);
+            $nouvelleNotif->setStatueNotif(0);
+            $em->persist($nouvelleNotif);
+            $em->flush();
+            $this->addFlash('info', 'Votre rapport hebdo de '.$nbreJournee.' jours a bien été enregistré ');
+            return $this->redirectToRoute("conducteur", array("user_id" => $user->getId()));
+
         }
 
 

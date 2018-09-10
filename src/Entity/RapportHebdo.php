@@ -97,6 +97,11 @@ class RapportHebdo
     private $minFinRapport;
 
 
+    /**
+     * @ORM\Column(name="nbTotalRapportHebdo", type="integer", nullable = false)
+     */
+    private $nbTotalRapportHebdo;
+
     public function __construct()
     {
         $this->dateCreation = new \DateTime();
@@ -107,6 +112,7 @@ class RapportHebdo
     {
         return $this->id;
     }
+
 
     public function getRapportConducteur(): ?Conducteur
     {
@@ -302,6 +308,22 @@ class RapportHebdo
     public function setMinFinRapport($minFinRapport): void
     {
         $this->minFinRapport = $minFinRapport;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNbTotalRapportHebdo()
+    {
+        return $this->nbTotalRapportHebdo;
+    }
+
+    /**
+     * @param mixed $nbTotalRapportHebdo
+     */
+    public function setNbTotalRapportHebdo($nbTotalRapportHebdo): void
+    {
+        $this->nbTotalRapportHebdo = $nbTotalRapportHebdo;
     }
 
 

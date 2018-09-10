@@ -39,6 +39,20 @@ class NotificationsRepository extends ServiceEntityRepository
     }
 
 
+
+    public function notifDirection()
+    {
+        return $this->createQueryBuilder('n')
+                    ->select('n.sujetNotif, n.dateCreation')
+                    ->where('n.notifDirection = :val')
+                    ->setParameter('val', 1)
+                    ->orderBy('n.id', 'ASC')
+                    ->getQuery()
+                    ->getResult()
+            ;
+    }
+
+
     /*
     public function findOneBySomeField($value): ?Notifications
     {

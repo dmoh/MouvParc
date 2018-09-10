@@ -175,7 +175,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <a class="btn btn-block btn-primary" data-toggle="collapse" href="#rapportHebdo" role="button" aria-expanded="false" aria-controls="rapporthebdo">Déclarer un rapport hebdo.</a>
+                    <a class="btn btn-block btn-primary" href="{{ path('rapport_hebdo_conducteur', {'user_id': userId}) }}" >Déclarer un rapport hebdo.</a>
                 </div>
                 <div class="col-md-4">
                     <a class="btn btn-block btn-primary" data-toggle="modal" href="#" data-target="#demandeConge1" role="button" aria-expanded="false" aria-controls="demandeConge1">Demande de Congé</a>
@@ -280,17 +280,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.7.9/metisMenu.min.js" ></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#side-menu').metisMenu();
-
-            $('button#form_Envoyer').addClass('btn btn-primary');
-            $('.js-datepicker').datepicker({
-                format: 'dd/mm/yyyy',
-                language: 'fr',
-                orientation: 'bottom',
-                todayHighlight: 'true',
-                startDate: 0
-            });
-
 
             //Demnde de Congés
             //disable le changement de nom et prénom
@@ -341,65 +330,6 @@
                 //if(valDateDu )
             });
 
-
-
-
-            //RAPPORTS HEBDO
-            if ($('div#form_rapportHebdoConducteur_0'))
-            {
-                var container = $('div#form_rapportHebdoConducteur');
-
-                //Lien ajout journée
-                var ajoutRapportHebdo = $('<a href="#" id="ajouter_rapport" class ="btn btn-block btn-info">Ajouter une journée</a>');
-                //ajout du lien au formulaire
-                //container.append(ajoutRapportHebdo);
-
-                ajoutRapportHebdo.click(function(e){
-                    ajoutRapport(container);
-                    e.preventDefault();
-                    return false;
-                });
-
-                var index = container.find(':input').length;
-
-                if(index === 0)
-                {
-                    ajoutRapport(container);
-                }else{
-                    container.children('div').each(function ()
-                    {
-                        ajoutLienSuppression($(this));
-                    });
-                }
-
-
-                function ajoutRapport(container)
-                {
-                    var prototype = $(container.attr('data-prototype').replace(/__name__label__/g, 'Rapport Jour '+(index+1)).replace(/___name___/g, index).replace(/__name__/g, index));
-                    ajoutLienSuppression(prototype);
-                    container.append(prototype);
-                    container.append(ajoutRapportHebdo);
-
-                    index++;
-                }
-
-                function ajoutLienSuppression(prototype)
-                {
-                    var lienSuppression = $('<a href="#" class="btn btn-danger">Supprimer</a>');
-                    prototype.append(lienSuppression);
-
-                    // Ajout du listener sur le clic du lien
-                    lienSuppression.click(function(e) {
-                        if(index > 0)
-                        {
-                            index--;
-                        }
-                        prototype.remove();
-                        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
-                        return false;
-                    });
-                }
-            }
 
 
         });

@@ -27,8 +27,9 @@ class Notifications
      */
     private $sujetNotif;
 
+
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $statueNotif;
 
@@ -38,10 +39,15 @@ class Notifications
     private $dateCreation;
 
 
+    /**
+     * @ORM\Column(name="notifDirection", type= "boolean", nullable= true)
+     */
+    private $notifDirection;
+
+
     public function __construct()
     {
         $this->dateCreation = new \DateTime();
-        $this->setStatueNotif(1);
     }
 
 
@@ -97,4 +103,22 @@ class Notifications
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNotifDirection()
+    {
+        return $this->notifDirection;
+    }
+
+    /**
+     * @param mixed $notifDirection
+     */
+    public function setNotifDirection($notifDirection): void
+    {
+        $this->notifDirection = $notifDirection;
+    }
+
+
 }

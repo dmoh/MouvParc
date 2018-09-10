@@ -35,6 +35,8 @@ class AdminController extends Controller
         //TODO SERVICE DE SECURITE
         $usrCurrent= $security->getUser();
         $userId = $usrCurrent->getId();
+        $em = $this->getDoctrine()->getManager();
+        $lesNotifs = null;
 
 
         if($security->isGranted('IS_AUTHENTICATED_ANONYMOUSLY'))
@@ -47,7 +49,12 @@ class AdminController extends Controller
             //throw new AccessDeniedException("Espace personnel défense d'entrer !");
         }
 
-        $em = $this->getDoctrine()->getManager();
+        if($security->isGranted('ROLE_SUPER_MASTER'))
+        {
+            $lesNotifs = $em->getRepository(Notifications::class)->notifDirection();
+
+        }
+
         $listingDemandesAccompte = $em->getRepository(DemandeAccompte::class)->findAll();
 
 
@@ -55,6 +62,7 @@ class AdminController extends Controller
         return $this->render('admin/indexAccompte.html.twig', [
             'controller_name'   => 'AdminController',
             'listingAccompte'   => $listingDemandesAccompte,
+            'lesNotifs'         => $lesNotifs
         ]);
     }
 
@@ -137,6 +145,7 @@ class AdminController extends Controller
             }
             //Lie au conducteur
             $nouvelleNotif->setNotifConducteur($conducteur);
+            $nouvelleNotif->setStatueNotif(1);
             $em->persist($nouvelleNotif);
             $em->flush();
             return $this->redirectToRoute("admin_rh");
@@ -260,6 +269,7 @@ class AdminController extends Controller
             {
                 $conge->setreponseDirection($obsDirection);
             }
+            $nouvelleNotif->setStatueNotif(1);
             $em->persist($nouvelleNotif);
             $em->flush();
             return $this->redirectToRoute("rh_conges");
