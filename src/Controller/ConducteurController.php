@@ -472,14 +472,17 @@ class ConducteurController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $nvelleDemandeAbs = new DemandeAbsence();
+        $nvelleDemandeAbs->setDemandeAbsenceConducteur($usrCurrent->getConducteur());
         $form = $this->createForm(DemandeAbsenceType::class, $nvelleDemandeAbs);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
-            $data = $form->getData();
+            $em->persist($nvelleDemandeAbs);
+            $em->flush();
+            $this->addFlash('info', 'Votre demande d\'absence a bien été enregistré');
+            return $this->redirectToRoute('conducteur', array('user_id' => $userId));
 
-            var_dump($data);
-            die();
+
         }
 
         return $this->render('conducteur/demandeAbs.html.twig', array(
