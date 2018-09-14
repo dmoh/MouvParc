@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Conducteur;
+use App\Entity\DemandeAbsence;
 use App\Entity\DemandeAccompte;
 use App\Entity\DemandeConges;
 use App\Entity\DemandesConducteurs;
@@ -10,6 +11,7 @@ use App\Entity\Notifications;
 use App\Entity\QuestionsPaie;
 use App\Entity\RapportHebdo;
 use App\Entity\User;
+use App\Form\DemandeAbsenceType;
 use App\Form\DemandeAccompteType;
 use App\Form\DemandeCongesType;
 use App\Form\DemandesConducteursType;
@@ -467,7 +469,24 @@ class ConducteurController extends Controller
             //throw new AccessDeniedException("Espace personnel défense d'entrer !");
         }
 
-        $em = $this->getDoctrine()->getRepository();
-        
+        $em = $this->getDoctrine()->getManager();
+
+        $nvelleDemandeAbs = new DemandeAbsence();
+        $form = $this->createForm(DemandeAbsenceType::class, $nvelleDemandeAbs);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $data = $form->getData();
+
+            var_dump($data);
+            die();
+        }
+
+        return $this->render('conducteur/demandeAbs.html.twig', array(
+           'userId'     => $userId,
+           'form'       => $form->createView(),
+        ));
+
+
     }
 }

@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demande d'absence{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+{% endblock %}
+{% block sideBar %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+    <section class="container">
+        <div class="row text-center">
+            <div class="col-md-12">
+                <h5 class="text-center">Demande d'absence</h5>
+                <br>
+                <span style="color: red; text-transform: uppercase; font-weight: bold"><em>LES Demandes d'absences doivent être faites 7 jours à l'avance !</em></span>
+            </div>
+        </div>
+        {{ form_start(form) }}
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {{ form_label(form.dateDemande, "Jour demandé : ", {'label_attr': {'class': ' control-label'}}) }}
+                    {# Génération de l'input.#}
+
+                    {{ form_widget(form.dateDemande, {'attr': {'class': 'form-control js-datepicker1'}}) }}
+                    {{ form_errors(form.dateDemande, { 'attr': {'class': 'red' }}) }}
+                </div>
+                <div class="form-group col-md-4">
+                    {{ form_label(form.heureDebutAbs, "Heure (absence) : ", {'label_attr': {'class': ' control-label'}}) }}
+                    {# Génération de l'input.#}
+
+                    {{ form_widget(form.heureDebutAbs, {'attr': {'class': 'form-control heureTimepicker'}}) }}
+                    {{ form_errors(form.heureDebutAbs, { 'attr': {'class': 'red' }}) }}
+                </div>
+                <div class="form-group col-md-4">
+                    {{ form_label(form.heureFinAbs, "Heure (retour): ", {'label_attr': {'class': ' control-label'}}) }}
+                    {# Génération de l'input.#}
+
+                    {{ form_widget(form.heureFinAbs, {'attr': {'class': 'form-control heureTimepicker'}}) }}
+                    {{ form_errors(form.heureFinAbs, { 'attr': {'class': 'red' }}) }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    {{ form_label(form.motifConducteur, "Motif : ", {'label_attr': {'class': ' control-label'}}) }}
+                    {# Génération de l'input.#}
+
+                    {{ form_widget(form.motifConducteur, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.motifConducteur, { 'attr': {'class': 'red' }}) }}
+                </div>
+            </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <button type="submit" id="boutonEnvoyer" class="btn btn-block btn-success">ENVOYER</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.js-datepicker1').datepicker({
+                format: 'dd/mm/yyyy',
+                language: 'fr',
+                startDate: '+7d',
+                orientation : 'auto'
+                //endDate:'0d'
+            });
+            $('.heureTimepicker').datetimepicker({
+                format: 'HH:mm'
+            });
+
+            $('#boutonEnvoyer').click(function () {
+                var hDebut = $('#demande_absence_heureDebutAbs').val();
+                var hFin = $('#demande_absence_heureFinAbs').val();
+                var dateDemande = $('#demande_absence_dateDemande').val();
+                var motifDemande = $('#demande_absence_motifConducteur').val();
+                var objDate = new Date(dateDemande.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3") );
+                var dateValidation = new Date();
+
+                var t = dateValidation.getTime();
+                var d = objDate.getTime();
+                var diff = (d-t)/(24*3600*1000);
+
+
+
+
+                if(!/[0-9:]/.test(hDebut) || !/[0-9:]/.test(hFin))
+                {
+                    alert('Heure (absence) ou heure (retour) incorrect !');
+                    return false;
+                }
+                else if(hDebut > hFin)
+                {
+                    alert('Vérifiez l\'heure de retour');
+                    return false;
+                }
+                else if(!/[0-9\/]/.test(dateDemande))
+                {
+                    //TODO vérifier si la date de la demande est bien de 7 jours
+                    alert('la date est incorrect !');
+                    return false;
+                }
+                else if(diff < 7 )
+                {
+                    //TODO vérifier si la date de la demande est bien de 7 jours
+                    alert('Les demandes d\'absence doivent être faites 7 jours avant !');
+                    return false;
+                }
+                else if(motifDemande.length < 5)
+                {
+                    alert('Le motif n\'est pas valable !');
+                    return false;
+                }
+
+
+            });
+
+        });
+    </script>
+{% endblock %}

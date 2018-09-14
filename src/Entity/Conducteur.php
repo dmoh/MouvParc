@@ -96,6 +96,11 @@ class Conducteur
      */
     private $questionsPaies;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\DemandeAbsence", mappedBy="demandeAbsenceConducteur", orphanRemoval=true)
+     */
+    private $demandeAbsences;
+
 
 
 
@@ -109,6 +114,7 @@ class Conducteur
         $this->demandeAccomptes = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->questionsPaies = new ArrayCollection();
+        $this->demandeAbsences = new ArrayCollection();
 
     }
 
@@ -413,6 +419,37 @@ class Conducteur
             // set the owning side to null (unless already changed)
             if ($questionsPaie->getQuestionsPaieConducteur() === $this) {
                 $questionsPaie->setQuestionsPaieConducteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DemandeAbsence[]
+     */
+    public function getDemandeAbsences(): Collection
+    {
+        return $this->demandeAbsences;
+    }
+
+    public function addDemandeAbsence(DemandeAbsence $demandeAbsence): self
+    {
+        if (!$this->demandeAbsences->contains($demandeAbsence)) {
+            $this->demandeAbsences[] = $demandeAbsence;
+            $demandeAbsence->setDemandeAbsenceConducteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandeAbsence(DemandeAbsence $demandeAbsence): self
+    {
+        if ($this->demandeAbsences->contains($demandeAbsence)) {
+            $this->demandeAbsences->removeElement($demandeAbsence);
+            // set the owning side to null (unless already changed)
+            if ($demandeAbsence->getDemandeAbsenceConducteur() === $this) {
+                $demandeAbsence->setDemandeAbsenceConducteur(null);
             }
         }
 
