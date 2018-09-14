@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes rapports{% endblock %}
+{% block sideBar %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-center">MES RAPPORTS HEBDO.</h4>
+            </div>
+        </div>
+        <div style="text-align: center" class="row">
+            <div class="col-md-12">
+                {% if listingRapports is defined and listingRapports is not null and listingRapports is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-stripped">
+                        <thead>
+                        <th>Date</th>
+                        <th>Tra. Hors Tachy</th>
+                        <th>Repas Midi</th>
+                        <th>Rpas Soir</th>
+                        <th>Heure(Début)</th>
+                        <th>Heure (fin)</th>
+                        </thead>
+                        <tbody>
+                            {% for lr in listingRapports %}
+                                <tr>
+                                    <td>
+                                        <span>
+                                        {{ lr.dateReclame | date('d/m/Y') }}
+                                        </span>
+                                    </td>
+                                    <td><span>
+                                            {{ lr.travailHorsTachy | upper }}
+                                        </span></td>
+                                    <td><span>
+                                            {{ lr.repasMidi }}
+                                        </span></td>
+                                    <td><span>
+                                            {{ lr.repasSoir }}
+                                        </span></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                    <span style="color: red; font-size: large; text-align: center"><em><strong>AUCUN RAPPORT !</strong></em></span>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

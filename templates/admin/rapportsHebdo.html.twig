@@ -1,0 +1,108 @@
+{%  extends 'base.html.twig' %}
+
+{% block title %}Rapports Hebdo{% endblock %}
+
+
+{% block body %}
+    <section class="container">
+        {% if listingRapports is not null and listingRapports is not empty %}
+            <div class="row" style="text-transform: uppercase">
+                <div class="col-md-12">
+                    <h4 class="text-center">Derniers Rapports NON VALIdé</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <th>N°Id</th>
+                            <th>NOM Prénom</th>
+                            <th>Date</th>
+                            <th>Tra. Hors Tachy</th>
+                            <th>Repas Midi</th>
+                            <th>Repas Soir</th>
+                            <th>Durée</th>
+                            <th>Commentaires</th>
+                            </thead>
+                            <tbody>
+                            {% for lR in listingRapports  %}
+                                <tr>
+                                    <td><span id="id{{ lR.id }}">{{ lR.id }}</span></td>
+                                    <td><span>{{ lR.rapportConducteur.nomConducteur | upper }} {{ lR.rapportConducteur.prenomConducteur | capitalize }}</span></td>
+                                    <td><span>{{ lR.dateReclame | date('d/m/Y') | upper }}</span></td>
+                                    <td><span>{{ lR.travailHorsTachy | upper }}</span></td>
+                                    <td>
+                                        {% if lR.repasMidi == 1  %}
+                                            <span style="color: #00bf00">OUI</span>
+                                        {% else %}
+                                            <span style="color: red">NON</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if lR.repasSoir == 1  %}
+                                            <span style="color: #00bf00">OUI</span>
+                                        {% else %}
+                                            <span style="color: red">NON</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><span><em>{{ lR.heureRapport }}h{{ lR.minRapport }} <i class="fa fa-arrow-right"></i>  {{ lR.heureFinRapport }}h{{ lR.minFinRapport }}</em></span></td>
+                                    <td><span>{{ lR.observationsRapport }}</span></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12"><a href="#" id="prisEnCompte" class="btn btn-block btn-primary">PRIS EN COMPTE</a></div>
+            </div>
+            {% else %}
+                <div style="text-transform: uppercase; color: red" class="row">
+                    <div class="col-md-12">
+                        <h5 class="text-center">
+                            AUCUN RAPPORT HEBDO A VALIDé
+                        </h5>
+                    </div>
+                </div>
+        {% endif %}
+    </section>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+           $('a#prisEnCompte').click(function (e) {
+              e.preventDefault();
+              var numIds = [];
+
+              $("tr span[id^='id']").each(function () {
+                  numIds.push($(this).attr('id'))
+              });
+
+              var lesIds = numIds.toString();
+
+
+              $.ajax({
+                 url: window.location.pathname,
+                 type: 'POST',
+                 data: {'lesIds': lesIds},
+                 success: function(data)
+                 {
+                     console.log(data.Vu);
+
+                     if(data.Vu == "success")
+                     {
+                         location.reload();
+                     }
+
+                 }
+              });
+           });
+        });
+    </script>
+{% endblock %}

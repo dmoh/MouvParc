@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Questions Paie{% endblock %}
+
+
+{% block body %}
+    <section class="contiainer">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-center">Demande de renseignements</h4>
+            </div>
+        </div>
+        {{ form_start(form) }}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ form_label(form.dateDemande, "Mois de salaire : ", {'label-attr':{'class': 'form-label'}}) }}
+                    {{ form_widget(form.dateDemande, {'attr': {'class': 'form-control '}}) }}
+                    {{ form_errors(form.dateDemande, {'attr': {'class': 'red'}}) }}
+                    <div class="err"></div>
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form_label(form.objetDemande, "Observation(s)(Obligatoire) : ", {'label-attr':{'class': 'form-label'}}) }}
+                    {{ form_widget(form.objetDemande, {'attr': {'class': 'form-control', 'autocomplete': 'off'}}) }}
+                    {{ form_errors(form.objetDemande, {'attr': {'class': 'red'}}) }}
+
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <button type="submit" id="boutonEnvoi" class="btn btn-block btn-primary">ENVOYER</button>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#questions_paie_dateDemande").focusin(function () {
+                var span = $("div.err").find('span').length;
+
+                if(span > 0)
+                {
+                    $('div.err').children('span').remove();
+                }
+                else
+                {
+                    return;
+                }
+            });
+
+
+            $('#questions_paie_dateDemande').datepicker( {
+                format: "mm/yyyy",
+                viewMode: "months",
+                language: 'fr',
+                minViewMode: "months"
+            });
+
+           $('#boutonEnvoi').click(function () {
+
+               var dateDemande = $('#questions_paie_dateDemande').val();
+               var objDemande = $('#questions_paie_objetDemande').val();
+
+               if(!/^[0-9\/\ ]/.test(dateDemande))
+               {
+                   alert('Date incorrect ! ');
+                   $('div.err').append('<span style="color: red; font-size: 11px; text-transform: uppercase">Date incorrect !</span>');
+                   return false;
+               }
+               else if(objDemande.length < 5)
+               {
+                   alert('Manque d\'information dans l\'observation');
+                   return false;
+               }
+
+           });
+        });
+    </script>
+{% endblock %}

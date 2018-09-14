@@ -74,4 +74,46 @@ class EnvoiSmartSheet
 
         return $response;
     }
+
+
+
+
+
+    public function demandeAccompteToSmartSheet($iDFeuille, $col_nom_prenom, $nomPrenom, $col_matricule, $matricule, $col_date_demande, $dateDemande, $col_montant_accompte, $montantAccompte, $col_date_reelle, $dateReelle)
+    {
+       $colllNomPrenom =  2573100639381380;
+
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.smartsheet.com/2.0/sheets/".$iDFeuille."/rows",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "[{\"toTop\":true,\"cells\": [{\"columnId\": ".$col_nom_prenom.", \"value\": \"".$nomPrenom."\"},{\"columnId\":".$col_matricule.", \"value\": \"".$matricule."\"},{\"columnId\":".$col_date_demande.", \"value\": \"".$dateDemande."\"},{\"columnId\":".$col_montant_accompte.", \"value\": \"".$montantAccompte."\"},{\"columnId\":".$col_date_reelle.", \"value\": \"".$dateReelle."\"}]}];\r\n",
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: Bearer 7ezq7gdmi2p966dk2wu1yht9vz",
+                "Cache-Control: no-cache",
+                "Content-Type: application/json",
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            echo "Erreur cUrl:" . $err;
+        }
+
+        return $response;
+
+
+
+    }
 }

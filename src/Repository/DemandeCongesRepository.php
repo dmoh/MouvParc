@@ -38,6 +38,21 @@ class DemandeCongesRepository extends ServiceEntityRepository
         ;
     }
 
+    public function mesDemandesConges($id)
+    {
+        return $this->createQueryBuilder('d')
+            ->innerJoin('d.demandeCongeConducteur', 'c') //Joint entité conducteur
+            ->select('d')
+            ->where('d.statueDemande = :val')
+            ->setParameter('val', 0)
+            ->andWhere('c.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('d.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 
     /*
     public function findOneBySomeField($value): ?DemandeConges

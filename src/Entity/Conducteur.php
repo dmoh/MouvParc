@@ -91,6 +91,11 @@ class Conducteur
      */
     private $notifications;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\QuestionsPaie", mappedBy="questionsPaieConducteur", orphanRemoval=true)
+     */
+    private $questionsPaies;
+
 
 
 
@@ -103,6 +108,7 @@ class Conducteur
         $this->demandeConges = new ArrayCollection();
         $this->demandeAccomptes = new ArrayCollection();
         $this->notifications = new ArrayCollection();
+        $this->questionsPaies = new ArrayCollection();
 
     }
 
@@ -376,6 +382,37 @@ class Conducteur
             // set the owning side to null (unless already changed)
             if ($notification->getNotifConducteur() === $this) {
                 $notification->setNotifConducteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|QuestionsPaie[]
+     */
+    public function getQuestionsPaies(): Collection
+    {
+        return $this->questionsPaies;
+    }
+
+    public function addQuestionsPaie(QuestionsPaie $questionsPaie): self
+    {
+        if (!$this->questionsPaies->contains($questionsPaie)) {
+            $this->questionsPaies[] = $questionsPaie;
+            $questionsPaie->setQuestionsPaieConducteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestionsPaie(QuestionsPaie $questionsPaie): self
+    {
+        if ($this->questionsPaies->contains($questionsPaie)) {
+            $this->questionsPaies->removeElement($questionsPaie);
+            // set the owning side to null (unless already changed)
+            if ($questionsPaie->getQuestionsPaieConducteur() === $this) {
+                $questionsPaie->setQuestionsPaieConducteur(null);
             }
         }
 

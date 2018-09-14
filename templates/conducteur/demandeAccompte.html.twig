@@ -41,7 +41,7 @@
                     {{ form_label(form.dateDemande, "Date de la demande : ", {'label_attr': {'class': ' control-label'}}) }}
                     {# Génération de l'input.#}
 
-                    {{ form_widget(form.dateDemande, {'attr': {'class': ' form-control js-datepicker'}}) }}
+                    {{ form_widget(form.dateDemande, {'attr': {'class': ' form-control js-datepicker', 'autocomplete': 'off'}}) }}
                     {{ form_errors(form.dateDemande, { 'attr': {'class': 'red' }}) }}
                 </div>
             </div>

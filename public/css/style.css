@@ -597,7 +597,7 @@ ul#side-menu.nav.in li i.fa{
 
 
 .page-header {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     padding-bottom: 9px;
     margin: 25px 0 20px;
     border-bottom: 1px solid #eee;
@@ -745,7 +745,9 @@ div.dropdown-menu.show{
         padding-top: 4px;
     }
 
-
+    #sidebar-conducteur{
+        display: none;
+    }
 }
 
 @media print {

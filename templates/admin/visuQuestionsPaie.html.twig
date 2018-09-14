@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title%}Demandes régul.{% endblock %}
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            {% if questionsNonTraite is not empty or questionsNonTraite is not null %}
+                <div class="col-md-12">
+                    <h5 class="text-center upper text-success">DEMANDE de régul</h5>
+                </div>
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <th>Num</th>
+                            <th>Nom Prénom</th>
+                            <th>Mois de salaire</th>
+                            <th>Date déclaration</th>
+                            <th>Objet</th>
+                            <th>Répondre</th>
+                            </thead>
+                            <tbody>
+                            {% for qn in questionsNonTraite  %}
+                                <tr>
+                                    <td><span>{{ qn.id }}</span></td>
+                                    <td><span><em>{{ qn.questionsPaieConducteur.nomConducteur | upper }} {{ qn.questionsPaieConducteur.prenomConducteur | capitalize }}</em></span></td>
+                                    <td><span><em>{{ qn.dateDemande | date('m/Y') }}</em></span></td>
+                                    <td><span><em>{{ qn.dateCreation | date('d/m/Y') }}</em></span></td>
+                                    <td><span><em>{{ qn.objetDemande }}</em></span></td>
+                                    <td><span><em><a href="{{ path('reponse_questions_paie',{'id': qn.id }) }}"><i style="color: #00bf00;" class="fa fa-reply"></i></a></em></span></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% else %}
+                    <div class="col-md-12">
+                        <h5 style="text-transform: uppercase" class="text-center text-danger">AUCUNE Réclamation sur SALAIRE</h5>
+                    </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

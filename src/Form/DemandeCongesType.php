@@ -28,10 +28,7 @@ class DemandeCongesType extends AbstractType
                 'choices' => array(
                     'Repos' => 'repos',
                     'Congés payés' => 'congés payés',
-                    'Décés' => 'décès',
-                    'Mariage' => 'mariage',
-                    'Congé maternité' => 'congé maternité',
-                    'Congé parental' => 'congé parental',
+                    'Exceptionnel' => 'congé exceptionnel',
                     'Congés sans solde' => 'congés sans solde',
                     'Autres' => 'Autres',
                 )))

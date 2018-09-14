@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réponse Demande régul{% endblock %}
+
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <h5 class="text-center text-success">Réponse demande de Régul</h5>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <th>Num°</th>
+                        <th>NOM Prénom</th>
+                        <th>Mois de Salaire</th>
+                        <th>Objet</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span>{{ repQuestion.id }}</span></td>
+                            <td><span><em><strong>{{ repQuestion.questionsPaieConducteur.nomConducteur |upper }} {{ repQuestion.questionsPaieConducteur.prenomConducteur | capitalize }} </strong></em></span></td>
+                            <td><span>{{ repQuestion.dateDemande | date('m/Y') }}</span></td>
+                            <td><span>{{ repQuestion.objetDemande }}</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {{ form_start(form) }}
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    {{ form_label(form.reponseDirection, "Réponse : ", {'label-attr': {'class':'form-label'}}) }}
+                    {{ form_widget(form.reponseDirection, {'attr': {'class': 'form-control', 'autocomplete': 'off'}}) }}
+                    {{ form_errors(form.reponseDirection, {'attr': {'class': 'red'}}) }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <button type="submit" id="boutonEnvoyer" class="btn btn-block btn-primary">ENVOYER</button>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}

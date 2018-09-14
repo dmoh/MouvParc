@@ -37,6 +37,23 @@ class DemandeAccompteRepository extends ServiceEntityRepository
             ;
     }
 
+
+    public function  mesDemandesAccomptes($id)
+    {
+        return $this->createQueryBuilder('d')
+                    ->innerJoin('d.demandeAccompteConducteur', 'c')
+                    ->select('d')
+                    ->where('d.statueDemande = :val')
+                    ->setParameter('val', 1)
+                    ->andWhere('c.id = :id')
+                    ->setParameter('id', $id)
+                    ->setMaxResults(10)
+                    ->orderBy('d.id', 'DESC')
+                    ->getQuery()
+                    ->getResult()
+            ;
+    }
+
     /*
     public function findOneBySomeField($value): ?DemandeAccompte
     {

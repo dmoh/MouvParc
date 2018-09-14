@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes infos{% endblock %}
+
+{% block sideBar %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-center">
+                    MES INFORMATIONS PERSONNELLES
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <span class="nomConducteur">NOM : <strong>{{ mesInfos.conducteur.nomConducteur | upper }}</strong></span><br>
+                <span class="prenomConducteur">Prénom : <strong>{{ mesInfos.conducteur.prenomConducteur | capitalize }}</strong></span><br>
+                <span class="matriculeConducteur">Matricule : <em>{{ mesInfos.conducteur.matriculeConducteur }}</em></span><br>
+                <span class="mailConducteur">Mail : <strong><em>{{ mesInfos.email }}</em></strong></span>
+            </div>
+        </div>
+    </section>
+{% endblock %}

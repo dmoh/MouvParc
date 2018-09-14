@@ -102,10 +102,24 @@ class RapportHebdo
      */
     private $nbTotalRapportHebdo;
 
+
+    /**
+     * @ORM\Column(name="rapportVudirection", type="boolean", nullable=true)
+     */
+    private $rapportVuDirection;
+
+    /**
+     * @ORM\Column(name="rapportVuRh", type="boolean", nullable=true)
+     */
+    private $rapportVuRh;
+
+
+
     public function __construct()
     {
         $this->dateCreation = new \DateTime();
-
+        $this->rapportVuDirection = false;
+        $this->rapportVuRh = false;
     }
 
     public function getId()
@@ -325,6 +339,40 @@ class RapportHebdo
     {
         $this->nbTotalRapportHebdo = $nbTotalRapportHebdo;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRapportVuDirection()
+    {
+        return $this->rapportVuDirection;
+    }
+
+    /**
+     * @param mixed $rapportVuDirection
+     */
+    public function setRapportVuDirection($rapportVuDirection): void
+    {
+        $this->rapportVuDirection = $rapportVuDirection;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRapportVuRh()
+    {
+        return $this->rapportVuRh;
+    }
+
+    /**
+     * @param mixed $rapportVuRh
+     */
+    public function setRapportVuRh($rapportVuRh): void
+    {
+        $this->rapportVuRh = $rapportVuRh;
+    }
+
+
 
 
 

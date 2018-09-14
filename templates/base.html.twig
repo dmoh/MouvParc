@@ -28,12 +28,15 @@
                     <a class="navbar-brand" href="{{ path('conducteur', {'user_id': userId}) }}"><i class="fa fa-home"></i></a></li>
                 {% endif %}
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbarCar" aria-controls="#myNavbarCar" aria-expanded="false" aria-label="Toggle navigation">
-                    <span ><i style="font-size: 24px; color: #fff; line-height: 10px" class="fa fa-bars"></i></span>
+                    {% if notifs is defined and notifs | length > 0 %}
+                        <span ><i style="font-size: 24px; color: #fff; line-height: 10px" class="fa fa-bars">{{ notifs|length }}</i></span>
+                        {% else %}
+                            <span ><i style="font-size: 24px; color: #fff; line-height: 10px" class="fa fa-bars"></i></span>
+                    {% endif %}
                 </button>
                 <div class="collapse navbar-collapse" id="myNavbarCar">
                     <ul class="navbar-nav ml-auto">
                         {% if app.user %}
-                            <li><a class="nav-link active" href="{{ path('geolocbus') }}"><i style="padding-top: 0px; width: 15px; height: 10px; color: #fff " class="fa fa-map-marker"></i></a></li>
                             {% if is_granted('ROLE_MASTER') %}
                                 <li><a class="nav-link active" href="{{ path('editionCars') }}">Edition</a></li>
                                 <li><a class="nav-link active" href="{{ path('etat_carrosseries') }}">Carrosserie</a></li>
@@ -45,8 +48,9 @@
                                 <li><a class="nav-link active" href="{{ path('recherche') }}">Recherche</a></li>
                             {% endif %}
                             {% if is_granted('ROLE_USER') and is_granted('ROLE_SUPER_MASTER') == false and userId is defined and userId is not null  %}
+                                <li><a class="nav-link active" href="{{ path('geolocbus') }}"><i style="padding-top: 0px; width: 15px; height: 10px; color: #fff " class="fa fa-map-marker"></i> Géoloc.</a></li>
                                 <li>
-                                    <a class="nav-link active" href="{{ path('conducteur', {'user_id': userId}) }}"><i style="padding-top: 0px; width: 15px; height: 10px; color: #fff " class="fa fa-bell"></i>
+                                    <a class="nav-link active" href="{{ path('conducteur', {'user_id': userId}) }}"><i style="padding-top: 0px; width: 15px; height: 10px; color: #fff " class="fa fa-bell"></i>Notification
                                         {% if notifs is defined and notifs | length > 0 %}
                                             <div class="dropdown  dropdown-menu-left">
                                                 <a class="dropdown-toggle" style="position: absolute; top: -36px !important;" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -62,7 +66,7 @@
                                     </a>
                                 </li>
                             {% endif %}
-                            <li><a class="nav-link active" href="{{ path('logout') }}"><i style="padding-top: 0px; width: 15px; height: 10px; color: #fff " class="fa fa-sign-out"></i></a></li>
+                            <li><a class="nav-link active" href="{{ path('logout') }}"><i style="padding-top: 0px; width: 15px; height: 10px; color: #fff " class="fa fa-sign-out"></i>Se déconnecter</a></li>
                         {% else %}
                             <li><a class="nav-link active" href="#" data-toggle="modal" data-target="#exampleModalLong">Se connecter</a></li>
                         {% endif %}
@@ -83,9 +87,13 @@
                             <li>
                                 <i class="fa fa-handshake-o"></i><a href="{{ path('mesdemandes', {'user_id': userId}) }}">Mes Demandes</a></li>
                             <li>
-                                <i class="fa fa-dashboard"></i><a href="#">Tableau de bord</a></li>
+                                <i class="fa fa-dashboard"></i><a href="{{ path('mes_rapports', {'id': userId}) }}">Mes Rapports Hebdo</a></li>
                             <li>
-                                <i class="fa fa-dashboard"></i><a href="#">Tableau de bord</a></li>
+                                <i class="fa fa-info"></i><a href="{{ path('mes_infos', {'id': userId}) }}">Informations</a>
+                            </li>
+                            <li>
+                                <i class="fa fa-question"></i><a href="{{ path('questions_paie', {'id': userId}) }}">Questions Paie</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -161,8 +169,7 @@
 
                                if(data.statueNotif === "OK")
                                {
-                                   setTimeout(function (){$('div.dropdown').delay(5000).hide();}, 6000);
-
+                                   setTimeout(function (){$('div.dropdown').delay(5000).hide();}, 10000);
                                }
                                console.log(data);
                            }

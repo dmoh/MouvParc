@@ -54,6 +54,47 @@ class RapportHebdoRepository extends ServiceEntityRepository
             ;
     }
 
+    public function toutrapportsNonVuParDirection()
+    {
+        return $this->createQueryBuilder('r')
+                    ->select('r')
+                    ->where('r.rapportVuDirection = :zero')
+                    ->setParameter('zero', 0)
+                    ->getQuery()
+                    ->getResult()
+        ;
+    }
+
+    public function rapportsNonVuDirection($nomConducteur, $prenomConducteur)
+    {
+        return $this->createQueryBuilder('r')
+                ->innerJoin('r.rapportConducteur', 'c')
+                ->select('r')
+                ->where('r.rapportVuDirection = :zero')
+                ->setParameter('zero', 0 )
+                ->andWhere('c.nomConducteur = :nomConducteur')
+                ->setParameter('nomConducteur', $nomConducteur)
+                ->andWhere('prenomConducteur = :prenomConducteur')
+                ->setParameter('prenomConducteur', $prenomConducteur)
+                ->orderBy('r.dateReclame', 'DESC')
+                ->getQuery()
+                ->getResult()
+            ;
+    }
+
+
+    public function mesRapportsHebdo($id)
+    {
+        return $this->createQueryBuilder('r')
+                    ->innerJoin('r.rapportConducteur', 'c')
+                    ->select('r')
+                    ->where('c.id = :id')
+                    ->setParameter('id', $id)
+                    ->getQuery()
+                    ->getResult()
+        ;
+    }
+
 
 
 

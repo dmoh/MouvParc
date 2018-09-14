@@ -5,13 +5,19 @@ namespace App\Controller;
 use App\Entity\DemandeAccompte;
 use App\Entity\DemandeConges;
 use App\Entity\Notifications;
+use App\Entity\QuestionsPaie;
+use App\Entity\RapportHebdo;
 use App\Form\DemandeAccompteType;
+use App\Form\QuestionsPaieType;
+use App\Service\EnvoiSmartSheet;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -280,6 +286,150 @@ class AdminController extends Controller
             'conge'         => $conge,
             'form'          => $form->createView(),
         ));
+    }
+
+
+    /**
+     * @Route("/admin/rapports-hebdo", name="rapports_hebdo")
+     */
+    public function rapportHebdo(Security $security, Request $request, EnvoiSmartSheet $envoiSmartSheet)
+    {
+        //TODO SERVICE DE SECURITE
+        $usrCurrent = $security->getUser();
+        $userId = $usrCurrent->getId();
+        $listingRapportsNonVus = null;
+        if ($security->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')) {
+            $this->redirectToRoute('login');
+
+        } elseif ($usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"] && $usrCurrent->getRoles() != ["ROLE_RH"]) {
+            $this->redirectToRoute('logout');
+            //throw new AccessDeniedException("Espace personnel défense d'entrer !");
+        }
+
+
+        //update les rapports vu par la direction
+
+        $em = $this->getDoctrine()->getManager();
+
+        if ($security->isGranted('ROLE_SUPER_MASTER') || $security->isGranted('ROLE_RH')) {
+            $listingRapportsNonVus = $em->getRepository(RapportHebdo::class)->toutrapportsNonVuParDirection();
+        }
+        else
+        {
+            $this->redirectToRoute('logout');
+        }
+
+        if($request->isXmlHttpRequest())
+        {
+            if(isset($request->request->all()["lesIds"]))
+            {
+                $lesIdsVus =$request->request->all()["lesIds"];
+                $ids = explode(",", $lesIdsVus);
+                $numIds =  str_replace('id', '',$ids);
+
+                foreach ($numIds as $nI) {
+                    $leRapportVu = $em->getRepository(RapportHebdo::class)->find((int)$nI);
+                    $leRapportVu->setRapportVuDirection(1);
+                }
+                $em->flush();
+
+                //TODO ENVOIE SMARTSHEET
+
+                return new JsonResponse(array("Vu" => "success"));
+            }
+
+        }
+
+
+        return $this->render('admin/rapportsHebdo.html.twig', array(
+            'listingRapports' => $listingRapportsNonVus,
+        ));
+    }
+
+
+    /**
+     * @Route("/admin/questions-paie", name="admin_questions_paie")
+     */
+    public function visuQuestionsPaie(Security $security, Request $request)
+    {
+        //TODO SERVICE DE SECURITE
+        $usrCurrent = $security->getUser();
+        $userId = $usrCurrent->getId();
+        if ($security->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')) {
+            $this->redirectToRoute('login');
+
+        } elseif ($usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"] && $usrCurrent->getRoles() != ["ROLE_RH"]) {
+            $this->redirectToRoute('logout');
+            //throw new AccessDeniedException("Espace personnel défense d'entrer !");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $questionsNonTraites = $em->getRepository(QuestionsPaie::class)->questionsPaieNonTraite();
+
+        return $this->render('/admin/visuQuestionsPaie.html.twig',[
+           'questionsNonTraite' => $questionsNonTraites
+        ]);
+    }
+
+    /**
+     * @Route("/admin/reponse-questions-paie/{id}", name="reponse_questions_paie")
+     * @ParamConverter("questionspaie",options={"id" = "id"})
+     */
+    public function reponseQuestionsPaie(Security $security, Request $request, QuestionsPaie $questionsPaie)
+    {
+        $usrCurrent = $security->getUser();
+        $userId = $usrCurrent->getId();
+        $listingRapportsNonVus = null;
+        if ($security->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')) {
+            $this->redirectToRoute('login');
+
+        } elseif ($usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"] || $usrCurrent->getRoles() != ["ROLE_RH"]) {
+            $this->redirectToRoute('logout');
+            //throw new AccessDeniedException("Espace personnel défense d'entrer !");
+        }
+
+
+        //update les rapports vu par la direction
+
+        $em = $this->getDoctrine()->getManager();
+        $arr = array();
+        $form = $this->createFormBuilder($arr)
+            ->add('reponseDirection', TextareaType::class)
+            ->getForm();
+
+
+
+        if($request->isMethod("POST"))
+        {
+            if(isset($request->request->all()["form"]["reponseDirection"]))
+            {
+                $repDirection = $request->request->all()["form"]["reponseDirection"];
+
+                $questionsPaie->setReponseDirection($repDirection);
+                $questionsPaie->setStatueDemande(0);
+                $questionsPaie->setStatueDemandeDirection(0);
+                $dateDemande = $questionsPaie->getDateDemande();
+                $dD = $dateDemande->format('m/Y');
+
+                $nvelleNotifConducteur =new Notifications();
+                $nvelleNotifConducteur->setStatueNotif(1);
+                $nvelleNotifConducteur->setNotifConducteur($questionsPaie->getQuestionsPaieConducteur());
+                $nvelleNotifConducteur->setSujetNotif("Réponse à la demande de régularisation du ".$dD.".");
+
+                $em->persist($nvelleNotifConducteur);
+                $em->flush();
+
+                $this->addFlash('info', 'La réponse a bien été envoyé à '.$questionsPaie->getQuestionsPaieConducteur()->getNomConducteur().' '.$questionsPaie->getQuestionsPaieConducteur()->getPrenomConducteur().'.');
+                return $this->redirectToRoute('admin_questions_paie');
+            }
+        }
+
+
+        return $this->render('admin/reponseQuestionsPaie.html.twig', [
+            'repQuestion'   => $questionsPaie,
+            'form'          => $form->createView()
+        ]);
     }
 
 

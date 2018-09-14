@@ -7,13 +7,16 @@ use App\Entity\DemandeAccompte;
 use App\Entity\DemandeConges;
 use App\Entity\DemandesConducteurs;
 use App\Entity\Notifications;
+use App\Entity\QuestionsPaie;
 use App\Entity\RapportHebdo;
 use App\Entity\User;
 use App\Form\DemandeAccompteType;
 use App\Form\DemandeCongesType;
 use App\Form\DemandesConducteursType;
+use App\Form\QuestionsPaieType;
 use App\Form\RapportHebdoType;
 use App\Repository\RapportHebdoRepository;
+use App\Service\EnvoiSmartSheet;
 use App\Service\RedirectAfterLogin;
 use http\Env\Response;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -73,22 +76,6 @@ class ConducteurController extends Controller
 
         //$conducteur->getConducteur()->getMatriculeConducteur()
 
-
-
-
-        $form1= $this->createFormBuilder($data)
-            ->add('rapportHebdoConducteur', CollectionType::class, array(
-                'entry_type' => RapportHebdoType::class,
-                'allow_add'=> true,
-                'allow_delete' =>true,
-                'prototype' => true,
-                'by_reference' => false,
-            ))
-            ->add('Envoyer', SubmitType::class)
-            ->getForm()
-        ;
-
-
         $demandeConge = new DemandeConges();
 
         $demandeConge->setNom($conducteur->getConducteur()->getNomConducteur())
@@ -98,8 +85,6 @@ class ConducteurController extends Controller
                         ->add('Envoyer', SubmitType::class)
        ;
 
-        //$form->handleRequest($request);
-        $form1->handleRequest($request);
         $form2->handleRequest($request);
 
         if($request->isXmlHttpRequest())
@@ -163,13 +148,7 @@ class ConducteurController extends Controller
             'controller_name'   => 'ConducteurController',
             'user'              => $user,
             'userId'            => $userId,
-            'nbreDemandeAttente'=> $nbreDemandeAttente,
-            'nbdemandeAccompteAttente' => $nbdemandeAccompteAttente,
-            'nbCongeEnAttente'  => $nbCongeEnAttente,
-            'demandesEnAttente' => $demandeAttente,
-            'rapportsHebdo'     => $rapportHebdo,
             'form2'             => $form2->createView(),
-            'form1'             => $form1->createView(),
             'notifs'            => $notifs,
         ]);
     }
@@ -178,7 +157,7 @@ class ConducteurController extends Controller
      * @Route("/conducteur/demande-accompte/{user_id}", name="demande_accompte")
      * @ParamConverter("user", options={"id" = "user_id"})
      */
-    public function demandeAccompte(Security $security, Request $request, User $user)
+    public function demandeAccompte(Security $security, Request $request, User $user, EnvoiSmartSheet $envoiSmartSheet)
     {
         $usrCurrent= $security->getUser();
         $userId = $usrCurrent->getId();
@@ -212,6 +191,7 @@ class ConducteurController extends Controller
             $demandeAccompte->setDemandeAccompteConducteur($conducteur);
 
             $em->persist($demandeAccompte);
+            $dateReelle = new \DateTime();
             $nouvelleNotif = new Notifications();
             $nouvelleNotif->setSujetNotif("Nouvelle demande d'accompte de ".$nom." ".$prenom." ");
             $nouvelleNotif->setNotifDirection(1);
@@ -220,6 +200,24 @@ class ConducteurController extends Controller
             $em->persist($nouvelleNotif);
             $em->flush();
 
+            $nom = strtoupper($nom);
+            $prenom = ucfirst($prenom);
+            $nomPrenom ="".$nom." ".$prenom;
+            $matricule =  $security->getUser()->getConducteur()->getMatriculeConducteur();
+            $dateR = $dateReelle->format('d/m/Y');
+            $dateD1 = $dateD->format('d/m/Y');
+
+
+            $idFeuille = 1487858948171652;
+            $col_nomPrenom = 2573100639381380;
+            $col_matricule =2277125853079428;
+            $col_date_demande = 7076700266751876;
+            $col_montant_accompte = 1447200732538756;
+            $col_date_reelle = 5950800359909252;
+
+            //TODO NE FONCTIONNE PAS EN LOCAL
+            //$reponseSmart = $envoiSmartSheet->demandeAccompteToSmartSheet($idFeuille, $col_nomPrenom, $nomPrenom, $col_matricule, $matricule, $col_date_demande, $dateD1,  $col_montant_accompte, $montantAccompte, $col_date_reelle, $dateR);
+
             $this->addFlash('info', 'Votre demande d\'accompte de '.$montantAccompte.'€ a bien été enregistré');
             return $this->redirectToRoute("conducteur", ['user_id' => $userId ]);
         }
@@ -227,7 +225,8 @@ class ConducteurController extends Controller
 
 
         return $this->render('conducteur/demandeAccompte.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'userId' => $userId
         ));
     }
 
@@ -280,7 +279,8 @@ class ConducteurController extends Controller
             {
                 $nVeauRapport = new RapportHebdo();
                 //$nVeauRapport->setDateReclame($dataRapport[$i]["dateReclame"]);
-                $nVeauRapport->setDateReclame(new \DateTime());
+                $dateD = \DateTime::createFromFormat('d/m/Y', $dataRapport[$i]["dateReclame"]);
+                $nVeauRapport->setDateReclame($dateD);
                 $nVeauRapport->setCompteurRapport($nbreJournee);
                 $nVeauRapport->setTravailHorsTachy($dataRapport[$i]["travailHorsTachy"]);
                 $nVeauRapport->setHeureRapport($dataRapport[$i]["heureRapport"]);
@@ -292,8 +292,7 @@ class ConducteurController extends Controller
                 $nVeauRapport->setObservationsRapport($dataRapport[$i]["observationsRapport"]);
                 $nVeauRapport->setStatuDemande(true);
                 $nVeauRapport->setRapportConducteur($conducteur);
-
-
+                $nVeauRapport->setNbTotalRapportHebdo($nbreJournee);
                 $em->persist($nVeauRapport);
                 $em->flush();
 
@@ -311,7 +310,10 @@ class ConducteurController extends Controller
         }
 
 
-        return $this->render('conducteur/rapportHebdo.html.twig',['form' => $form1->createView()]);
+        return $this->render('conducteur/rapportHebdo.html.twig',[
+            'form' => $form1->createView(),
+            'userId' => $userId
+            ]);
     }
 
 
@@ -335,8 +337,10 @@ class ConducteurController extends Controller
 
         $mesDemandesAccompte = null;
         $mesDemandesConges = null;
-        $mesDemandesAccompte = $em->getRepository(DemandeAccompte::class)->findAll();
-        $mesDemandesConges = $em->getRepository(DemandeConges::class)->findAll();
+        $mesDemandesAccompte = $em->getRepository(DemandeAccompte::class)->mesDemandesAccomptes($userId);
+        $mesDemandesConges = $em->getRepository(DemandeConges::class)->mesDemandesConges($userId);
+
+
         return $this->render('conducteur/mesdemandes.html.twig', array(
             'userId'                    => $userId,
             'mesDemandesAccompte'       => $mesDemandesAccompte,
@@ -345,7 +349,125 @@ class ConducteurController extends Controller
 
     }
 
+    /**
+     * @Route("/conducteur/mes-rapports/{id}", name="mes_rapports")
+     * @ParamConverter("user", options={"id" ="id"})
+     */
+    public  function mesRapportsHebdo(Security $security, Request $request, User $user)
+    {
+        $usrCurrent= $security->getUser();
+        $userId = $usrCurrent->getId();
+        if($usrCurrent->getId() != $user->getId() && $usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"])
+        {
+            return $this->redirectToRoute('logout');
+            //throw new AccessDeniedException("Espace personnel défense d'entrer !");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $listingRapports = $em->getRepository(RapportHebdo::class)->mesRapportsHebdo($userId);
+
+        return $this->render('conducteur/mesrapports.html.twig', array(
+            "listingRapports" => $listingRapports,
+            'userId' => $userId
+        ));
+    }
 
 
 
+    /**
+     * @Route("/conducteur/mes-infos/{id}", name="mes_infos")
+     * @ParamConverter("user", options={"id" = "id"})
+     */
+    public function mesInformations(Security $security, Request $request, User $user)
+    {
+        $usrCurrent = $security->getUser();
+        $userId = $usrCurrent->getId();
+        if ($usrCurrent->getId() != $user->getId() && $usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"]) {
+            return $this->redirectToRoute('logout');
+            //throw new AccessDeniedException("Espace personnel défense d'entrer !");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $mesInfos = $em->getRepository(User::class)->find($user->getId());
+
+        return $this->render('conducteur/mesinfos.html.twig', array(
+
+            'userId' => $userId,
+            "mesInfos" => $mesInfos,
+
+        ));
+
+    }
+
+
+    /**
+     * @Route("/conducteur/questions-paie/{id}", name="questions_paie")
+     * @ParamConverter("user", options={"id"="id"})
+     */
+    public function questionsPaie(Security $security, Request $request, User $user)
+    {
+        $usrCurrent = $security->getUser();
+        $userId = $usrCurrent->getId();
+        $conducteur = $usrCurrent->getConducteur();
+        if ($usrCurrent->getId() != $user->getId() && $usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"]) {
+            return $this->redirectToRoute('logout');
+            //throw new AccessDeniedException("Espace personnel défense d'entrer !");
+        }
+
+        $nvelleQuestion = new QuestionsPaie();
+        $form = $this->createForm(QuestionsPaieType::class,$nvelleQuestion);
+        $form->handleRequest($request);
+
+        $em = $this->getDoctrine()->getManager();
+
+        if($request->isMethod("POST"))
+        {
+            if(isset($request->request->all()["questions_paie"]))
+            {
+                $formPoster = $request->request->all()["questions_paie"];
+
+                $dateDemande = \DateTime::createFromFormat('m/Y', $formPoster['dateDemande']);
+                $objDemande = $formPoster['objetDemande'];
+
+                $nvelleQuestion->setDateDemande($dateDemande);
+                $nvelleQuestion->setObjetDemande($objDemande);
+                $nvelleQuestion->setQuestionsPaieConducteur($conducteur);
+
+                $em->persist($nvelleQuestion);
+                $em->flush();
+                $this->addFlash('info', 'Demande de régularisation enregistré');
+
+                //TODO ENVOI DE MAIL A LA RH
+
+
+
+                return $this->redirectToRoute('conducteur', ['user_id' => $userId]);
+            }
+        }
+
+        return $this->render('conducteur/questionsPaie.html.twig', array(
+            'userId' => $userId,
+            'form'  => $form->createView(),
+        ));
+    }
+
+    /**
+     * @Route("/conducteur/demande-absence/{id}", name="demande_absence", requirements={"id" = "\d+"})
+     * @ParamConverter("user", options = {"id" = "id"})
+     */
+    public function demandeAbsenceConducteur(Security $security, Request $request, User $user)
+    {
+        $usrCurrent = $security->getUser();
+        $userId = $usrCurrent->getId();
+        $conducteur = $usrCurrent->getConducteur();
+        if ($usrCurrent->getId() != $user->getId() && $usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"]) {
+            return $this->redirectToRoute('logout');
+            //throw new AccessDeniedException("Espace personnel défense d'entrer !");
+        }
+
+        $em = $this->getDoctrine()->getRepository();
+        
+    }
 }

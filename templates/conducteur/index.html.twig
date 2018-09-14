@@ -20,108 +20,6 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3 col-md-3 col-lg-3">
-                                    <i class="fa fa-comments fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 col-md-9 col-lg-9 text-right">
-                                    <div class="huge"><em>{{ nbreDemandeAttente }}</em></div>
-                                    <div style="font-size: 0.84rem;">Rapports envoyés</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left" style="font-size: 0.8rem;">Voir les rapports</span>
-                                <span class="pull-right">
-                                    <i class="fa fa-arrow-circle-right">
-                                    </i>
-                                </span>
-                            </div>
-                            <div class="clearfix"></div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3 col-md-3 col-lg-3">
-                                    <i class="fa fa-pause fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 col-md-9 col-lg-9 text-right">
-                                    <div class="huge"><em>{{ nbCongeEnAttente }}</em></div>
-                                    <div style="font-size: 0.84rem;">Congés en attente</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left" style="font-size: 0.8rem;">Voir les demandes</span>
-                                <span class="pull-right">
-                                    <i class="fa fa-arrow-circle-right">
-                                    </i>
-                                </span>
-                            </div>
-                            <div class="clearfix"></div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3 col-md-3 col-lg-3">
-                                    <i class="fa fa-comments fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 col-md-9 col-lg-9 text-right">
-                                    <div class="huge"><em>{{ nbreDemandeAttente }}</em></div>
-                                    <div style="font-size: 0.84rem;">Mes Demandes traités</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left" style="font-size: 0.8rem;">Voir les demandes</span>
-                                <span class="pull-right">
-                                    <i class="fa fa-arrow-circle-right">
-                                    </i>
-                                </span>
-                            </div>
-                            <div class="clearfix"></div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3 col-md-3 col-lg-3">
-                                    <i class="fa fa-comments fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 col-md-9 col-lg-9 text-right">
-                                    <div class="huge"><em>{{ nbdemandeAccompteAttente }}</em></div>
-                                    <div style="font-size: 0.84rem;">Accompte en Attente</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left" style="font-size: 0.8rem;">Voir les rapports</span>
-                                <span class="pull-right">
-                                    <i class="fa fa-arrow-circle-right">
-                                    </i>
-                                </span>
-                            </div>
-                            <div class="clearfix"></div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-md-6">
                     <div class="panel panel-primary">
                         <a style="color: #fff" target="_blank" href="http://www.planningaps.fr">
@@ -131,8 +29,8 @@
                                         <i class="fa fa-calendar fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 col-md-9 col-lg-9 text-right">
-                                        <div class="huge"><em>PLANNING APS</em></div>
-                                        <div style="font-size: 0.84rem;">Consulter son planning</div>
+                                        <div class="huge"><em>PLANNING</em></div>
+                                        <div style="font-size: 0.84rem;">Consulter mon planning</div>
                                     </div>
                                 </div>
                             </div>
@@ -148,7 +46,49 @@
                     </div>
                 </div>
                 <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <a style="color: #fff" href="{{ path('geolocbus') }}">
+                            <div style="background-color:#d05d1a" class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3 col-md-3 col-lg-3">
+                                        <i class="fa fa-map-marker fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 col-md-9 col-lg-9 text-right">
+                                        <div style="text-transform: uppercase" class="huge"><em>Géoloc</em></div>
+                                        <div style="font-size: 0.84rem;">Géolocaliser un autocar</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <span class="pull-left" style="font-size: 0.8rem; color: #045cab">www.caraps.fr/geolocbus</span>
+                                <span class="pull-right">
+                                    <i class="fa fa-arrow-circle-right">
+                                    </i>
+                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div style="padding-bottom: 4.4%" class="row">
+                <div class="col-md-3">
+                    <a class="btn btn-block btn-primary" href="{{ path('rapport_hebdo_conducteur', {'user_id': userId}) }}" >Déclarer un rapport hebdo.</a>
+                </div>
+                <div class="col-md-3">
+                    <a class="btn btn-block btn-primary" data-toggle="modal" href="#" data-target="#demandeConge1" role="button" aria-expanded="false" aria-controls="demandeConge1">Demande de Congé</a>
+                </div>
+                <div class="col-md-3">
+                    <a class="btn btn-block btn-primary" href="{{ path('demande_accompte', {'user_id': user.id}) }}">Demande d'accompte</a>
+                </div>
+                <div class="col-md-3">
+                    <a class="btn btn-block btn-danger" href="{{ path('demande_accompte', {'user_id': user.id}) }}">Demande d'absence</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
                     <div  class="panel panel-primary">
+                        <a style="color: #fff" href="http://apscar.fr">
                         <div style="background-color: #a31291" class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3 col-md-3 col-lg-3">
@@ -160,7 +100,6 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="http://apscar.fr">
                             <div class="panel-footer">
                                 <span class="pull-left" style="font-size: 0.8rem; color: #045cab;">www.apscar.fr</span>
                                 <span class="pull-right">
@@ -172,42 +111,29 @@
                         </a>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <a class="btn btn-block btn-primary" href="{{ path('rapport_hebdo_conducteur', {'user_id': userId}) }}" >Déclarer un rapport hebdo.</a>
-                </div>
-                <div class="col-md-4">
-                    <a class="btn btn-block btn-primary" data-toggle="modal" href="#" data-target="#demandeConge1" role="button" aria-expanded="false" aria-controls="demandeConge1">Demande de Congé</a>
-                </div>
-                <div class="col-md-4">
-                    <a class="btn btn-block btn-primary" href="{{ path('demande_accompte', {'user_id': user.id}) }}">Demande d'accompte</a>
-                </div>
-            </div>
-            {% if rapportsHebdo is defined and rapportsHebdo is not empty %}
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <i class="fa fa-bell "></i>
-                                Derniers rapports hebdo.
+                <div class="col-md-6">
+                    <div  class="panel panel-primary">
+                        <a style="color: #fff" href="http://flecar.fr">
+                            <div style="background-color: #43a312" class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3 col-md-3 col-lg-3">
+                                        <i class="fa fa-bus fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 col-md-9 col-lg-9 text-right">
+                                        <div class="huge"><em>FLECAR</em></div>
+                                        <div style="font-size: 0.84rem;">PRISE EN CHARGE D'UN AUTOCAR </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="list-group">
-                            {% for d in rapportsHebdo  %}
-                                <div class="list-group-item"><span>Date : {{ d.dateReclame|date('d/m/Y') }} </span><span>Observations : {{ d.observationsRapport }} </span></div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            <div class="collapse" id="rapportHebdo">
-                {#{{ form_start(form1) }}
-                {{ form_widget(form1.rapportHebdoConducteur.vars.prototype)}}
-                {{ form_end(form1) }}#}
-                {{ form(form1) }}
-                <div class="form-row">
-                    <div class="form-group col-md-3">
+                            <div class="panel-footer">
+                                <span class="pull-left" style="font-size: 0.8rem; color: #045cab;">www.flecar.fr</span>
+                                <span class="pull-right">
+                                    <i class="fa fa-arrow-circle-right">
+                                    </i>
+                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -321,8 +247,6 @@
                         success: function(data)
                         {
                             location.reload();
-
-                            //console.log(data.ok);
                         }
                     });
                 }

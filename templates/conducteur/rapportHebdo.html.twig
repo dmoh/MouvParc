@@ -6,7 +6,7 @@
 {% endblock %}
 {% block body %}
     <section class="container">
-        <div class="row">
+        <div style="text-align: center; text-transform: uppercase; " class="row">
             <div class="col-md-12">
                 {{ form(form) }}
             </div>
@@ -20,8 +20,11 @@
         $(document).ready(function () {
             //RAPPORTS HEBDO
 
+
                 var container = $('div#form_rapportHebdoConducteur');
 
+
+                //²var $rapportHebdo = $('label.required')
 
                 //Lien ajout journée
                 var ajoutRapportHebdo = $('<a href="#" id="ajouter_rapport" class ="btn btn-block btn-info">Ajouter une journée</a>');

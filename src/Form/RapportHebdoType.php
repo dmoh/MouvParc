@@ -22,23 +22,24 @@ class RapportHebdoType extends AbstractType
                 'required'  => true,
                 'format'    => 'dd/MM/yyyy',
                 'attr'      => array(
-                    'class' => 'col-md-3 form-control jsdatepicker'
+                    'class' => 'col-md-12 form-control jsdatepicker'
                 ),
                 'label_attr'=> array(
-                  'class'   => 'control-label'
+                  'class'   => 'control-label '
+
                 )
 
             ))
             ->add('travailHorsTachy', ChoiceType::class, array(
                 'choices' => array(
                     'TRAVAIL ATELIER' => "travail atelier",
-                    'TRAVAIL BRUEAU' => "travail bureau",
+                    'TRAVAIL BUREAU' => "travail bureau",
                     'CONDUITE VL'   => "conduite vl",
                     'RELAIS (Avion, Train)' => "relais (avion, train)",
                     "AUTRE TRAVAIL"         => 'autre travail'
                 ),
                 'attr'      => array(
-                    'class' => 'col-md-3 form-control'
+                    'class' => 'col-md-12 form-control'
                 )
                 ))
             ->add('heureRapport', ChoiceType::class, array(
@@ -69,7 +70,7 @@ class RapportHebdoType extends AbstractType
                     '23' => '23',
                 ),
                 'attr' => array(
-                    'class' => 'form-control col-md-3'
+                    'class' => 'form-control col-md-12'
                 )
             ))
             ->add('minRapport', ChoiceType::class, array(
@@ -88,7 +89,7 @@ class RapportHebdoType extends AbstractType
                     '55' => '55',
                 ),
                 'attr' => array(
-                    'class' => 'form-control col-md-3'
+                    'class' => 'form-control col-md-12'
                 )
             ))
             ->add('heureFinRapport', ChoiceType::class, array(
@@ -119,7 +120,7 @@ class RapportHebdoType extends AbstractType
                     '23' => '23',
                 ),
                 'attr' => array(
-                    'class' => 'form-control col-md-3'
+                    'class' => 'form-control col-md-12'
                 )
             ))
             ->add('minFinRapport', ChoiceType::class, array(
@@ -138,7 +139,7 @@ class RapportHebdoType extends AbstractType
                     '55' => '55',
                 ),
                 'attr' => array(
-                    'class' => 'form-control col-md-3'
+                    'class' => 'form-control col-md-12'
                 )
             ))
             ->add('repasMidi', ChoiceType::class, array(
@@ -147,7 +148,7 @@ class RapportHebdoType extends AbstractType
                     'NON' => 0,
                 ),
                 'attr' => array(
-                    'class' => 'form-control col-md-3'
+                    'class' => 'form-control col-md-12'
                 )
                 ))
             ->add('repasSoir', ChoiceType::class, array(
@@ -156,7 +157,7 @@ class RapportHebdoType extends AbstractType
                     'NON' => 0,
                 ),
                 'attr' => array(
-                    'class' => 'form-control col-md-3'
+                    'class' => 'form-control col-md-12'
                 )
             ))
             ->add('observationsRapport', TextareaType::class, array(
