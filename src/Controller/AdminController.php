@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\DemandeAbsence;
 use App\Entity\DemandeAccompte;
 use App\Entity\DemandeConges;
 use App\Entity\Notifications;
@@ -49,7 +50,7 @@ class AdminController extends Controller
         {
             $this->redirectToRoute('login');
 
-        }elseif( $usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"] || $usrCurrent->getRoles() != ["ROLE_RH"])
+        }elseif( $usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"] && $usrCurrent->getRoles() != ["ROLE_RH"])
         {
            $this->redirectToRoute('logout');
             //throw new AccessDeniedException("Espace personnel défense d'entrer !");
@@ -432,7 +433,78 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/admin/demande-abs/", name="admin_demande_abs")
+     */
+    public function visuDemandeAbs(Security $security, Request $request)
+    {
+        //TODO SERVICE DE SECURITE
+        $usrCurrent = $security->getUser();
+        $userId = $usrCurrent->getId();
+        if ($security->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')) {
+            $this->redirectToRoute('login');
+        } elseif ($usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"] && $usrCurrent->getRoles() != ["ROLE_RH"] && $usrCurrent->getRoles() != ['ROLE_EXPLOIT'] ) {
+            $this->redirectToRoute('logout');
+            //throw new AccessDeniedException("Espace personnel défense d'entrer !");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        if($this->isGranted('ROLE_SUPER_MASTER'))
+        {
+            $demandeAbs = $em->getRepository(DemandeAbsence::class)->demandeAbsenceNonTraitees();
+        }
+        elseif($this->isGranted('ROLE_EXPLOIT'))
+        {
+            $demandeAbs = $em->getRepository(DemandeAbsence::class)->demandeAbsenceNonTraiteesExploit();
+        }
+        elseif ($this->isGranted('ROLE_RH'))
+        {
+            $demandeAbs = $em->getRepository(DemandeAbsence::class)->demandeAbsenceNonTraiteesRh();
+        }
+
+        return $this->render('admin/visuDemandeAbs.html.twig', array(
+           'demandesAbs' => $demandeAbs
+        ));
 
 
+    }
 
-}
+    /**
+     * @Route("/admin/reponse-demande-absence/{id_absence}", name="admin_reponse_demande_absence", requirements={"id_absence" = "\d+"})
+     * @ParamConverter("laDemandeAbs", options={"id" = "id_absence"})
+     */
+    public function reponseDemandeAbs(Security $security, Request $request, DemandeAbsence $laDemandeAbs)
+    {
+        //TODO SERVICE DE SECURITE
+        $usrCurrent = $security->getUser();
+        $userId = $usrCurrent->getId();
+        if ($security->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')) {
+            $this->redirectToRoute('login');
+        } elseif ($usrCurrent->getRoles() != ["ROLE_SUPER_MASTER"] && $usrCurrent->getRoles() != ["ROLE_RH"] && $usrCurrent->getRoles() != ["ROLE_EXPLOIT"] ) {
+            $this->redirectToRoute('logout');
+            //throw new AccessDeniedException("Espace personnel défense d'entrer !");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        //REPONSE EXPLOIT
+
+        if($usrCurrent->getRoles() === ["ROLE_EXPLOIT"])
+        {
+
+        }
+
+        $arr = array();
+        $form = $this->createFormBuilder($arr)
+            ->add('reponseDirection', TextType::class)
+            ->add('commentaireDirection', TextareaType::class)
+            ->getForm();
+
+
+        return $this->render("admin/reponseDemandeAbsence.html.twig", array(
+            'dA' => $laDemandeAbs
+        ));
+    }
+
+
+    }

@@ -3708,6 +3708,7 @@ Class MainController extends Controller
                 'choices'   =>[
                     'Administrateur'        => 'ROLE_ADMIN',
                     'Modérateur'            => 'ROLE_MASTER',
+                    'Exploitant'            => 'ROLE_EXPLOIT',
                     'PATRON'                => 'ROLE_SUPER_MASTER',
                     'RH'                    => 'ROLE_RH'
                 ]

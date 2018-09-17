@@ -19,22 +19,50 @@ class DemandeAbsenceRepository extends ServiceEntityRepository
         parent::__construct($registry, DemandeAbsence::class);
     }
 
-//    /**
-//     * @return DemandeAbsence[] Returns an array of DemandeAbsence objects
-//     */
-    /*
-    public function findByExampleField($value)
+    /**
+    * @return DemandeAbsence[] Returns an array of DemandeAbsence objects
+    */
+
+    public function demandeAbsenceNonTraitees()
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('d.statueDemande = :val')
+            ->setParameter('val', true)
             ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
+
+
+    public function demandeAbsenceNonTraiteesExploit()
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.statueDemande = :val')
+            ->setParameter('val', true)
+            ->andWhere('d.statueDemandeExploit = :un')
+            ->setParameter('un', true)
+            ->orderBy('d.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+    public function demandeAbsenceNonTraiteesRh()
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.statueDemande = :val')
+            ->setParameter('val', true)
+            ->andWhere('d.statueDemandeExploit = :un')
+            ->setParameter('un', false)
+            ->orderBy('d.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 
     /*
     public function findOneBySomeField($value): ?DemandeAbsence

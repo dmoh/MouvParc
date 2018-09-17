@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\QuestionsPaie;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,7 +30,7 @@ class QuestionsPaieType extends AbstractType
                 )
 
             ))
-            ->add('objetDemande', TextType::class)
+            ->add('objetDemande', TextareaType::class)
             //->add('statueDemande')
             //->add('statueDemandeDirection')
             //->add('reponseDirection')

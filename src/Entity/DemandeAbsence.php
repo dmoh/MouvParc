@@ -72,6 +72,21 @@ class DemandeAbsence
      */
     private $cloturer;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $reponseExploit;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $commentaireExploit;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $statueDemandeExploit;
+
 
 
     public function __construct()
@@ -80,6 +95,7 @@ class DemandeAbsence
         $this->statueDemande = 1;
         $this->statueDemandeDirection = 1;
         $this->cloturer = 0;
+        $this->statueDemandeExploit = 1;
     }
 
     public function getId()
@@ -215,6 +231,42 @@ class DemandeAbsence
     public function setCloturer(bool $cloturer): self
     {
         $this->cloturer = $cloturer;
+
+        return $this;
+    }
+
+    public function getReponseExploit(): ?bool
+    {
+        return $this->reponseExploit;
+    }
+
+    public function setReponseExploit(?bool $reponseExploit): self
+    {
+        $this->reponseExploit = $reponseExploit;
+
+        return $this;
+    }
+
+    public function getCommentaireExploit(): ?string
+    {
+        return $this->commentaireExploit;
+    }
+
+    public function setCommentaireExploit(?string $commentaireExploit): self
+    {
+        $this->commentaireExploit = $commentaireExploit;
+
+        return $this;
+    }
+
+    public function getStatueDemandeExploit(): ?bool
+    {
+        return $this->statueDemandeExploit;
+    }
+
+    public function setStatueDemandeExploit(?bool $statueDemandeExploit): self
+    {
+        $this->statueDemandeExploit = $statueDemandeExploit;
 
         return $this;
     }

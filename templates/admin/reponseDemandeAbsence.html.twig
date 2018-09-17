@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réponse demande absence{% endblock%}
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <div class="col-md-12"><h4 class="text-center">Réponse Demande Absence</h4></div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <th>Num °</th>
+                            <th>NOM Prénom</th>
+                            <th>De X h à X h</th>
+                            <th>Jour</th>
+                            <th>Motif</th>
+                        </thead>
+                        <tbody>
+                            <td>{{ dA.id }}</td>
+                            <td><strong><em>{{ dA.demandeAbsenceConducteur.nomConducteur }} {{ dA.demandeAbsenceConducteur.prenomConducteur |capitalize }}</em></strong></td>
+                            <td>{{ dA.heureDebutAbs }} <i class="fa fa-arrow-right"></i> {{ dA.heureFinAbs }}</td>
+                            <td>{{ dA.dateDemande | date('d/m/Y') }}</td>
+                            <td>{{ dA.motifConducteur }}</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

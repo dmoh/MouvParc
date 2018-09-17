@@ -12,17 +12,18 @@
         </div>
         {{ form_start(form) }}
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     {{ form_label(form.dateDemande, "Mois de salaire : ", {'label-attr':{'class': 'form-label'}}) }}
                     {{ form_widget(form.dateDemande, {'attr': {'class': 'form-control '}}) }}
                     {{ form_errors(form.dateDemande, {'attr': {'class': 'red'}}) }}
                     <div class="err"></div>
                 </div>
-                <div class="form-group col-md-6">
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
                     {{ form_label(form.objetDemande, "Observation(s)(Obligatoire) : ", {'label-attr':{'class': 'form-label'}}) }}
                     {{ form_widget(form.objetDemande, {'attr': {'class': 'form-control', 'autocomplete': 'off'}}) }}
                     {{ form_errors(form.objetDemande, {'attr': {'class': 'red'}}) }}
-
                 </div>
             </div>
             <div class="form-row">
@@ -44,6 +45,7 @@
                 if(span > 0)
                 {
                     $('div.err').children('span').remove();
+                    $("#questions_paie_dateDemande").css('border', '1px solid #ced4da');
                 }
                 else
                 {
@@ -56,17 +58,19 @@
                 format: "mm/yyyy",
                 viewMode: "months",
                 language: 'fr',
-                minViewMode: "months"
+                minViewMode: "months",
+                endDate: '0d'
             });
 
            $('#boutonEnvoi').click(function () {
 
                var dateDemande = $('#questions_paie_dateDemande').val();
                var objDemande = $('#questions_paie_objetDemande').val();
-
+               var dateD = $("#questions_paie_dateDemande");
                if(!/^[0-9\/\ ]/.test(dateDemande))
                {
                    alert('Date incorrect ! ');
+                   dateD.css('border-color', 'red');
                    $('div.err').append('<span style="color: red; font-size: 11px; text-transform: uppercase">Date incorrect !</span>');
                    return false;
                }

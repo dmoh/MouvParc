@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Consultation Demande d'absence{% endblock %}
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-center">Consultation demande d'absence</h4>
+            </div>
+        </div>
+        {% if demandesAbs is not empty %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th>Num °</th>
+                                <th>NOM Prénom</th>
+                                <th>De X h à X h</th>
+                                <th>Jour</th>
+                                <th>Motif</th>
+                                <th>Répondre</th>
+                            </thead>
+                            <tbody>
+                                {% for dA in demandesAbs %}
+                                    <tr>
+                                        <td>{{ dA.id }}</td>
+                                        <td><strong><em>{{ dA.demandeAbsenceConducteur.nomConducteur }} {{ dA.demandeAbsenceConducteur.prenomConducteur | capitalize }}</em></strong></td>
+                                        <td>{{ dA.heureDebutAbs }} <i class="fa fa-arrow-right"></i> {{ dA.heureFinAbs }}</td>
+                                        <td>{{ dA.dateDemande | date('d/m/Y') }}</td>
+                                        <td>{{ dA.motifConducteur }}</td>
+                                        {% if is_granted('ROLE_EXPLOIT') %}
+                                            <td><a href="{{ path('admin_reponse_demande_absence', {'id_absence': dA.id }) }}"><i class="fa fa-reply"></i></a></td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <div class="row">
+                    <div class=" col-md-12">
+                        <span><em><strong>Aucune demande d'absence</strong></em></span>
+                    </div>
+                </div>
+        {% endif %}
+    </section>
+{% endblock %}

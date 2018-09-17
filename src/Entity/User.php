@@ -103,7 +103,7 @@ class User implements UserInterface, \Serializable
     {
         $tmpRoles = $this->roles;
 
-        if($tmpRoles !== ['ROLE_USER'] && $tmpRoles !== ['ROLE_ADMIN'] && $tmpRoles !== ['ROLE_MASTER'] && $tmpRoles !== ['ROLE_SUPER_MASTER'] && $tmpRoles !== ['ROLE_RH'])
+        if($tmpRoles !== ['ROLE_USER'] && $tmpRoles !== ['ROLE_ADMIN'] && $tmpRoles !== ['ROLE_MASTER'] && $tmpRoles !== ['ROLE_SUPER_MASTER'] && $tmpRoles !== ['ROLE_RH'] && $tmpRoles !== ['ROLE_EXPLOIT'])
         {
             $tmpRoles = ['ROLE_USER'];
         }

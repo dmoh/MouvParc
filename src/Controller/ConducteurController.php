@@ -151,6 +151,7 @@ class ConducteurController extends Controller
             'user'              => $user,
             'userId'            => $userId,
             'form2'             => $form2->createView(),
+            //TODO service notifications
             'notifs'            => $notifs,
         ]);
     }
@@ -481,8 +482,6 @@ class ConducteurController extends Controller
             $em->flush();
             $this->addFlash('info', 'Votre demande d\'absence a bien été enregistré');
             return $this->redirectToRoute('conducteur', array('user_id' => $userId));
-
-
         }
 
         return $this->render('conducteur/demandeAbs.html.twig', array(
